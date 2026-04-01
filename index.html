@@ -3,273 +3,448 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
-<!-- OG 태그 (카카오·슬랙·디스코드 미리보기) -->
-<meta property="og:title" content="나의 정치 성향 지도 — VRSUS">
-<meta property="og:description" content="10개 질문으로 나의 정치 성향 좌표를 찍어보세요. 당신은 어디에 있나요?">
-<meta property="og:image" content="https://placehold.co/600x315/26215C/ffffff?text=VRSUS+%EC%A0%95%EC%B9%98+%EC%84%B1%ED%96%A5+%EC%A7%80%EB%8F%84">
+<meta property="og:title" content="나는 조선의 어떤 인물? — VRSUS">
+<meta property="og:description" content="12개 질문으로 조선시대 내 직업군을 알아보세요. 어사? 협객? 거상? 지금 확인하세요!">
+<meta property="og:image" content="https://placehold.co/600x315/1A1205/F5E6C8?text=VRSUS+%EC%A1%B0%EC%84%A0+%EC%84%B1%ED%96%A5+%ED%85%8C%EC%8A%A4%ED%8A%B8">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<title>나의 정치 성향 지도 — VRSUS</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<title>나는 조선의 어떤 인물? — VRSUS</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:#F0EEE9;min-height:100%}
+:root{
+  --paper:#FBF6EC;
+  --paper2:#F5EDD8;
+  --ink:#1A1205;
+  --ink2:#3D2B1A;
+  --ink3:#6B4C2A;
+  --red:#8B1A1A;
+  --gold:#8B6914;
+  --blue:#1A3A5C;
+  --teal:#1A4A3A;
+  --border:#C8A96E;
+  --border2:#E8D5A8;
+}
+html{background:#2C1A0A;min-height:100%}
 body{
   font-family:'Noto Sans KR',sans-serif;
-  background:#F0EEE9;
+  background:#2C1A0A;
   min-height:100vh;
   display:flex;align-items:flex-start;justify-content:center;
-  padding:2rem 1rem 4rem;
+  padding:1.5rem 1rem 4rem;
 }
 .card{
-  width:100%;max-width:480px;
-  background:#fff;
-  border-radius:24px;
-  border:1px solid #E4E2DC;
+  width:100%;max-width:460px;
+  background:var(--paper);
+  border-radius:4px;
+  border:1px solid var(--border);
   overflow:hidden;
+  position:relative;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(200,169,110,0.08) 31px,rgba(200,169,110,0.08) 32px);
+  pointer-events:none;z-index:0;
 }
 
-/* 헤더 */
+/* 상단 헤더 */
 .top-bar{
-  background:#1A1930;
-  padding:18px 24px 16px;
-  display:flex;align-items:center;justify-content:space-between;
+  background:var(--ink);
+  padding:16px 20px 14px;
+  position:relative;z-index:1;
+  border-bottom:3px solid var(--gold);
 }
-.brand{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:0.12em}
-.brand span{color:#7F77DD}
-.top-meta{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.14em;text-align:right;line-height:1.6}
+.tb-inner{display:flex;align-items:center;justify-content:space-between}
+.brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:24px;color:#F5E6C8;letter-spacing:0.14em;
+}
+.brand span{color:#C8A96E}
+.tb-right{text-align:right}
+.tb-title{font-family:'Noto Serif KR',serif;font-size:13px;color:#C8A96E;letter-spacing:0.06em}
+.tb-sub{font-size:10px;color:rgba(245,230,200,0.4);letter-spacing:0.1em;margin-top:2px}
+
+/* 도장 장식 */
+.seal{
+  width:44px;height:44px;border-radius:4px;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.seal-text{
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;font-weight:600;
+  color:#F5E6C8;letter-spacing:0.05em;
+  text-align:center;line-height:1.3;
+}
+
+/* 인트로 */
+.intro{padding:28px 24px 24px;position:relative;z-index:1;text-align:center}
+.intro-deco{
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.3em;margin-bottom:16px;
+}
+.intro-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:21px;font-weight:600;
+  color:var(--ink);line-height:1.45;
+  margin-bottom:10px;
+}
+.intro-desc{
+  font-size:13px;color:var(--ink3);
+  line-height:1.75;margin-bottom:22px;
+}
+.intro-meta{
+  display:flex;justify-content:center;gap:18px;
+  margin-bottom:24px;
+  padding:12px 0;
+  border-top:1px solid var(--border2);
+  border-bottom:1px solid var(--border2);
+}
+.im{font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:5px}
+.im-dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+
+.divider-ornament{
+  text-align:center;font-size:14px;color:var(--border);
+  margin:14px 0;letter-spacing:8px;
+}
+
+.start-btn{
+  width:100%;padding:13px;
+  background:var(--ink);color:#F5E6C8;
+  border:2px solid var(--gold);
+  border-radius:3px;
+  font-family:'Noto Serif KR',serif;
+  font-size:15px;font-weight:500;cursor:pointer;
+  letter-spacing:0.1em;
+  transition:background .15s;
+}
+.start-btn:hover{background:var(--ink2)}
 
 /* 진행바 */
-.prog-wrap{padding:16px 24px 0}
-.prog-bg{height:3px;background:#F0EEE9;border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;background:#534AB7;border-radius:2px;transition:width .4s ease}
-.prog-label{font-size:11px;color:#888;margin-top:6px;text-align:right}
+.prog-wrap{padding:12px 20px 0;position:relative;z-index:1}
+.prog-bg{height:3px;background:var(--border2);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s ease}
+.prog-label{font-size:11px;color:var(--ink3);margin-top:5px;text-align:right;font-family:'Noto Serif KR',serif}
 
 /* 질문 */
-.q-body{padding:20px 24px 16px}
-.q-num{font-size:10px;font-weight:500;color:#534AB7;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:8px}
-.q-text{font-size:16px;font-weight:500;color:#1A1930;line-height:1.6;margin-bottom:20px}
-.opts{display:flex;flex-direction:column;gap:8px}
+.q-body{padding:20px 24px 12px;position:relative;z-index:1}
+.q-num{
+  font-family:'Noto Serif KR',serif;
+  font-size:10px;font-weight:500;color:var(--gold);
+  letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px;
+}
+.q-text{
+  font-family:'Noto Serif KR',serif;
+  font-size:16px;font-weight:500;
+  color:var(--ink);line-height:1.65;margin-bottom:18px;
+}
+.opts{display:flex;flex-direction:column;gap:7px}
 .opt{
-  width:100%;padding:12px 16px;
-  border:1px solid #E4E2DC;border-radius:10px;
-  background:#fff;font-family:'Noto Sans KR',sans-serif;
-  font-size:14px;color:#1A1930;text-align:left;cursor:pointer;
+  width:100%;padding:11px 14px;
+  border:1px solid var(--border2);
+  border-radius:3px;
+  background:rgba(255,255,255,0.5);
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:13px;color:var(--ink2);
+  text-align:left;cursor:pointer;
   transition:all .15s;line-height:1.45;
 }
-.opt:hover{background:#F5F4FF;border-color:#AFA9EC}
-.opt.sel{background:#EEEDFE;border-color:#534AB7;color:#26215C}
+.opt:hover{background:rgba(200,169,110,0.15);border-color:var(--border)}
+.opt.sel{background:rgba(139,105,20,0.12);border-color:var(--gold);color:var(--ink)}
 
-.nav-row{padding:10px 24px 20px;display:flex;justify-content:space-between;align-items:center}
-.back-btn{font-size:12px;color:#888;background:none;border:none;cursor:pointer;font-family:inherit;padding:4px 0}
-.back-btn:hover{color:#1A1930}
+.nav-row{
+  padding:8px 24px 18px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:1;
+}
+.back-btn{
+  font-size:12px;color:var(--ink3);
+  background:none;border:none;cursor:pointer;
+  font-family:'Noto Serif KR',serif;
+}
+.back-btn:hover{color:var(--ink)}
 
 /* 로딩 */
-.loading{padding:48px 24px;text-align:center;display:none}
-.spinner{width:36px;height:36px;border:2px solid #E4E2DC;border-top-color:#534AB7;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading p{font-size:13px;color:#888}
+.loading{
+  padding:52px 24px;text-align:center;
+  display:none;position:relative;z-index:1;
+}
+.loading-char{
+  font-size:48px;margin-bottom:14px;
+  animation:float 2s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.loading p{
+  font-family:'Noto Serif KR',serif;
+  font-size:14px;color:var(--ink3);
+  line-height:1.7;
+}
 
 /* 결과 */
-.result{display:none}
+.result{display:none;position:relative;z-index:1}
 
-.map-section{padding:20px 24px 0}
-.sec-label{font-size:10px;font-weight:500;color:#888;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px;text-align:center}
-.map-svg-wrap{position:relative;width:100%;padding-bottom:100%}
-.map-svg-wrap svg{position:absolute;inset:0;width:100%;height:100%}
+.result-hero{
+  padding:24px 24px 0;text-align:center;
+}
+.rh-label{
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.22em;margin-bottom:14px;
+}
+.rh-char{
+  font-size:72px;margin-bottom:8px;
+  display:block;
+  animation:float 3s ease-in-out infinite;
+}
+.rh-job{
+  font-family:'Noto Serif KR',serif;
+  font-size:26px;font-weight:700;
+  color:var(--ink);margin-bottom:6px;
+  letter-spacing:0.04em;
+}
+.rh-sub{
+  font-size:12px;color:var(--ink3);
+  letter-spacing:0.16em;margin-bottom:14px;
+}
+.rh-quote{
+  font-family:'Noto Serif KR',serif;
+  font-size:14px;color:var(--ink2);
+  line-height:1.75;
+  padding:14px 16px;
+  background:rgba(200,169,110,0.12);
+  border-left:3px solid var(--gold);
+  border-radius:0 3px 3px 0;
+  text-align:left;
+  margin-bottom:16px;
+}
 
-.type-card{margin:16px 24px 0;border-radius:14px;padding:16px 18px}
-.tc-badge{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px}
-.tc-name{font-size:20px;font-weight:500;margin-bottom:6px}
-.tc-desc{font-size:13px;line-height:1.65}
+.trait-row{
+  display:flex;gap:6px;padding:0 24px;
+  margin-bottom:14px;flex-wrap:wrap;justify-content:center;
+}
+.trait-pill{
+  font-size:11px;font-weight:500;
+  padding:4px 12px;border-radius:20px;
+  border:1px solid var(--border);
+  background:rgba(200,169,110,0.1);
+  color:var(--ink3);font-family:'Noto Serif KR',serif;
+  letter-spacing:0.06em;
+}
 
-.stats-row{display:flex;gap:8px;margin:12px 24px 0}
-.stat-box{flex:1;background:#F5F4F1;border-radius:10px;padding:10px 8px;text-align:center}
-.stat-val{font-size:20px;font-weight:500;color:#1A1930;display:block;line-height:1.1}
-.stat-lbl{font-size:10px;color:#888;margin-top:3px}
+.stat-section{
+  margin:0 24px 14px;
+  border:1px solid var(--border2);
+  border-radius:3px;overflow:hidden;
+}
+.stat-head{
+  background:var(--paper2);
+  padding:8px 14px;
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.14em;
+  border-bottom:1px solid var(--border2);
+}
+.stat-bars{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.sbar-row{display:flex;align-items:center;gap:8px}
+.sbar-label{font-size:11px;color:var(--ink3);width:52px;flex-shrink:0;font-family:'Noto Serif KR',serif}
+.sbar-track{flex:1;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.sbar-pct{font-size:11px;color:var(--ink3);width:32px;text-align:right;flex-shrink:0}
 
-.topics-section{margin:16px 24px 0;border:1px solid #E4E2DC;border-radius:14px;overflow:hidden}
-.ts-head{padding:12px 16px;background:#F5F4F1;font-size:11px;font-weight:500;color:#555;letter-spacing:0.1em;text-transform:uppercase}
-.ts-item{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-top:1px solid #E4E2DC;font-size:13px;color:#1A1930}
-.ts-badge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:8px}
+.rival-section{
+  margin:0 24px 14px;
+  background:var(--paper2);
+  border:1px solid var(--border2);
+  border-radius:3px;padding:12px 14px;
+}
+.rival-label{
+  font-size:10px;color:var(--gold);
+  letter-spacing:0.16em;
+  font-family:'Noto Serif KR',serif;
+  margin-bottom:8px;
+}
+.rival-row{display:flex;gap:8px}
+.rival-card{
+  flex:1;border:1px solid var(--border2);
+  border-radius:3px;padding:8px 10px;
+  text-align:center;background:rgba(255,255,255,0.5);
+}
+.rc-emoji{font-size:22px;display:block;margin-bottom:3px}
+.rc-name{font-size:11px;font-weight:500;color:var(--ink);font-family:'Noto Serif KR',serif}
+.rc-rel{font-size:10px;color:var(--ink3);margin-top:2px}
+
+.topics-section{
+  margin:0 24px 14px;
+  border:1px solid var(--border2);border-radius:3px;overflow:hidden;
+}
+.ts-head{
+  padding:8px 14px;background:var(--paper2);
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.14em;
+  border-bottom:1px solid var(--border2);
+}
+.ts-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-top:1px solid var(--border2);
+  font-size:13px;color:var(--ink);
+}
+.ts-item:first-child{border-top:none}
+.ts-badge{
+  font-size:10px;font-weight:500;
+  padding:2px 8px;border-radius:10px;
+  flex-shrink:0;
+}
 .badge-hot{background:#FAECE7;color:#712B13}
 .badge-fit{background:#EEEDFE;color:#3C3489}
 
-/* 공유 섹션 */
-.share-section{padding:16px 24px 24px}
-.share-title{font-size:11px;font-weight:500;color:#888;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;text-align:center}
+/* 공유 */
+.share-section{padding:0 24px 28px}
+.share-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.16em;
+  margin-bottom:10px;text-align:center;
+}
 .share-link-wrap{
   display:flex;align-items:center;gap:8px;
-  background:#F5F4F1;border:1px solid #E4E2DC;
-  border-radius:10px;padding:10px 14px;
+  background:var(--paper2);
+  border:1px solid var(--border2);
+  border-radius:3px;padding:9px 12px;
   margin-bottom:10px;
 }
-.share-link-text{flex:1;font-size:12px;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
-.copy-btn{
-  flex-shrink:0;padding:6px 12px;
-  background:#534AB7;color:#fff;
-  border:none;border-radius:7px;
-  font-size:12px;font-weight:500;
-  font-family:'Noto Sans KR',sans-serif;cursor:pointer;
-  transition:background .15s;
+.share-link-text{
+  flex:1;font-size:11px;color:var(--ink3);
+  overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;font-family:monospace;
 }
-.copy-btn:hover{background:#3C3489}
-.copy-btn.copied{background:#1D9E75}
+.copy-btn{
+  flex-shrink:0;padding:5px 10px;
+  background:var(--ink);color:#F5E6C8;
+  border:none;border-radius:3px;
+  font-size:11px;font-weight:500;
+  font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;transition:background .15s;
+}
+.copy-btn:hover{background:var(--ink2)}
+.copy-btn.copied{background:var(--teal)}
 
-.share-btns{display:flex;flex-direction:column;gap:8px}
+.share-btns{display:flex;flex-direction:column;gap:7px}
 .btn-kakao{
-  width:100%;padding:13px;
+  width:100%;padding:12px;
   background:#FEE500;color:#1A1A1A;
-  border:none;border-radius:12px;
+  border:none;border-radius:3px;
   font-family:'Noto Sans KR',sans-serif;
   font-size:14px;font-weight:500;cursor:pointer;
   display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .btn-kakao:hover{background:#F5DB00}
-.kakao-icon{width:20px;height:20px;background:#1A1A1A;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.kakao-icon svg{width:12px;height:12px}
-
-.btn-link{
-  width:100%;padding:12px;
-  background:#fff;color:#1A1930;
-  border:1px solid #E4E2DC;border-radius:12px;
+.btn-native{
+  width:100%;padding:11px;
+  background:rgba(255,255,255,0.6);color:var(--ink);
+  border:1px solid var(--border);border-radius:3px;
   font-family:'Noto Sans KR',sans-serif;
   font-size:13px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:6px;
 }
-.btn-link:hover{background:#F5F4F1}
-
+.btn-native:hover{background:var(--paper2)}
 .btn-retry{
-  width:100%;padding:11px;
-  background:transparent;color:#888;
-  border:none;font-family:'Noto Sans KR',sans-serif;
-  font-size:13px;cursor:pointer;margin-top:4px;
+  width:100%;padding:10px;
+  background:transparent;color:var(--ink3);
+  border:none;font-family:'Noto Serif KR',serif;
+  font-size:13px;cursor:pointer;margin-top:2px;
 }
-.btn-retry:hover{color:#1A1930}
+.btn-retry:hover{color:var(--ink)}
 
-/* 인트로 화면 */
-.intro{padding:32px 24px 28px;text-align:center}
-.intro-badge{display:inline-block;background:#EEEDFE;color:#3C3489;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;letter-spacing:0.1em;margin-bottom:16px}
-.intro-title{font-size:22px;font-weight:500;color:#1A1930;line-height:1.4;margin-bottom:10px}
-.intro-desc{font-size:14px;color:#666;line-height:1.7;margin-bottom:24px}
-.intro-meta{display:flex;justify-content:center;gap:20px;margin-bottom:28px}
-.im{font-size:12px;color:#888;display:flex;align-items:center;gap:4px}
-.im-dot{width:5px;height:5px;border-radius:50%;background:#1D9E75}
-.start-btn{
-  width:100%;padding:14px;
-  background:#1A1930;color:#fff;
-  border:none;border-radius:12px;
-  font-family:'Noto Sans KR',sans-serif;
-  font-size:15px;font-weight:500;cursor:pointer;
-  letter-spacing:0.04em;
-}
-.start-btn:hover{background:#26215C}
-
-/* 공유 결과 배너 */
 .shared-banner{
-  margin:0 24px 0;
+  margin:0 24px 14px;
   background:#E1F5EE;border:1px solid #9FE1CB;
-  border-radius:10px;padding:10px 14px;
+  border-radius:3px;padding:9px 12px;
   font-size:12px;color:#085041;
   display:none;align-items:center;gap:6px;
 }
-.sb-dot{width:6px;height:6px;border-radius:50%;background:#1D9E75;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="card">
   <div class="top-bar">
-    <div class="brand">VR<span>S</span>US</div>
-    <div class="top-meta">나의 정치 성향 지도<br>Korea Debate Platform</div>
+    <div class="tb-inner">
+      <div>
+        <div class="brand">VR<span>S</span>US</div>
+        <div class="tb-right">
+          <div class="tb-title">조선의 인물 성향 테스트</div>
+          <div class="tb-sub">JOSEON CHARACTER TYPE</div>
+        </div>
+      </div>
+      <div class="seal"><div class="seal-text">性向<br>判定</div></div>
+    </div>
   </div>
 
   <!-- 인트로 -->
   <div class="intro" id="introWrap">
-    <div class="intro-badge">성향 테스트</div>
-    <div class="intro-title">나는 어떤 정치 성향을<br>가지고 있을까?</div>
-    <div class="intro-desc">10개의 질문으로 진보/보수 × 공동체/개인<br>2축 위에 나의 좌표를 찍어드립니다.</div>
-    <div class="intro-meta">
-      <div class="im"><div class="im-dot"></div>약 2분 소요</div>
-      <div class="im"><div class="im-dot"></div>10개 질문</div>
-      <div class="im"><div class="im-dot"></div>4가지 유형</div>
+    <div class="intro-deco">⊱ 성향 판정 ⊰</div>
+    <div class="intro-title">나는 조선시대에<br>어떤 인물이었을까?</div>
+    <div class="intro-desc">
+      12개의 질문으로<br>
+      조선의 8가지 직업군 중<br>
+      나의 성향과 가장 가까운 인물을 찾아드립니다.
     </div>
-    <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
+    <div class="intro-meta">
+      <div class="im"><div class="im-dot"></div>약 3분 소요</div>
+      <div class="im"><div class="im-dot"></div>12개 질문</div>
+      <div class="im"><div class="im-dot"></div>8가지 유형</div>
+    </div>
+    <div class="divider-ornament">— ✦ —</div>
+    <button class="start-btn" onclick="startTest()">판정 시작하기</button>
   </div>
 
   <!-- 진행바 -->
   <div class="prog-wrap" id="progWrap" style="display:none">
-    <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:5%"></div></div>
-    <div class="prog-label" id="progLabel">1 / 10</div>
+    <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:4%"></div></div>
+    <div class="prog-label" id="progLabel">제 1문 / 총 12문</div>
   </div>
 
   <!-- 질문 -->
   <div class="q-body" id="qBody" style="display:none">
-    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-num" id="qNum">第一問</div>
     <div class="q-text" id="qText"></div>
     <div class="opts" id="optsWrap"></div>
   </div>
   <div class="nav-row" id="navRow" style="display:none">
-    <button class="back-btn" id="backBtn" onclick="goBack()">← 이전</button>
-    <span style="font-size:11px;color:#bbb" id="navHint"></span>
+    <button class="back-btn" id="backBtn" onclick="goBack()">← 이전 문항</button>
+    <span style="font-size:11px;color:var(--border)" id="navHint"></span>
   </div>
 
   <!-- 로딩 -->
   <div class="loading" id="loadingWrap">
-    <div class="spinner"></div>
-    <p>성향 지도를 분석하는 중...</p>
+    <div class="loading-char">📜</div>
+    <p>
+      그대의 성향을<br>
+      판정하는 중이옵니다...
+    </p>
   </div>
 
   <!-- 결과 -->
   <div class="result" id="resultWrap">
-    <div class="map-section">
-      <div class="sec-label">나의 정치 성향 좌표</div>
-      <div class="map-svg-wrap">
-        <svg viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="258" height="258" rx="12" fill="#FAFAF8" stroke="#E4E2DC" stroke-width="0.5"/>
-          <rect x="1" y="1" width="129" height="129" fill="#EEEDFE" opacity="0.4"/>
-          <rect x="130" y="1" width="129" height="129" fill="#FAECE7" opacity="0.3"/>
-          <rect x="1" y="130" width="129" height="129" fill="#E6F1FB" opacity="0.3"/>
-          <rect x="130" y="130" width="129" height="129" fill="#F1EFE8" opacity="0.4"/>
-          <line x1="130" y1="8" x2="130" y2="252" stroke="#D0CEC8" stroke-width="0.5" stroke-dasharray="5,4"/>
-          <line x1="8" y1="130" x2="252" y2="130" stroke="#D0CEC8" stroke-width="0.5" stroke-dasharray="5,4"/>
-          <!-- 사분면 라벨 -->
-          <text x="12" y="16" font-size="9" fill="#534AB7" font-family="sans-serif" opacity="0.75">진보 · 공동체</text>
-          <text x="144" y="16" font-size="9" fill="#993C1D" font-family="sans-serif" opacity="0.75">보수 · 공동체</text>
-          <text x="12" y="255" font-size="9" fill="#185FA5" font-family="sans-serif" opacity="0.75">진보 · 개인</text>
-          <text x="144" y="255" font-size="9" fill="#5F5E5A" font-family="sans-serif" opacity="0.75">보수 · 개인</text>
-          <!-- 축 레이블 -->
-          <text x="60" y="126" font-size="9" fill="#534AB7" font-family="sans-serif" opacity="0.6">← 진보</text>
-          <text x="158" y="126" font-size="9" fill="#993C1D" font-family="sans-serif" opacity="0.6">보수 →</text>
-          <text x="132" y="76" font-size="9" fill="#555" font-family="sans-serif" opacity="0.6">공동체 ↑</text>
-          <text x="132" y="196" font-size="9" fill="#555" font-family="sans-serif" opacity="0.6">개인 ↓</text>
-          <!-- 내 좌표 -->
-          <circle id="rDotPulse" cx="130" cy="130" r="10" fill="none" stroke="#534AB7" stroke-width="1.5" opacity="0">
-            <animate attributeName="r" from="10" to="22" dur="1.6s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.6s" repeatCount="indefinite"/>
-          </circle>
-          <circle id="rDot" cx="130" cy="130" r="9" fill="#534AB7"/>
-          <text id="rDotLbl" x="130" y="118" font-size="10" fill="#26215C" font-family="sans-serif" text-anchor="middle" font-weight="bold">나</text>
-        </svg>
-      </div>
+    <div class="result-hero">
+      <div class="rh-label">그대의 유형은</div>
+      <span class="rh-char" id="rhChar"></span>
+      <div class="rh-job" id="rhJob"></div>
+      <div class="rh-sub" id="rhSub"></div>
+      <div class="rh-quote" id="rhQuote"></div>
     </div>
 
-    <div class="type-card" id="typeCard">
-      <div class="tc-badge" id="tcBadge">유형</div>
-      <div class="tc-name" id="tcName"></div>
-      <div class="tc-desc" id="tcDesc"></div>
+    <div class="trait-row" id="traitRow"></div>
+
+    <div class="stat-section">
+      <div class="stat-head">성향 분석</div>
+      <div class="stat-bars" id="statBars"></div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-box"><span class="stat-val" id="sProgressive"></span><div class="stat-lbl">진보 성향</div></div>
-      <div class="stat-box"><span class="stat-val" id="sCommunity"></span><div class="stat-lbl">공동체 가치</div></div>
-      <div class="stat-box"><span class="stat-val" id="sMatch"></span><div class="stat-lbl">같은 유형</div></div>
-    </div>
-
-    <div class="shared-banner" id="sharedBanner">
-      <div class="sb-dot"></div>
-      <span id="sharedText"></span>
+    <div class="rival-section">
+      <div class="rival-label">유형 궁합</div>
+      <div class="rival-row" id="rivalRow"></div>
     </div>
 
     <div class="topics-section">
@@ -277,24 +452,24 @@ body{
       <div id="topicList"></div>
     </div>
 
+    <div class="shared-banner" id="sharedBanner">
+      <span>👀</span>
+      <span>친구가 공유한 결과예요. 나도 판정받아 볼까요?</span>
+    </div>
+
     <div class="share-section">
-      <div class="share-title">결과 공유하기</div>
+      <div class="share-title">— 결과 공유하기 —</div>
       <div class="share-link-wrap">
         <span class="share-link-text" id="shareLinkText"></span>
         <button class="copy-btn" id="copyBtn" onclick="copyLink()">복사</button>
       </div>
       <div class="share-btns">
         <button class="btn-kakao" onclick="shareKakao()">
-          <div class="kakao-icon">
-            <svg viewBox="0 0 24 24" fill="white"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.82 5.47 4.58 6.96L5.5 21l4.13-2.16A11.6 11.6 0 0012 19.5c5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>
-          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.82 5.47 4.58 6.96L5.5 21l4.13-2.16A11.6 11.6 0 0012 19.5c5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>
           카카오톡으로 공유하기
         </button>
-        <button class="btn-link" onclick="shareNative()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-          링크 공유하기
-        </button>
-        <button class="btn-retry" onclick="restart()">다시 테스트하기</button>
+        <button class="btn-native" onclick="shareNative()">🔗 링크 공유하기</button>
+        <button class="btn-retry" onclick="restart()">다시 판정받기</button>
       </div>
     </div>
   </div>
@@ -302,28 +477,163 @@ body{
 
 <script>
 const QS = [
-  {t:"최저임금을 지금보다 빠르게 올려야 한다.", opts:["강하게 찬성","대체로 찬성","대체로 반대","강하게 반대"], ax:"p", sc:[2,1,-1,-2]},
-  {t:"부유층에게 더 높은 세율을 적용하는 것은 정당하다.", opts:["매우 그렇다","어느 정도 그렇다","별로 그렇지 않다","전혀 그렇지 않다"], ax:"p", sc:[2,1,-1,-2]},
-  {t:"복지 확대보다 개인의 자립 역량 강화가 더 중요하다.", opts:["매우 그렇다","어느 정도 그렇다","별로 그렇지 않다","전혀 그렇지 않다"], ax:"p", sc:[-2,-1,1,2]},
-  {t:"전통적 가족 제도와 문화를 보호하는 것이 사회 안정에 기여한다.", opts:["매우 그렇다","어느 정도 그렇다","별로 그렇지 않다","전혀 그렇지 않다"], ax:"c", sc:[2,1,-1,-2]},
-  {t:"개인의 자유로운 선택이 사회 규범보다 항상 우선되어야 한다.", opts:["매우 그렇다","어느 정도 그렇다","별로 그렇지 않다","전혀 그렇지 않다"], ax:"c", sc:[-2,-1,1,2]},
-  {t:"탈원전을 감수하더라도 친환경 에너지로 전환해야 한다.", opts:["강하게 찬성","대체로 찬성","대체로 반대","강하게 반대"], ax:"p", sc:[2,1,-1,-2]},
-  {t:"이민자 및 다문화 가정 지원 정책을 확대해야 한다.", opts:["강하게 찬성","대체로 찬성","대체로 반대","강하게 반대"], ax:"p", sc:[2,1,-1,-2]},
-  {t:"사회 안전을 위해 개인 정보 일부 수집을 허용할 수 있다.", opts:["매우 그렇다","어느 정도 그렇다","별로 그렇지 않다","전혀 그렇지 않다"], ax:"c", sc:[2,1,-1,-2]},
-  {t:"기업 규제를 줄이고 시장 자율에 맡기는 것이 경제에 더 효과적이다.", opts:["매우 그렇다","어느 정도 그렇다","별로 그렇지 않다","전혀 그렇지 않다"], ax:"p", sc:[-2,-1,1,2]},
-  {t:"사회적 소수자 보호를 위한 적극적 법·제도 지원이 필요하다.", opts:["매우 그렇다","어느 정도 그렇다","별로 그렇지 않다","전혀 그렇지 않다"], ax:"c", sc:[-2,-1,1,2]}
+  {
+    t:"불의한 일을 목격했을 때 나는",
+    opts:["즉시 나서서 바로잡는다","상황을 살핀 후 행동한다","조용히 해결책을 모색한다","일단 피하고 나중에 대처한다"],
+    ax:"g", sc:[2,1,-1,-2]
+  },
+  {
+    t:"나에게 가장 중요한 것은",
+    opts:["공동체의 안녕과 평화","개인의 자유와 독립","나라의 전통과 질서","실리와 현실적 이득"],
+    ax:"pc", sc_map:[[0,2],[0,-2],[1,2],[1,-2]]
+  },
+  {
+    t:"새로운 제도와 변화에 대해 나는",
+    opts:["적극적으로 환영한다","신중하게 검토 후 수용한다","검증된 것만 받아들인다","변화 자체를 경계한다"],
+    ax:"p", sc:[2,1,-1,-2]
+  },
+  {
+    t:"사람들과 함께 있을 때 나는",
+    opts:["모두를 아우르는 역할을 한다","필요할 때만 함께한다","든든하게 뒤를 지킨다","나의 이익을 조용히 챙긴다"],
+    ax:"c", sc:[2,-1,1,-2]
+  },
+  {
+    t:"억울한 백성이 있다면",
+    opts:["직접 나서서 해결해준다","절차에 따라 도움을 준다","기존 법도 안에서 해결한다","나와 관련이 없으면 관여 안 한다"],
+    ax:"p", sc:[2,1,-1,-2]
+  },
+  {
+    t:"권력과 나의 관계는",
+    opts:["권력을 개혁의 도구로 쓴다","권력보다 사람이 먼저다","권력으로 나라를 지킨다","권력보다 재력이 실속 있다"],
+    ax:"pc", sc_map:[[0,1],[0,-1],[1,1],[1,-1]]
+  },
+  {
+    t:"친구가 잘못된 길을 가고 있다면",
+    opts:["직접적으로 충고한다","돌아서 생각할 시간을 준다","모범을 보여 스스로 깨닫게 한다","각자의 선택을 존중한다"],
+    ax:"g", sc:[2,0,-1,-2]
+  },
+  {
+    t:"내가 꿈꾸는 이상적인 나라는",
+    opts:["모두가 평등한 세상","개인이 자유로운 세상","전통이 살아있는 안정된 세상","능력 있는 자가 잘 사는 세상"],
+    ax:"pc", sc_map:[[0,2],[0,-2],[1,2],[1,-2]]
+  },
+  {
+    t:"어려운 결정 앞에서 나는",
+    opts:["원칙을 끝까지 지킨다","상황에 따라 유연하게 판단한다","오래된 관례를 따른다","손익을 따져 결정한다"],
+    ax:"g", sc:[2,0,-1,-2]
+  },
+  {
+    t:"나를 움직이게 하는 것은",
+    opts:["정의감과 사명감","자유와 창의성","충성심과 의무감","이익과 성취"],
+    ax:"mix", sc_map:[[0,2,2],[0,-2,2],[1,2,-2],[1,-2,-2]]
+  },
+  {
+    t:"갈등 상황에서 나의 역할은",
+    opts:["앞장서서 해결한다","중재자가 된다","원칙을 지키며 버틴다","실리적으로 상황을 이용한다"],
+    ax:"g", sc:[2,0,-1,-2]
+  },
+  {
+    t:"역사에 이름을 남긴다면 어떤 인물로 기억되고 싶나요?",
+    opts:["불의에 맞선 개혁가","자유를 추구한 예술가·사상가","나라를 지킨 충신·장수","시대를 앞선 사업가"],
+    ax:"mix2", sc_map:["어사","협객","장군","거상"]
+  }
 ];
 
-const TYPES = {
-  PC: {name:"공동체 진보형", badge:"진보 · 공동체", desc:"평등과 연대를 중시하며 사회적 약자를 위한 적극적 정책을 지지합니다. 변화를 통해 더 나은 공동체를 만들고자 합니다.", bg:"#EEEDFE", border:"#AFA9EC", badgeColor:"#534AB7", nameColor:"#26215C", descColor:"#3C3489", topics:[["기본소득 도입 찬반","hot"],["최저임금 인상 속도","fit"],["이민·다문화 정책 확대","fit"]], dotColor:"#534AB7"},
-  PI: {name:"자유 진보형", badge:"진보 · 개인", desc:"개인의 자유와 권리를 최우선으로 하면서 경제적 평등도 추구합니다. 다양성을 존중하고 개인 선택을 중시합니다.", bg:"#E6F1FB", border:"#B5D4F4", badgeColor:"#185FA5", nameColor:"#0C447C", descColor:"#185FA5", topics:[["동성혼 법제화 찬반","hot"],["안락사 합법화","fit"],["사형제 폐지","fit"]], dotColor:"#378ADD"},
-  CC: {name:"공동체 보수형", badge:"보수 · 공동체", desc:"전통적 가치와 사회 질서를 중시하면서 공동체의 결속을 강조합니다. 안정과 통합을 통한 발전을 추구합니다.", bg:"#FAECE7", border:"#F5C4B3", badgeColor:"#993C1D", nameColor:"#712B13", descColor:"#993C1D", topics:[["대통령제 vs 내각제","hot"],["국가보안법 존폐","fit"],["핵무장 자체 보유","fit"]], dotColor:"#D85A30"},
-  CI: {name:"자유 보수형", badge:"보수 · 개인", desc:"시장 자율과 개인의 책임을 중시하는 고전적 자유주의 성향입니다. 작은 정부와 규제 완화를 통한 성장을 선호합니다.", bg:"#F1EFE8", border:"#D3D1C7", badgeColor:"#5F5E5A", nameColor:"#2C2C2A", descColor:"#5F5E5A", topics:[["기업 규제 완화 찬반","hot"],["부동산 세금 정책","fit"],["공기업 민영화","fit"]], dotColor:"#888780"}
+const JOBS = {
+  어사: {
+    emoji:"🎭",
+    job:"암행어사",
+    sub:"진보 · 공동체 · 강경",
+    quote:"불의를 보면 밥이 안 넘어가는 당신. 어느 고을에 가든 '암행어사 출두요!'를 외칠 준비가 되어 있습니다.",
+    traits:["개혁파","정의로움","직설적","불굴"],
+    bars:[{l:"진보 성향",v:88,c:"#534AB7"},{l:"공동체",v:82,c:"#1D9E75"},{l:"강경함",v:90,c:"#8B1A1A"}],
+    ally:{emoji:"🏥",name:"혜민서 의원",rel:"든든한 동지"},
+    rival:{emoji:"⚔️",name:"장군",rel:"가끔 충돌"},
+    topics:[["기본소득 도입 찬반","hot"],["최저임금 인상","fit"],["검찰 개혁","hot"]]
+  },
+  의원: {
+    emoji:"🏥",
+    job:"혜민서 의원",
+    sub:"진보 · 공동체 · 온건",
+    quote:"신분 고하를 막론하고 아픈 사람을 치료하는 것이 도리. 세상을 바꾸되, 상처 주지 않는 방식으로.",
+    traits:["따뜻함","포용적","현실적","헌신"],
+    bars:[{l:"진보 성향",v:75,c:"#534AB7"},{l:"공동체",v:85,c:"#1D9E75"},{l:"온건함",v:80,c:"#185FA5"}],
+    ally:{emoji:"🎭",name:"암행어사",rel:"이상적 동반자"},
+    rival:{emoji:"💰",name:"거상",rel:"가치관 충돌"},
+    topics:[["저출생 해결 방안","hot"],["의료보험 확대","fit"],["사회 안전망 강화","fit"]]
+  },
+  협객: {
+    emoji:"⚡",
+    job:"협객",
+    sub:"진보 · 개인 · 강경",
+    quote:"의리 하나로 세상을 사는 당신. 혼자서도 충분하지만, 옳은 일 앞에선 목숨도 건다.",
+    traits:["독립적","의리","자유분방","돌격형"],
+    bars:[{l:"진보 성향",v:80,c:"#534AB7"},{l:"개인주의",v:85,c:"#D85A30"},{l:"강경함",v:88,c:"#8B1A1A"}],
+    ally:{emoji:"🎨",name:"서생·화가",rel:"자유로운 동지"},
+    rival:{emoji:"🏛️",name:"대감",rel:"천적"},
+    topics:[["사형제 폐지","hot"],["동성혼 법제화","fit"],["표현의 자유","hot"]]
+  },
+  서생: {
+    emoji:"🎨",
+    job:"서생·화가",
+    sub:"진보 · 개인 · 온건",
+    quote:"붓 하나로 세상을 바꾸는 타입. 기존 질서에 의문을 품되, 아름다운 방식으로 저항합니다.",
+    traits:["창의적","몽상가","자유주의","예술적"],
+    bars:[{l:"진보 성향",v:78,c:"#534AB7"},{l:"개인주의",v:80,c:"#D85A30"},{l:"온건함",v:75,c:"#185FA5"}],
+    ally:{emoji:"⚡",name:"협객",rel:"영감을 주는 관계"},
+    rival:{emoji:"🛡️",name:"영주·대감",rel:"이해 불가"},
+    topics:[["예술 검열 찬반","hot"],["AI 규제 논쟁","fit"],["표현의 자유","fit"]]
+  },
+  장군: {
+    emoji:"⚔️",
+    job:"장군",
+    sub:"보수 · 공동체 · 강경",
+    quote:"나라가 있어야 백성이 있다. 물러서는 것도 전략이지만, 결코 지지는 않는다.",
+    traits:["수호자","충성심","강직","결단력"],
+    bars:[{l:"보수 성향",v:85,c:"#993C1D"},{l:"공동체",v:80,c:"#1D9E75"},{l:"강경함",v:90,c:"#8B1A1A"}],
+    ally:{emoji:"🏛️",name:"대감",rel:"믿음직한 동반자"},
+    rival:{emoji:"🎭",name:"암행어사",rel:"노선 충돌"},
+    topics:[["모병제 전환 찬반","hot"],["핵무장 논쟁","hot"],["국가보안법","fit"]]
+  },
+  대감: {
+    emoji:"🏛️",
+    job:"원로 대감",
+    sub:"보수 · 공동체 · 온건",
+    quote:"급하게 바꾸다 나라를 망친 전례가 얼마나 많은가. 안정 속에서 천천히, 그것이 진정한 개혁이오.",
+    traits:["안정 추구","원칙주의","경험 중시","중재자"],
+    bars:[{l:"보수 성향",v:80,c:"#993C1D"},{l:"공동체",v:82,c:"#1D9E75"},{l:"온건함",v:85,c:"#185FA5"}],
+    ally:{emoji:"⚔️",name:"장군",rel:"오랜 동지"},
+    rival:{emoji:"⚡",name:"협객",rel:"천적"},
+    topics:[["대통령제 vs 내각제","hot"],["선거제도 개혁","fit"],["전통 가치 보전","fit"]]
+  },
+  거상: {
+    emoji:"💰",
+    job:"조선 거상",
+    sub:"보수 · 개인 · 강경",
+    quote:"감정보다 계산이 빠른 당신. 시장에서의 성공이 곧 실력이고, 실력이 곧 정의입니다.",
+    traits:["실용주의","냉철함","자기관리","성취지향"],
+    bars:[{l:"보수 성향",v:82,c:"#993C1D"},{l:"개인주의",v:88,c:"#D85A30"},{l:"강경함",v:78,c:"#8B1A1A"}],
+    ally:{emoji:"📖",name:"선비",rel:"의외의 동반자"},
+    rival:{emoji:"🏥",name:"혜민서 의원",rel:"가치관 충돌"},
+    topics:[["기업 규제 완화","hot"],["부동산 정책","hot"],["공기업 민영화","fit"]]
+  },
+  선비: {
+    emoji:"📖",
+    job:"선비",
+    sub:"보수 · 개인 · 온건",
+    quote:"학문과 원칙으로 살아가는 당신. 세상이 어지러울수록 나만의 도를 지키는 것이 중요합니다.",
+    traits:["원칙주의","지성적","독립적","절제"],
+    bars:[{l:"보수 성향",v:76,c:"#993C1D"},{l:"개인주의",v:78,c:"#D85A30"},{l:"온건함",v:82,c:"#185FA5"}],
+    ally:{emoji:"💰",name:"거상",rel:"실용적 동맹"},
+    rival:{emoji:"🎭",name:"암행어사",rel:"방법론 차이"},
+    topics:[["수능 vs 수시","hot"],["사교육 규제","fit"],["학문의 자유","fit"]]
+  }
 };
 
-const MATCHES = ["11%","17%","23%","28%","31%","34%","38%","42%"];
+const HAN_NUMS = ["一","二","三","四","五","六","七","八","九","十","十一","十二"];
 
-let cur=0, ans=[], scores={p:0,c:0};
+let cur=0, ans=[], scores={p:0, c:0, g:0};
+let forcedJob = null;
 
 function startTest(){
   document.getElementById('introWrap').style.display='none';
@@ -334,35 +644,36 @@ function startTest(){
 }
 
 function renderQ(){
-  const q=QS[cur];
-  document.getElementById('qNum').textContent='Q'+(cur+1);
-  document.getElementById('qText').textContent=q.t;
-  document.getElementById('progFill').style.width=Math.max(Math.round((cur/QS.length)*100),3)+'%';
-  document.getElementById('progLabel').textContent=(cur+1)+' / '+QS.length;
-  document.getElementById('backBtn').style.visibility=cur===0?'hidden':'visible';
-  const wrap=document.getElementById('optsWrap');
-  wrap.innerHTML='';
-  q.opts.forEach((o,i)=>{
-    const b=document.createElement('button');
-    b.className='opt'+(ans[cur]===i?' sel':'');
-    b.textContent=o;
-    b.onclick=()=>pick(i);
+  const q = QS[cur];
+  document.getElementById('qNum').textContent = '第' + HAN_NUMS[cur] + '問';
+  document.getElementById('qText').textContent = q.t;
+  const pct = Math.max(Math.round((cur / QS.length) * 100), 4);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent = '제 ' + (cur+1) + '문 / 총 ' + QS.length + '문';
+  document.getElementById('backBtn').style.visibility = cur === 0 ? 'hidden' : 'visible';
+  const wrap = document.getElementById('optsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt' + (ans[cur] === i ? ' sel' : '');
+    b.textContent = o;
+    b.onclick = () => pick(i);
     wrap.appendChild(b);
   });
 }
 
 function pick(i){
-  ans[cur]=i;
-  document.querySelectorAll('.opt').forEach((b,j)=>b.classList.toggle('sel',j===i));
-  setTimeout(()=>{
+  ans[cur] = i;
+  document.querySelectorAll('.opt').forEach((b,j) => b.classList.toggle('sel', j===i));
+  setTimeout(() => {
     cur++;
-    if(cur>=QS.length) doAnalyze();
+    if(cur >= QS.length) doAnalyze();
     else renderQ();
-  },300);
+  }, 300);
 }
 
 function goBack(){
-  if(cur>0){cur--;renderQ();}
+  if(cur > 0){ cur--; renderQ(); }
 }
 
 function doAnalyze(){
@@ -370,130 +681,186 @@ function doAnalyze(){
   document.getElementById('navRow').style.display='none';
   document.getElementById('progWrap').style.display='none';
   document.getElementById('loadingWrap').style.display='block';
-  scores={p:0,c:0};
-  ans.forEach((a,i)=>{const q=QS[i];scores[q.ax]+=q.sc[a];});
-  setTimeout(showResult,1800);
+
+  scores = {p:0, c:0, g:0};
+  forcedJob = null;
+
+  ans.forEach((a, i) => {
+    const q = QS[i];
+    if(q.ax === 'p') scores.p += q.sc[a];
+    else if(q.ax === 'c') scores.c += q.sc[a];
+    else if(q.ax === 'g') scores.g += q.sc[a];
+    else if(q.ax === 'pc') {
+      const [axis, val] = q.sc_map[a];
+      if(axis === 0) scores.p += val;
+      else scores.c += val;
+    } else if(q.ax === 'mix') {
+      const [axis, pv, cv] = q.sc_map[a];
+      if(axis === 0) scores.p += pv;
+      else scores.p -= Math.abs(pv);
+      scores.c += cv;
+    } else if(q.ax === 'mix2') {
+      forcedJob = q.sc_map[a];
+    }
+  });
+
+  setTimeout(showResult, 2000);
+}
+
+function getJobKey(){
+  if(forcedJob) return forcedJob;
+  const isP = scores.p >= 0;
+  const isC = scores.c >= 0;
+  const isG = scores.g >= 0;
+  if(isP && isC && isG) return "어사";
+  if(isP && isC && !isG) return "의원";
+  if(isP && !isC && isG) return "협객";
+  if(isP && !isC && !isG) return "서생";
+  if(!isP && isC && isG) return "장군";
+  if(!isP && isC && !isG) return "대감";
+  if(!isP && !isC && isG) return "거상";
+  return "선비";
 }
 
 function showResult(){
   document.getElementById('loadingWrap').style.display='none';
 
-  const maxV=10;
-  const progPct=Math.round(((scores.p+maxV)/(maxV*2))*100);
-  const commPct=Math.round(((scores.c+maxV)/(maxV*2))*100);
-  const isP=scores.p>=0, isC=scores.c>=0;
-  const typeKey=(isP?'P':'C')+(isC?'C':'I');
-  const T=TYPES[typeKey];
+  const jobKey = getJobKey();
+  const J = JOBS[jobKey];
 
-  const svgX=Math.min(Math.max(Math.round(260*(1-(progPct/100))),16),244);
-  const svgY=Math.min(Math.max(Math.round(260*(commPct/100)),16),244);
-  document.getElementById('rDot').setAttribute('cx',svgX);
-  document.getElementById('rDot').setAttribute('cy',svgY);
-  document.getElementById('rDot').setAttribute('fill',T.dotColor);
-  document.getElementById('rDotPulse').setAttribute('cx',svgX);
-  document.getElementById('rDotPulse').setAttribute('cy',svgY);
-  document.getElementById('rDotPulse').setAttribute('stroke',T.dotColor);
-  document.getElementById('rDotPulse').setAttribute('opacity','1');
-  document.getElementById('rDotLbl').setAttribute('x',svgX);
-  document.getElementById('rDotLbl').setAttribute('y',svgY-12);
+  document.getElementById('rhChar').textContent = J.emoji;
+  document.getElementById('rhJob').textContent = J.job;
+  document.getElementById('rhSub').textContent = J.sub;
+  document.getElementById('rhQuote').textContent = J.quote;
 
-  const tc=document.getElementById('typeCard');
-  tc.style.background=T.bg; tc.style.border='1px solid '+T.border;
-  const badge=document.getElementById('tcBadge');
-  badge.textContent=T.badge; badge.style.color=T.badgeColor;
-  const nm=document.getElementById('tcName');
-  nm.textContent=T.name; nm.style.color=T.nameColor;
-  const ds=document.getElementById('tcDesc');
-  ds.textContent=T.desc; ds.style.color=T.descColor;
+  const tr = document.getElementById('traitRow');
+  tr.innerHTML = '';
+  J.traits.forEach(t => {
+    const p = document.createElement('div');
+    p.className = 'trait-pill';
+    p.textContent = t;
+    tr.appendChild(p);
+  });
 
-  document.getElementById('sProgressive').textContent=isP?progPct+'%':(100-progPct)+'%';
-  document.getElementById('sCommunity').textContent=isC?commPct+'%':(100-commPct)+'%';
-  document.getElementById('sMatch').textContent=MATCHES[Math.floor(Math.random()*MATCHES.length)];
+  const sb = document.getElementById('statBars');
+  sb.innerHTML = '';
+  J.bars.forEach(b => {
+    const row = document.createElement('div');
+    row.className = 'sbar-row';
+    row.innerHTML = `
+      <div class="sbar-label">${b.l}</div>
+      <div class="sbar-track"><div class="sbar-fill" style="width:0%;background:${b.c}" data-val="${b.v}"></div></div>
+      <div class="sbar-pct">${b.v}%</div>
+    `;
+    sb.appendChild(row);
+  });
 
-  const tl=document.getElementById('topicList');
-  tl.innerHTML='';
-  T.topics.forEach(([title,badge])=>{
-    const d=document.createElement('div');
-    d.className='ts-item';
-    d.innerHTML=`<span>${title}</span><span class="ts-badge badge-${badge}">${badge==='hot'?'인기':'추천'}</span>`;
+  const rr = document.getElementById('rivalRow');
+  rr.innerHTML = `
+    <div class="rival-card">
+      <span class="rc-emoji">${J.ally.emoji}</span>
+      <div class="rc-name">${J.ally.name}</div>
+      <div class="rc-rel">${J.ally.rel}</div>
+    </div>
+    <div class="rival-card">
+      <span class="rc-emoji">${J.rival.emoji}</span>
+      <div class="rc-name">${J.rival.name}</div>
+      <div class="rc-rel">${J.rival.rel}</div>
+    </div>
+  `;
+
+  const tl = document.getElementById('topicList');
+  tl.innerHTML = '';
+  J.topics.forEach(([title, badge]) => {
+    const d = document.createElement('div');
+    d.className = 'ts-item';
+    d.innerHTML = `<span>${title}</span><span class="ts-badge badge-${badge}">${badge==='hot'?'인기':'추천'}</span>`;
     tl.appendChild(d);
   });
 
-  const resultParam=btoa(encodeURIComponent(JSON.stringify({type:typeKey,p:progPct,c:commPct,x:svgX,y:svgY})));
-  const shareURL=window.location.href.split('?')[0]+'?r='+resultParam;
-  document.getElementById('shareLinkText').textContent=shareURL;
-  window._shareURL=shareURL;
-  window._shareType=T.name;
+  const resultParam = btoa(encodeURIComponent(JSON.stringify({job: jobKey})));
+  const shareURL = window.location.href.split('?')[0] + '?r=' + resultParam;
+  document.getElementById('shareLinkText').textContent = shareURL;
+  window._shareURL = shareURL;
+  window._shareJob = J.job;
+  window._shareEmoji = J.emoji;
 
-  document.getElementById('resultWrap').style.display='block';
+  document.getElementById('resultWrap').style.display = 'block';
+
+  setTimeout(() => {
+    document.querySelectorAll('.sbar-fill').forEach(el => {
+      el.style.transition = 'width 1s ease';
+      el.style.width = el.dataset.val + '%';
+    });
+  }, 200);
 
   if(window.location.search.includes('?r=')){
-    const banner=document.getElementById('sharedBanner');
-    banner.style.display='flex';
-    banner.style.marginTop='16px';
-    document.getElementById('sharedText').textContent='친구가 공유한 결과예요. 나도 테스트해볼까요?';
+    const b = document.getElementById('sharedBanner');
+    b.style.display = 'flex';
   }
 }
 
 function copyLink(){
-  const url=window._shareURL||window.location.href;
+  const url = window._shareURL || window.location.href;
   if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(()=>{
-      const btn=document.getElementById('copyBtn');
-      btn.textContent='복사됨'; btn.classList.add('copied');
-      setTimeout(()=>{btn.textContent='복사';btn.classList.remove('copied');},2000);
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '복사됨'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
     });
   } else {
-    const el=document.createElement('textarea');
-    el.value=url; document.body.appendChild(el);
-    el.select(); document.execCommand('copy');
-    document.body.removeChild(el);
-    const btn=document.getElementById('copyBtn');
-    btn.textContent='복사됨'; btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='복사';btn.classList.remove('copied');},2000);
-  }
-}
-
-function shareNative(){
-  const url=window._shareURL||window.location.href;
-  const type=window._shareType||'정치 성향';
-  if(navigator.share){
-    navigator.share({title:'나의 정치 성향 지도 — VRSUS',text:`나는 "${type}" 유형이래요! 당신의 정치 성향도 확인해보세요.`,url:url});
-  } else {
-    copyLink();
-    alert('링크가 복사되었습니다. 원하는 곳에 붙여넣기 하세요!');
+    const el = document.createElement('textarea');
+    el.value = url; document.body.appendChild(el);
+    el.select(); document.execCommand('copy'); document.body.removeChild(el);
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '복사됨'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
   }
 }
 
 function shareKakao(){
-  const url=window._shareURL||window.location.href;
-  const type=window._shareType||'정치 성향';
-  const kakaoURL='https://story.kakao.com/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent('나는 VRSUS에서 "'+type+'" 유형이 나왔어요! 당신의 정치 성향도 확인해보세요.');
-  window.open(kakaoURL,'_blank','width=560,height=600');
+  const url = window._shareURL || window.location.href;
+  const job = window._shareJob || '조선의 인물';
+  const emoji = window._shareEmoji || '📜';
+  const kakaoURL = 'https://story.kakao.com/share?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(emoji + ' 나는 VRSUS에서 "' + job + '" 유형이 나왔어요! 당신은 조선의 어떤 인물인가요?');
+  window.open(kakaoURL, '_blank', 'width=560,height=600');
+}
+
+function shareNative(){
+  const url = window._shareURL || window.location.href;
+  const job = window._shareJob || '조선의 인물';
+  const emoji = window._shareEmoji || '📜';
+  if(navigator.share){
+    navigator.share({
+      title: '나는 조선의 어떤 인물? — VRSUS',
+      text: emoji + ' 나는 "' + job + '" 유형이래요! 당신은요?',
+      url: url
+    });
+  } else {
+    copyLink();
+    alert('링크가 복사되었습니다!');
+  }
 }
 
 function restart(){
-  cur=0;ans=[];scores={p:0,c:0};
-  document.getElementById('resultWrap').style.display='none';
-  document.getElementById('introWrap').style.display='block';
+  cur = 0; ans = []; scores = {p:0,c:0,g:0}; forcedJob = null;
+  document.getElementById('resultWrap').style.display = 'none';
+  document.getElementById('introWrap').style.display = 'block';
 }
 
-// URL에 결과 파라미터가 있으면 바로 결과 표시
 (function(){
-  const params=new URLSearchParams(window.location.search);
-  const r=params.get('r');
+  const params = new URLSearchParams(window.location.search);
+  const r = params.get('r');
   if(r){
     try{
-      const data=JSON.parse(decodeURIComponent(atob(r)));
-      const T=TYPES[data.type];
-      if(!T) return;
-      document.getElementById('introWrap').style.display='none';
-      scores={p:data.p>=50?data.p-50:(50-data.p)*-1, c:data.c>=50?data.c-50:(50-data.c)*-1};
-      setTimeout(()=>{
-        document.getElementById('loadingWrap').style.display='block';
-        setTimeout(showResult,800);
-      },100);
-    }catch(e){}
+      const data = JSON.parse(decodeURIComponent(atob(r)));
+      if(data.job && JOBS[data.job]){
+        document.getElementById('introWrap').style.display = 'none';
+        document.getElementById('loadingWrap').style.display = 'block';
+        forcedJob = data.job;
+        setTimeout(showResult, 1000);
+      }
+    } catch(e){}
   }
 })();
 </script>
