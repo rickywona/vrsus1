@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta property="og:title" content="나는 어떤 식물일까? — 생각의 숲 출산육아 편">
+<meta property="og:description" content="10개의 질문으로 출산육아 정책에 대한 나의 세계관을 알아보세요. 해바라기? 민들레? 대나무?">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<title>나는 어떤 식물일까? — 생각의 숲</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green-deep:#1A3D1A;
+  --green-mid:#2D6A2D;
+  --green-light:#4A9B4A;
+  --green-pale:#E8F5E8;
+  --green-mist:#F2FAF2;
+  --gold:#8B6914;
+  --gold-light:#C8A84B;
+  --cream:#FBF8F3;
+  --cream2:#F5EFE4;
+  --ink:#1C1C1A;
+  --ink2:#3D3D38;
+  --ink3:#6B6B60;
+  --border:#DDD5C0;
+  --border2:#EDE7D5;
+}
+html{background:#1A2F1A;min-height:100%}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background:linear-gradient(180deg,#1A2F1A 0%,#0F1F0F 100%);
+  min-height:100vh;
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:1.5rem 1rem 5rem;
+}
+.card{
+  width:100%;max-width:460px;
+  background:var(--cream);
+  border-radius:6px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  position:relative;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 200px 100px at 20% 0%,rgba(74,155,74,0.06) 0%,transparent 70%),
+    radial-gradient(ellipse 200px 100px at 80% 100%,rgba(74,155,74,0.04) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* 헤더 */
+.top-bar{
+  background:var(--green-deep);
+  padding:14px 20px 12px;
+  position:relative;z-index:1;
+  border-bottom:2px solid var(--gold);
+}
+.tb-inner{display:flex;align-items:center;justify-content:space-between}
+.brand-wrap{display:flex;flex-direction:column}
+.brand{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:600;color:#E8F5E8;letter-spacing:0.06em}
+.brand-en{font-size:9px;color:rgba(200,230,200,0.45);letter-spacing:0.18em;margin-top:1px}
+.tb-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(200,168,75,0.2);color:var(--gold-light);
+  border:1px solid rgba(200,168,75,0.35);
+  font-size:10px;font-weight:500;padding:4px 10px;
+  border-radius:20px;letter-spacing:0.08em;
+}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:var(--gold-light);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* 인트로 */
+.intro{padding:26px 24px 22px;position:relative;z-index:1;text-align:center}
+.into-leaf{font-size:36px;margin-bottom:14px;display:block;animation:sway 4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.intro-deco{
+  font-family:'Noto Serif KR',serif;
+  font-size:10px;color:var(--green-mid);
+  letter-spacing:0.3em;margin-bottom:12px;
+}
+.intro-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:20px;font-weight:600;
+  color:var(--ink);line-height:1.5;margin-bottom:8px;
+}
+.intro-desc{font-size:13px;color:var(--ink3);line-height:1.8;margin-bottom:18px}
+.intro-meta{
+  display:flex;justify-content:center;gap:16px;
+  margin-bottom:20px;padding:10px 0;
+  border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);
+}
+.im{font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:4px}
+.im-dot{width:4px;height:4px;border-radius:50%;background:var(--green-light)}
+
+/* 식물 프리뷰 */
+.plant-preview{
+  display:flex;justify-content:center;gap:4px;
+  margin-bottom:20px;flex-wrap:wrap;padding:0 4px;
+}
+.pp-item{text-align:center;width:48px}
+.pp-emoji{font-size:26px;display:block;margin-bottom:2px}
+.pp-name{font-size:9px;color:var(--ink3)}
+
+.start-btn{
+  width:100%;padding:13px;
+  background:var(--green-deep);color:#E8F5E8;
+  border:1.5px solid var(--gold);border-radius:4px;
+  font-family:'Noto Serif KR',serif;
+  font-size:15px;font-weight:500;cursor:pointer;
+  letter-spacing:0.08em;transition:all .15s;
+}
+.start-btn:hover{background:var(--green-mid)}
+
+/* 진행바 */
+.prog-wrap{padding:12px 20px 0;position:relative;z-index:1}
+.prog-bg{height:3px;background:var(--border2);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--green-light);border-radius:2px;transition:width .4s ease}
+.prog-label{font-size:11px;color:var(--ink3);margin-top:5px;text-align:right;font-family:'Noto Serif KR',serif}
+
+/* 질문 */
+.q-body{padding:20px 24px 12px;position:relative;z-index:1}
+.q-num{
+  font-family:'Noto Serif KR',serif;
+  font-size:10px;font-weight:500;color:var(--green-mid);
+  letter-spacing:0.2em;margin-bottom:8px;
+}
+.q-text{
+  font-family:'Noto Serif KR',serif;
+  font-size:15px;font-weight:500;
+  color:var(--ink);line-height:1.7;margin-bottom:16px;
+  white-space:pre-line;
+}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{
+  width:100%;padding:11px 14px;
+  border:1px solid var(--border2);border-radius:4px;
+  background:rgba(255,255,255,0.6);
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:13px;color:var(--ink2);
+  text-align:left;cursor:pointer;
+  transition:all .15s;line-height:1.5;
+}
+.opt:hover{background:rgba(74,155,74,0.08);border-color:var(--green-light)}
+.opt.sel{background:rgba(45,106,45,0.1);border-color:var(--green-mid);color:var(--ink)}
+.nav-row{
+  padding:8px 24px 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:1;
+}
+.back-btn{font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Noto Serif KR',serif}
+.back-btn:hover{color:var(--ink)}
+
+/* 로딩 */
+.loading{padding:52px 24px;text-align:center;display:none;position:relative;z-index:1}
+.loading-emoji{font-size:48px;margin-bottom:14px;animation:grow 2s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.loading p{font-family:'Noto Serif KR',serif;font-size:14px;color:var(--ink3);line-height:1.8}
+
+/* 결과 */
+.result{display:none;position:relative;z-index:1}
+
+.result-hero{padding:26px 24px 0;text-align:center}
+.rh-label{
+  font-family:'Noto Serif KR',serif;
+  font-size:10px;color:var(--green-mid);
+  letter-spacing:0.26em;margin-bottom:12px;
+}
+.rh-plant{font-size:80px;display:block;margin-bottom:6px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.rh-sentence{
+  font-family:'Noto Serif KR',serif;
+  font-size:20px;font-weight:600;
+  color:var(--ink);margin-bottom:4px;line-height:1.4;
+}
+.rh-type{font-size:11px;color:var(--ink3);letter-spacing:0.14em;margin-bottom:14px}
+.rh-quote{
+  font-family:'Noto Serif KR',serif;
+  font-size:13px;color:var(--green-deep);
+  line-height:1.85;padding:13px 16px;
+  background:var(--green-pale);
+  border-left:3px solid var(--green-light);
+  border-radius:0 4px 4px 0;text-align:left;
+  margin-bottom:14px;font-style:italic;
+}
+.rh-desc{
+  font-size:13px;color:var(--ink2);
+  line-height:1.85;padding:13px 16px;
+  background:rgba(255,255,255,0.7);
+  border:1px solid var(--border2);
+  border-radius:4px;text-align:left;
+  margin-bottom:14px;
+}
+
+/* 성향 축 */
+.axis-section{margin:0 24px 12px;border:1px solid var(--border2);border-radius:4px;overflow:hidden}
+.axis-head{
+  background:var(--cream2);padding:8px 14px;
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.14em;border-bottom:1px solid var(--border2);
+}
+.axis-bars{padding:14px 14px;display:flex;flex-direction:column;gap:12px}
+.abar{display:flex;flex-direction:column;gap:5px}
+.abar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3)}
+.abar-track{
+  height:10px;background:var(--border2);border-radius:5px;
+  overflow:visible;position:relative;
+}
+.abar-fill-left{
+  position:absolute;left:0;top:0;height:100%;
+  border-radius:5px 0 0 5px;transition:width 1.2s ease;
+}
+.abar-fill-right{
+  position:absolute;right:0;top:0;height:100%;
+  border-radius:0 5px 5px 0;transition:width 1.2s ease;
+}
+.abar-marker{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  width:16px;height:16px;border-radius:50%;
+  background:#fff;border:2px solid;
+  transition:left 1.2s ease;z-index:2;
+}
+
+/* 숲 속 다른 식물들 */
+.forest-section{margin:0 24px 12px;border:1px solid var(--border2);border-radius:4px;overflow:hidden}
+.fs-head{
+  background:var(--cream2);padding:8px 14px;
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.14em;border-bottom:1px solid var(--border2);
+}
+.fs-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.fs-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:8px 10px;background:rgba(255,255,255,0.5);
+  border:1px solid var(--border2);border-radius:4px;
+}
+.fs-emoji{font-size:22px;flex-shrink:0}
+.fs-text{}
+.fs-name{font-size:12px;font-weight:500;color:var(--ink);font-family:'Noto Serif KR',serif}
+.fs-view{font-size:11px;color:var(--ink3);margin-top:2px;line-height:1.5}
+
+/* 토론 추천 */
+.topics-section{margin:0 24px 12px;border:1px solid var(--border2);border-radius:4px;overflow:hidden}
+.ts-head{
+  background:var(--cream2);padding:8px 14px;
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.14em;border-bottom:1px solid var(--border2);
+}
+.ts-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-top:1px solid var(--border2);
+  font-size:13px;color:var(--ink);
+}
+.ts-item:first-child{border-top:none}
+.ts-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.badge-hot{background:#FAE8E8;color:#7A1A1A}
+.badge-fit{background:#E8F0E8;color:#1A4A1A}
+
+/* 공유 */
+.share-section{padding:0 24px 28px}
+.share-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.2em;margin-bottom:10px;text-align:center;
+}
+.share-link-wrap{
+  display:flex;align-items:center;gap:8px;
+  background:var(--cream2);border:1px solid var(--border2);
+  border-radius:4px;padding:9px 12px;margin-bottom:10px;
+}
+.share-link-text{flex:1;font-size:11px;color:var(--ink3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
+.copy-btn{
+  flex-shrink:0;padding:5px 10px;
+  background:var(--green-deep);color:#E8F5E8;
+  border:none;border-radius:3px;
+  font-size:11px;font-weight:500;
+  font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s;
+}
+.copy-btn:hover{background:var(--green-mid)}
+.copy-btn.copied{background:#4A9B4A}
+.share-btns{display:flex;flex-direction:column;gap:7px}
+.btn-kakao{
+  width:100%;padding:12px;background:#FEE500;color:#1A1A1A;
+  border:none;border-radius:4px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:14px;font-weight:500;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-kakao:hover{background:#F5DB00}
+.btn-native{
+  width:100%;padding:11px;
+  background:rgba(255,255,255,0.6);color:var(--ink);
+  border:1px solid var(--border);border-radius:4px;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer;
+}
+.btn-native:hover{background:var(--cream2)}
+.btn-retry{
+  width:100%;padding:10px;background:transparent;color:var(--ink3);
+  border:none;font-family:'Noto Serif KR',serif;font-size:13px;cursor:pointer;margin-top:2px;
+}
+.btn-retry:hover{color:var(--ink)}
+.shared-banner{
+  margin:0 24px 12px;background:#E8F5E8;border:1px solid #9FE1CB;
+  border-radius:4px;padding:9px 12px;font-size:12px;color:#085041;
+  display:none;align-items:center;gap:6px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top-bar">
+    <div class="tb-inner">
+      <div class="brand-wrap">
+        <div class="brand">생각의 숲</div>
+        <div class="brand-en">Forest of Thoughts</div>
+      </div>
+      <div class="tb-badge">
+        <div class="badge-dot"></div>
+        가정의 달 특집
+      </div>
+    </div>
+  </div>
+
+  <!-- 인트로 -->
+  <div class="intro" id="introWrap">
+    <span class="into-leaf">🌿</span>
+    <div class="intro-deco">⊱ 세계관 탐험 ⊰</div>
+    <div class="intro-title">나는 어떤 식물일까?<br>출산육아 정책 편</div>
+    <div class="intro-desc">
+      10개의 질문을 지나며<br>
+      출산육아 정책에 대한 나의 세계관이<br>
+      어떤 식물로 피어나는지 알아보세요.
+    </div>
+    <div class="intro-meta">
+      <div class="im"><div class="im-dot"></div>약 2분 소요</div>
+      <div class="im"><div class="im-dot"></div>10개 질문</div>
+      <div class="im"><div class="im-dot"></div>8가지 식물</div>
+    </div>
+    <div class="plant-preview">
+      <div class="pp-item"><span class="pp-emoji">🌻</span><div class="pp-name">해바라기</div></div>
+      <div class="pp-item"><span class="pp-emoji">🌾</span><div class="pp-name">벼</div></div>
+      <div class="pp-item"><span class="pp-emoji">🌸</span><div class="pp-name">온실난초</div></div>
+      <div class="pp-item"><span class="pp-emoji">🌳</span><div class="pp-name">사과나무</div></div>
+      <div class="pp-item"><span class="pp-emoji">🌷</span><div class="pp-name">튤립</div></div>
+      <div class="pp-item"><span class="pp-emoji">🪴</span><div class="pp-name">다육식물</div></div>
+      <div class="pp-item"><span class="pp-emoji">🌼</span><div class="pp-name">민들레</div></div>
+      <div class="pp-item"><span class="pp-emoji">🎋</span><div class="pp-name">대나무</div></div>
+    </div>
+    <button class="start-btn" onclick="startTest()">숲으로 들어가기</button>
+  </div>
+
+  <!-- 진행바 -->
+  <div class="prog-wrap" id="progWrap" style="display:none">
+    <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:5%"></div></div>
+    <div class="prog-label" id="progLabel">1 / 10</div>
+  </div>
+
+  <!-- 질문 -->
+  <div class="q-body" id="qBody" style="display:none">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText"></div>
+    <div class="opts" id="optsWrap"></div>
+  </div>
+  <div class="nav-row" id="navRow" style="display:none">
+    <button class="back-btn" id="backBtn" onclick="goBack()">← 이전</button>
+    <span></span>
+  </div>
+
+  <!-- 로딩 -->
+  <div class="loading" id="loadingWrap">
+    <div class="loading-emoji">🌱</div>
+    <p>숲 속에서<br>당신의 씨앗이 자라나고 있습니다...</p>
+  </div>
+
+  <!-- 결과 -->
+  <div class="result" id="resultWrap">
+    <div class="result-hero">
+      <div class="rh-label">당신의 씨앗은</div>
+      <span class="rh-plant" id="rhPlant"></span>
+      <div class="rh-sentence" id="rhSentence"></div>
+      <div class="rh-type" id="rhType"></div>
+      <div class="rh-quote" id="rhQuote"></div>
+      <div class="rh-desc" id="rhDesc"></div>
+    </div>
+
+    <div class="axis-section">
+      <div class="axis-head">나의 세계관 좌표</div>
+      <div class="axis-bars" id="axisBars"></div>
+    </div>
+
+    <div class="forest-section">
+      <div class="fs-head">같은 숲의 다른 식물들</div>
+      <div class="fs-body" id="forestBody"></div>
+    </div>
+
+    <div class="topics-section">
+      <div class="ts-head">생각의 숲 — 이런 현안은 어떻게 생각하세요?</div>
+      <div id="topicList"></div>
+    </div>
+
+    <div class="shared-banner" id="sharedBanner">
+      <span>🌿</span>
+      <span>친구가 공유한 결과예요. 당신은 어떤 식물인가요?</span>
+    </div>
+
+    <div class="share-section">
+      <div class="share-title">— 나의 식물 공유하기 —</div>
+      <div class="share-link-wrap">
+        <span class="share-link-text" id="shareLinkText"></span>
+        <button class="copy-btn" id="copyBtn" onclick="copyLink()">복사</button>
+      </div>
+      <div class="share-btns">
+        <button class="btn-kakao" onclick="shareKakao()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.82 5.47 4.58 6.96L5.5 21l4.13-2.16A11.6 11.6 0 0012 19.5c5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>
+          카카오톡으로 공유하기
+        </button>
+        <button class="btn-native" onclick="shareNative()">🔗 링크 공유하기</button>
+        <button class="btn-retry" onclick="restart()">다시 탐험하기</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const QS = [
+  {
+    t:"정부가 출산 장려금을\n첫째 200만 원 → 둘째 500만 원 → 셋째 1,000만 원으로 올렸다.\n나는?",
+    opts:[
+      "잘됐다. 현금이 가장 직접적인 동기부여다",
+      "나쁘지 않지만 그것만으론 부족하다. 병행 정책이 필요하다",
+      "돈으로 출산을 유도하는 건 근본 해결이 아니다",
+      "국가가 출산에 개입하는 것 자체가 불편하다"
+    ],
+    state:[2,1,-1,-2], money:[2,1,-1,-2]
+  },
+  {
+    t:'친구가 말한다.\n"우리 회사 육아휴직, 눈치 때문에 못 쓰겠어."\n나는?',
+    opts:[
+      "법으로 강제해야 한다. 못 쓰게 하는 기업엔 벌금을",
+      "기업 문화가 바뀌어야 한다. 정부가 캠페인이라도 해야",
+      "결국 개인이 회사를 잘 골라야 한다",
+      "육아휴직 대신 현금 보상을 선택할 수 있게 해주면 된다"
+    ],
+    state:[2,1,-1,0], money:[-1,-1,0,2]
+  },
+  {
+    t:"국공립 어린이집 대기가 2년이다.\n해결책으로 가장 공감되는 건?",
+    opts:[
+      "국가가 공보육 시설을 대폭 확충해야 한다",
+      "민간 어린이집에 보조금을 줘서 질을 높여야 한다",
+      "부모가 직접 돌볼 수 있도록 양육수당을 올려야 한다",
+      "어린이집 시장을 자유화하면 공급이 늘어날 것이다"
+    ],
+    state:[2,1,-1,-2], money:[-2,0,2,0]
+  },
+  {
+    t:'뉴스 헤드라인:\n"스웨덴, 부모 모두 육아휴직 의무화로 출산율 반등."\n내 생각은?',
+    opts:[
+      "한국도 당장 도입해야 한다. 제도가 문화를 바꾼다",
+      "좋은 사례지만 한국 기업 현실과는 다르다",
+      "의무화보다 인센티브로 자발적 참여를 유도해야 한다",
+      "출산은 개인 결정이다. 의무화는 과도한 개입이다"
+    ],
+    state:[2,1,-1,-2], money:[-1,-1,0,0]
+  },
+  {
+    t:"아이 한 명당 월 100만 원 아동수당을\n18세까지 지급하는 정책이 발표됐다.\n나는?",
+    opts:[
+      "적극 찬성이다. 경제적 부담이 출산의 가장 큰 걸림돌이다",
+      "좋지만 소득 기준을 두어 필요한 가정에 집중해야 한다",
+      "현금보다 교육·의료 인프라에 투자하는 게 낫다",
+      "세금 낭비다. 낳고 싶은 사람은 알아서 낳는다"
+    ],
+    state:[2,1,0,-2], money:[2,1,-2,-1]
+  },
+  {
+    t:'직장인 부부가 말한다.\n"집값이 해결되지 않으면 아이 낳을 생각이 없어요."\n나는?',
+    opts:[
+      "출산 가구 공공주택 우선 공급, 당연히 해야 한다",
+      "주거 지원이 출산율에 실질적으로 영향을 줄 것이다",
+      "집값은 부동산 정책 문제지 출산 정책과는 별개다",
+      "주거보다 양육비 직접 지원이 더 효과적이다"
+    ],
+    state:[2,1,-1,0], money:[-1,0,0,2]
+  },
+  {
+    t:"기업에 출산장려 세액공제를 주는 대신\n육아친화 환경 조성을 의무화하는 법안이 추진된다.\n나는?",
+    opts:[
+      "찬성이다. 기업도 사회적 책임을 져야 한다",
+      "당근과 채찍을 동시에 주는 합리적인 방식이다",
+      "기업 자율에 맡기되 우수기업에 혜택을 주면 된다",
+      "기업 부담이 늘면 오히려 고용이 줄어들 수 있다"
+    ],
+    state:[2,1,-1,-2], money:[-1,0,0,0]
+  },
+  {
+    t:'SNS에서 논쟁이 뜨겁다.\n"출산율 올리려면 결국 돈이냐, 문화냐?"\n내 입장은?',
+    opts:[
+      "돈이다. 경제적 불안이 해결되면 낳는다",
+      "둘 다 필요하다. 하지만 문화 변화가 더 근본적이다",
+      "문화다. 아무리 돈 줘도 인식이 안 바뀌면 소용없다",
+      "사실 둘 다 소용없다. 출산은 완전히 개인 선택의 영역이다"
+    ],
+    state:[1,1,0,-2], money:[2,0,-2,-1]
+  },
+  {
+    t:'정부가 "출산율 목표 1.5명"을\n국가 핵심 과제로 선언했다. 나는?',
+    opts:[
+      "당연히 국가가 나서야 한다. 인구는 국가 생존의 문제다",
+      "목표 설정은 좋지만 실행 방법이 중요하다",
+      "목표 수치보다 개인이 행복하게 선택할 환경이 먼저다",
+      "출산율을 국가 목표로 삼는 것 자체가 압박이 될 수 있다"
+    ],
+    state:[2,1,-1,-2], money:[0,0,0,0]
+  },
+  {
+    t:"가정의 달 특집 여론조사:\n\"저출생 해결, 정부가 지금 당장 해야 할\n가장 중요한 정책은?\"\n당신의 선택은?",
+    opts:[
+      "출산·양육 현금 지원 대폭 확대",
+      "공보육·돌봄 인프라 국가 책임 강화",
+      "육아휴직·유연근무 실질적 보장",
+      "출산은 개인 선택 — 환경만 만들고 강요는 하지 않는다"
+    ],
+    state:[2,2,1,-2], money:[2,-1,-1,-1]
+  }
+];
+
+const PLANTS = {
+  sunflower:{
+    emoji:"🌻",
+    sentence:"당신은 해바라기입니다",
+    type:"국가개입 · 금전지원",
+    quote:'"태양(국가)이 있어야 피어나듯, 강력한 현금 지원이 출산을 이끈다고 믿습니다."',
+    desc:"경제적 불안이 저출생의 핵심 원인이라고 봅니다. 출산장려금·아동수당 확대 등 직접적인 현금 지원을 국가가 책임져야 한다고 생각해요. 돈 문제가 해결되면 출산율은 자연스럽게 따라온다는 현실적 낙관론자입니다.",
+    stateDir:"state", moneyDir:"money",
+    stateVal:88, moneyVal:85,
+    neighbors:[
+      {emoji:"🌾",name:"벼",view:"같은 방향이지만 좀 더 신중한 편이에요"},
+      {emoji:"🌸",name:"온실 난초",view:"돈보다 인프라가 먼저라고 생각해요"}
+    ],
+    topics:[["출산·양육 현금 지원 확대 찬반","hot"],["아동수당 인상 필요성","hot"],["출산장려금 실효성","fit"]]
+  },
+  rice:{
+    emoji:"🌾",
+    sentence:"당신은 벼입니다",
+    type:"국가개입 · 금전지원 (온건)",
+    quote:'"국가가 논을 만들어야 자라듯, 현금 지원은 필요하되 체계적이고 실질적이어야 합니다."',
+    desc:"현금 지원의 필요성을 인정하지만 무조건적인 지급보다 소득 기준과 우선순위가 중요하다고 봐요. 출산장려금보다 아동수당·교육비처럼 실제로 쓰이는 지원이 더 효과적이라고 생각합니다.",
+    stateDir:"state", moneyDir:"money",
+    stateVal:75, moneyVal:72,
+    neighbors:[
+      {emoji:"🌻",name:"해바라기",view:"같은 방향이지만 좀 더 강경한 편이에요"},
+      {emoji:"🌳",name:"사과나무",view:"금전보다 인프라를 더 중시해요"}
+    ],
+    topics:[["아동수당 소득 기준 설정 찬반","hot"],["출산 지원 체계화 방안","fit"],["선별 복지 vs 보편 복지","fit"]]
+  },
+  orchid:{
+    emoji:"🌸",
+    sentence:"당신은 온실 난초입니다",
+    type:"국가개입 · 비금전지원",
+    quote:'"정교한 환경이 갖춰져야 피어나듯, 완벽한 보육 인프라가 먼저입니다."',
+    desc:"돈을 주기보다 공보육 확충, 육아휴직 의무화 등 제도적 인프라가 근본 해결책이라고 봐요. 국가가 적극 개입해 촘촘한 사회 안전망을 만들어야 안심하고 아이를 낳을 수 있다고 믿습니다.",
+    stateDir:"state", moneyDir:null,
+    stateVal:90, moneyVal:20,
+    neighbors:[
+      {emoji:"🌳",name:"사과나무",view:"같은 방향이지만 좀 더 온건해요"},
+      {emoji:"🌻",name:"해바라기",view:"인프라보다 현금이 더 직접적이라고 생각해요"}
+    ],
+    topics:[["공보육 국가 책임 강화","hot"],["육아휴직 의무화 찬반","hot"],["국공립 어린이집 확충","fit"]]
+  },
+  appletree:{
+    emoji:"🌳",
+    sentence:"당신은 사과나무입니다",
+    type:"국가개입 · 비금전지원 (온건)",
+    quote:'"좋은 토양이 있어야 열매 맺듯, 제도와 문화가 함께 바뀌어야 출산율이 오릅니다."',
+    desc:"육아휴직·유연근무·공보육 확대가 현금보다 장기적으로 효과적이라고 봐요. 단 국가가 강제하기보다 기업과 사회가 함께 바뀌도록 유도하는 방식을 선호합니다. 서두르지 않지만 방향은 분명한 타입이에요.",
+    stateDir:"state", moneyDir:null,
+    stateVal:72, moneyVal:22,
+    neighbors:[
+      {emoji:"🌸",name:"온실 난초",view:"같은 방향이지만 좀 더 강경해요"},
+      {emoji:"🌼",name:"민들레",view:"국가보다 사회 변화를 더 믿어요"}
+    ],
+    topics:[["육아휴직 사용률 개선 방안","hot"],["일·가정 양립 제도 강화","fit"],["기업 육아지원 의무화","fit"]]
+  },
+  tulip:{
+    emoji:"🌷",
+    sentence:"당신은 튤립입니다",
+    type:"개인선택 · 금전지원",
+    quote:'"구근(돈)만 있으면 어디서든 피어나듯, 지원은 받되 선택은 내가 합니다."',
+    desc:"출산 여부는 철저히 개인의 선택이지만, 국가가 경제적 지원을 해주는 것은 당연하다고 생각해요. 국가 목표 수치 설정이나 강요 없이 현금·세금 혜택으로 선택을 돕는 방식을 선호합니다.",
+    stateDir:null, moneyDir:"money",
+    stateVal:20, moneyVal:82,
+    neighbors:[
+      {emoji:"🪴",name:"다육식물",view:"같은 방향이지만 좀 더 최소주의예요"},
+      {emoji:"🌸",name:"온실 난초",view:"개인 선택보다 국가 역할을 더 중시해요"}
+    ],
+    topics:[["출산 장려금 vs 개인 선택","hot"],["세금 혜택 활용 방안","fit"],["출산율 목표치 설정 찬반","fit"]]
+  },
+  succulent:{
+    emoji:"🪴",
+    sentence:"당신은 다육식물입니다",
+    type:"개인선택 · 금전지원 (최소)",
+    quote:'"척박해도 살지만 물은 주면 좋듯, 최소한의 지원이 있으면 고려해볼 수 있습니다."',
+    desc:"국가 적극 개입보다 세금 혜택, 양육비 일부 지원 정도면 충분하다고 봐요. 출산은 어디까지나 개인의 결정이고 국가는 최소한의 경제적 환경만 만들어주면 된다고 생각합니다.",
+    stateDir:null, moneyDir:"money",
+    stateVal:22, moneyVal:60,
+    neighbors:[
+      {emoji:"🌷",name:"튤립",view:"같은 방향이지만 지원을 더 원해요"},
+      {emoji:"🎋",name:"대나무",view:"금전보다 환경 변화를 더 중시해요"}
+    ],
+    topics:[["최소 국가 개입 원칙","hot"],["세금 혜택 실효성","fit"],["개인 선택 존중 vs 출산 장려","fit"]]
+  },
+  dandelion:{
+    emoji:"🌼",
+    sentence:"당신은 민들레입니다",
+    type:"개인선택 · 비금전지원",
+    quote:'"어디서든 스스로 피어나듯, 문화와 인식이 바뀌면 출산율은 자연스럽게 따라옵니다."',
+    desc:"현금을 아무리 줘도 일·가정 양립 문화, 성평등 인식이 바뀌지 않으면 소용없다고 봐요. 국가보다 사회와 기업이 자발적으로 변화해야 한다고 생각하는 개인주의적 환경론자입니다.",
+    stateDir:null, moneyDir:null,
+    stateVal:15, moneyVal:18,
+    neighbors:[
+      {emoji:"🎋",name:"대나무",view:"같은 방향이지만 좀 더 온건해요"},
+      {emoji:"🌳",name:"사과나무",view:"국가 역할을 좀 더 중시해요"}
+    ],
+    topics:[["성평등 문화와 출산율 연관성","hot"],["기업 문화 변화 vs 법적 강제","fit"],["일·가정 양립 사회 인식 개선","fit"]]
+  },
+  bamboo:{
+    emoji:"🎋",
+    sentence:"당신은 대나무입니다",
+    type:"개인선택 · 비금전지원 (온건)",
+    quote:'"환경만 맞으면 쑥쑥 자라듯, 삶의 조건이 갖춰지면 사람들은 스스로 선택합니다."',
+    desc:"유연근무, 주거 안정 등 삶의 기본 환경이 개선되면 출산은 자연스럽게 따라온다고 봐요. 강요나 현금 유인 없이도 개인이 합리적으로 선택할 수 있는 사회를 만드는 것이 핵심이라고 생각합니다.",
+    stateDir:null, moneyDir:null,
+    stateVal:18, moneyVal:30,
+    neighbors:[
+      {emoji:"🌼",name:"민들레",view:"같은 방향이지만 좀 더 강경해요"},
+      {emoji:"🪴",name:"다육식물",view:"환경보다 소액 지원을 더 선호해요"}
+    ],
+    topics:[["주거 안정과 출산율 연관성","hot"],["유연근무제 확대","fit"],["출산 강요 없는 환경 조성","fit"]]
+  }
+};
+
+let cur=0, ans=[], scores={state:0, money:0};
+
+function startTest(){
+  document.getElementById('introWrap').style.display='none';
+  document.getElementById('progWrap').style.display='block';
+  document.getElementById('qBody').style.display='block';
+  document.getElementById('navRow').style.display='flex';
+  renderQ();
+}
+
+function renderQ(){
+  const q=QS[cur];
+  document.getElementById('qNum').textContent='Q'+(cur+1);
+  document.getElementById('qText').textContent=q.t;
+  const pct=Math.max(Math.round((cur/QS.length)*100),4);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progLabel').textContent=(cur+1)+' / '+QS.length;
+  document.getElementById('backBtn').style.visibility=cur===0?'hidden':'visible';
+  const wrap=document.getElementById('optsWrap');
+  wrap.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(ans[cur]===i?' sel':'');
+    b.textContent=o;
+    b.onclick=()=>pick(i);
+    wrap.appendChild(b);
+  });
+}
+
+function pick(i){
+  ans[cur]=i;
+  document.querySelectorAll('.opt').forEach((b,j)=>b.classList.toggle('sel',j===i));
+  setTimeout(()=>{cur++;if(cur>=QS.length)doAnalyze();else renderQ();},280);
+}
+
+function goBack(){if(cur>0){cur--;renderQ();}}
+
+function doAnalyze(){
+  document.getElementById('qBody').style.display='none';
+  document.getElementById('navRow').style.display='none';
+  document.getElementById('progWrap').style.display='none';
+  document.getElementById('loadingWrap').style.display='block';
+  scores={state:0,money:0};
+  ans.forEach((a,i)=>{
+    scores.state+=QS[i].state[a];
+    scores.money+=QS[i].money[a];
+  });
+  setTimeout(showResult,2200);
+}
+
+function getPlantKey(){
+  const isState=scores.state>=0;
+  const isMoney=scores.money>=0;
+  const stateStrong=Math.abs(scores.state)>=8;
+  const moneyStrong=Math.abs(scores.money)>=6;
+  if(isState&&isMoney&&stateStrong&&moneyStrong)return'sunflower';
+  if(isState&&isMoney&&!moneyStrong)return'rice';
+  if(isState&&isMoney)return'sunflower';
+  if(isState&&!isMoney&&stateStrong)return'orchid';
+  if(isState&&!isMoney)return'appletree';
+  if(!isState&&isMoney&&moneyStrong)return'tulip';
+  if(!isState&&isMoney)return'succulent';
+  if(!isState&&!isMoney&&Math.abs(scores.state)>=6)return'dandelion';
+  return'bamboo';
+}
+
+function showResult(){
+  document.getElementById('loadingWrap').style.display='none';
+  const pk=getPlantKey();
+  const P=PLANTS[pk];
+
+  document.getElementById('rhPlant').textContent=P.emoji;
+  document.getElementById('rhSentence').textContent=P.sentence;
+  document.getElementById('rhType').textContent=P.type;
+  document.getElementById('rhQuote').textContent=P.quote;
+  document.getElementById('rhDesc').textContent=P.desc;
+
+  const stateScore=Math.min(Math.max(Math.round(((scores.state+20)/40)*100),5),95);
+  const moneyScore=Math.min(Math.max(Math.round(((scores.money+20)/40)*100),5),95);
+
+  document.getElementById('axisBars').innerHTML=`
+    <div class="abar">
+      <div class="abar-labels">
+        <span style="color:#2D6A2D">국가 개입</span>
+        <span style="color:#6B4A1A">개인 선택</span>
+      </div>
+      <div class="abar-track" style="background:#E8F0E8">
+        <div class="abar-fill-left" style="width:${stateScore}%;background:#4A9B4A;opacity:0.35"></div>
+        <div class="abar-marker" style="left:${stateScore}%;border-color:#2D6A2D"></div>
+      </div>
+    </div>
+    <div class="abar">
+      <div class="abar-labels">
+        <span style="color:#8B4A1A">금전 지원</span>
+        <span style="color:#1A5A4A">비금전 지원</span>
+      </div>
+      <div class="abar-track" style="background:#F0EDE8">
+        <div class="abar-fill-left" style="width:${moneyScore}%;background:#C8A84B;opacity:0.35"></div>
+        <div class="abar-marker" style="left:${moneyScore}%;border-color:#8B6914"></div>
+      </div>
+    </div>
+  `;
+
+  const fb=document.getElementById('forestBody');
+  fb.innerHTML='';
+  P.neighbors.forEach(n=>{
+    const d=document.createElement('div');
+    d.className='fs-item';
+    d.innerHTML=`<div class="fs-emoji">${n.emoji}</div><div class="fs-text"><div class="fs-name">${n.name}</div><div class="fs-view">${n.view}</div></div>`;
+    fb.appendChild(d);
+  });
+
+  const tl=document.getElementById('topicList');
+  tl.innerHTML='';
+  P.topics.forEach(([title,badge])=>{
+    const d=document.createElement('div');
+    d.className='ts-item';
+    d.innerHTML=`<span>${title}</span><span class="ts-badge badge-${badge}">${badge==='hot'?'🌿 주목':'✓ 추천'}</span>`;
+    tl.appendChild(d);
+  });
+
+  const rp=btoa(encodeURIComponent(JSON.stringify({plant:pk})));
+  const url=window.location.href.split('?')[0]+'?r='+rp;
+  document.getElementById('shareLinkText').textContent=url;
+  window._shareURL=url;
+  window._sharePlant=P.emoji+' '+P.sentence;
+
+  document.getElementById('resultWrap').style.display='block';
+  if(window.location.search.includes('?r=')){
+    document.getElementById('sharedBanner').style.display='flex';
+  }
+  setTimeout(()=>{
+    document.querySelectorAll('.abar-fill-left,.abar-marker').forEach(el=>{
+      el.style.transition='all 1.2s ease';
+    });
+  },200);
+}
+
+function copyLink(){
+  const url=window._shareURL||window.location.href;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn=document.getElementById('copyBtn');
+      btn.textContent='복사됨';btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='복사';btn.classList.remove('copied');},2000);
+    });
+  } else {
+    const el=document.createElement('textarea');el.value=url;
+    document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+    const btn=document.getElementById('copyBtn');
+    btn.textContent='복사됨';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='복사';btn.classList.remove('copied');},2000);
+  }
+}
+
+function shareKakao(){
+  const url=window._shareURL||window.location.href;
+  const plant=window._sharePlant||'어떤 식물';
+  const kakaoURL='https://story.kakao.com/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent('생각의 숲에서 '+plant+' 유형이 나왔어요! 당신은 어떤 식물인가요? 🌿');
+  window.open(kakaoURL,'_blank','width=560,height=600');
+}
+
+function shareNative(){
+  const url=window._shareURL||window.location.href;
+  const plant=window._sharePlant||'어떤 식물';
+  if(navigator.share){
+    navigator.share({
+      title:'나는 어떤 식물일까? — 생각의 숲',
+      text:plant+' 유형이래요! 당신은 어떤 식물인가요? 🌿',
+      url:url
+    });
+  } else {copyLink();alert('링크가 복사되었습니다!');}
+}
+
+function restart(){
+  cur=0;ans=[];scores={state:0,money:0};
+  document.getElementById('resultWrap').style.display='none';
+  document.getElementById('introWrap').style.display='block';
+}
+
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  const r=params.get('r');
+  if(r){
+    try{
+      const data=JSON.parse(decodeURIComponent(atob(r)));
+      if(data.plant&&PLANTS[data.plant]){
+        document.getElementById('introWrap').style.display='none';
+        document.getElementById('loadingWrap').style.display='block';
+        scores={state:data.plant==='sunflower'||data.plant==='rice'||data.plant==='orchid'||data.plant==='appletree'?10:-10,
+                money:data.plant==='sunflower'||data.plant==='rice'||data.plant==='tulip'||data.plant==='succulent'?10:-10};
+        const forcedKey=data.plant;
+        setTimeout(()=>{
+          document.getElementById('loadingWrap').style.display='none';
+          const P=PLANTS[forcedKey];
+          document.getElementById('rhPlant').textContent=P.emoji;
+          document.getElementById('rhSentence').textContent=P.sentence;
+          document.getElementById('rhType').textContent=P.type;
+          document.getElementById('rhQuote').textContent=P.quote;
+          document.getElementById('rhDesc').textContent=P.desc;
+          document.getElementById('axisBars').innerHTML='<div style="padding:8px 0;font-size:12px;color:var(--ink3);text-align:center">친구의 결과예요. 직접 탐험해보세요!</div>';
+          const fb=document.getElementById('forestBody');fb.innerHTML='';
+          P.neighbors.forEach(n=>{const d=document.createElement('div');d.className='fs-item';d.innerHTML=`<div class="fs-emoji">${n.emoji}</div><div class="fs-text"><div class="fs-name">${n.name}</div><div class="fs-view">${n.view}</div></div>`;fb.appendChild(d);});
+          const tl=document.getElementById('topicList');tl.innerHTML='';
+          P.topics.forEach(([title,badge])=>{const d=document.createElement('div');d.className='ts-item';d.innerHTML=`<span>${title}</span><span class="ts-badge badge-${badge}">${badge==='hot'?'🌿 주목':'✓ 추천'}</span>`;tl.appendChild(d);});
+          const url=window.location.href;
+          document.getElementById('shareLinkText').textContent=url;
+          window._shareURL=url;window._sharePlant=P.emoji+' '+P.sentence;
+          document.getElementById('resultWrap').style.display='block';
+          document.getElementById('sharedBanner').style.display='flex';
+        },1000);
+      }
+    }catch(e){}
+  }
+})();
+</script>
+</body>
+</html>
