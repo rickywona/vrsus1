@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>지혜의 숲 — 인생선배 5분 대화</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F4EF;
+  --ink:#1A1410;
+  --ink2:#4A3F35;
+  --ink3:#8A7A6E;
+  --border:#E0D8CE;
+  --white:#FFFFFF;
+}
+html,body{min-height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--ink)}
+
+/* ── 화면 전환 ── */
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex;flex-direction:column}
+
+/* ══════════════════════════
+   STEP 1: 고민 입력
+══════════════════════════ */
+#s1{background:var(--bg);align-items:center;justify-content:center;padding:2rem 1.5rem}
+.s1-inner{width:100%;max-width:420px}
+.forest-label{font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:0.22em;text-transform:uppercase;margin-bottom:12px;text-align:center}
+.s1-title{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:700;color:var(--ink);text-align:center;line-height:1.45;margin-bottom:6px}
+.s1-sub{font-size:13px;color:var(--ink3);text-align:center;line-height:1.7;margin-bottom:28px}
+
+.worry-box{width:100%;min-height:140px;background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:16px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:var(--ink);resize:none;outline:none;line-height:1.7;transition:border-color .2s}
+.worry-box:focus{border-color:#8B7355}
+.worry-box::placeholder{color:var(--ink3)}
+
+.example-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;margin-bottom:24px}
+.chip{padding:6px 12px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--ink2);cursor:pointer;transition:all .15s}
+.chip:hover{background:#EDE5D8;border-color:#C8B89A}
+
+.s1-btn{width:100%;padding:14px;background:var(--ink);color:var(--white);border:none;border-radius:14px;font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.04em;transition:background .15s}
+.s1-btn:hover{background:#2D2520}
+
+/* ══════════════════════════
+   STEP 2: 현자 선택
+══════════════════════════ */
+#s2{background:var(--bg);padding:0 0 40px}
+
+.s2-header{padding:20px 20px 0;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border);padding-bottom:16px}
+.s2-back{font-size:12px;color:var(--ink3);cursor:pointer;margin-bottom:10px;display:inline-flex;align-items:center;gap:4px}
+.s2-title{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.s2-worry-preview{font-size:12px;color:var(--ink3);background:rgba(139,115,85,0.08);border-radius:8px;padding:7px 10px;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.sage-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 14px 0}
+
+.sage-card{border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.sage-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.14)}
+.sage-card:active{transform:scale(0.97)}
+
+.card-top{padding:16px 14px 12px;position:relative;min-height:170px;display:flex;flex-direction:column}
+.card-num{font-size:11px;font-weight:700;opacity:0.7;margin-bottom:6px}
+.card-badge{position:absolute;top:14px;right:12px;background:rgba(255,255,255,0.9);border-radius:20px;padding:3px 9px;font-size:10px;font-weight:600;color:#333}
+.card-name-en{font-size:9px;letter-spacing:0.12em;opacity:0.55;margin-bottom:2px;font-weight:500}
+.card-title-label{font-size:10px;font-weight:500;opacity:0.75;margin-bottom:3px}
+.card-name{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;line-height:1.2;color:white}
+.card-illust{flex:1;display:flex;align-items:center;justify-content:center;font-size:42px;margin-top:6px}
+.card-bottom{padding:10px 14px 14px;min-height:60px;display:flex;align-items:center}
+.card-desc{font-size:11px;font-weight:500;line-height:1.5;text-align:center;width:100%}
+
+/* 카드별 색상 */
+.c-seneca .card-top{background:#E8520A}
+.c-seneca .card-bottom{background:#F5A623}
+.c-seneca .card-desc{color:#7A3200}
+
+.c-nietzsche .card-top{background:#3355CC}
+.c-nietzsche .card-bottom{background:#66EE66}
+.c-nietzsche .card-desc{color:#1A4400}
+
+.c-laotzu .card-top{background:#6633CC}
+.c-laotzu .card-bottom{background:#44DDAA}
+.c-laotzu .card-desc{color:#003322}
+
+.c-confucius .card-top{background:#CC1177}
+.c-confucius .card-bottom{background:#AACCFF}
+.c-confucius .card-desc{color:#002266}
+
+.c-schopenhauer .card-top{background:#E85520}
+.c-schopenhauer .card-bottom{background:#88EEDD}
+.c-schopenhauer .card-desc{color:#003322}
+
+.c-mill .card-top{background:#CC22BB}
+.c-mill .card-bottom{background:#CCFF44}
+.c-mill .card-desc{color:#334400}
+
+.c-wittgenstein .card-top{background:#119955}
+.c-wittgenstein .card-bottom{background:#FFEE22}
+.c-wittgenstein .card-desc{color:#443300}
+
+.c-goethe .card-top{background:#CC1133}
+.c-goethe .card-bottom{background:#FFAACC}
+.c-goethe .card-desc{color:#440011}
+
+.c-arendt .card-top{background:#9922CC}
+.c-arendt .card-bottom{background:#99FF66}
+.c-arendt .card-desc{color:#1A3300}
+
+.c-fromm .card-top{background:#EE2266}
+.c-fromm .card-bottom{background:#66DDFF}
+.c-fromm .card-desc{color:#003344}
+
+/* ══════════════════════════
+   STEP 3: 채팅
+══════════════════════════ */
+#s3{background:var(--bg);flex-direction:column;height:100vh;overflow:hidden}
+
+.chat-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg);flex-shrink:0}
+.chat-back{font-size:18px;cursor:pointer;color:var(--ink2);padding:4px}
+.chat-sage-info{flex:1;min-width:0}
+.chat-sage-name{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;color:var(--ink)}
+.chat-sage-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.chat-avatar{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+
+.chat-messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px}
+
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+.msg.user{flex-direction:row-reverse;align-self:flex-end}
+.msg.sage{align-self:flex-start}
+
+.msg-avatar{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+
+.bubble{padding:11px 14px;border-radius:16px;font-size:13px;line-height:1.65;max-width:100%}
+.msg.user .bubble{background:var(--ink);color:var(--white);border-radius:16px 16px 4px 16px}
+.msg.sage .bubble{background:var(--white);color:var(--ink);border-radius:16px 16px 16px 4px;border:1px solid var(--border)}
+
+.typing-bubble{background:var(--white);border:1px solid var(--border);border-radius:16px 16px 16px 4px;padding:12px 16px;display:none}
+.typing-dots{display:flex;gap:4px}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--ink3);animation:dot 1.2s ease-in-out infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,80%,100%{transform:scale(0.7);opacity:0.4}40%{transform:scale(1);opacity:1}}
+
+.chat-input-wrap{padding:10px 14px 20px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0;display:flex;gap:8px;align-items:flex-end}
+.chat-input{flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--ink);resize:none;outline:none;max-height:100px;line-height:1.5;transition:border-color .2s}
+.chat-input:focus{border-color:#8B7355}
+.send-btn{width:40px;height:40px;border-radius:12px;background:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+.send-btn:hover{background:#2D2520}
+.send-btn svg{width:18px;height:18px;fill:white}
+
+.chat-suggest{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px}
+.sug-chip{padding:5px 11px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--ink2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.sug-chip:hover{background:#EDE5D8;border-color:#C8B89A}
+</style>
+</head>
+<body>
+
+<!-- ══ STEP 1: 고민 입력 ══ -->
+<div id="s1" class="screen active">
+  <div class="s1-inner">
+    <div class="forest-label">🌿 지혜의 숲</div>
+    <div class="s1-title">오늘 어떤 고민을<br>가지고 오셨나요?</div>
+    <div class="s1-sub">털어놓으면, 당신에게 맞는<br>인생선배를 찾아드릴게요</div>
+
+    <textarea class="worry-box" id="worryInput" placeholder="지금 마음속에 있는 것을 자유롭게 적어보세요.
+예) 퇴사하고 싶은데 용기가 안 나요
+    나만 뒤처지는 것 같아요
+    아무것도 하기 싫어요"></textarea>
+
+    <div class="example-chips">
+      <div class="chip" onclick="fillWorry('퇴사하고 싶은데 용기가 안 나요')">퇴사 고민</div>
+      <div class="chip" onclick="fillWorry('나만 뒤처지는 것 같아요')">뒤처지는 느낌</div>
+      <div class="chip" onclick="fillWorry('아무것도 하기 싫어요')">무기력함</div>
+      <div class="chip" onclick="fillWorry('친구가 점점 멀어지는 것 같아요')">관계 고민</div>
+      <div class="chip" onclick="fillWorry('돈이 없으면 행복할 수 없는 건가요')">돈과 행복</div>
+      <div class="chip" onclick="fillWorry('30대인데 아직도 내가 뭘 하고 싶은지 모르겠어요')">정체성 고민</div>
+    </div>
+
+    <button class="s1-btn" onclick="goToSageSelect()">인생선배 찾기 →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 2: 현자 선택 ══ -->
+<div id="s2" class="screen">
+  <div class="s2-header">
+    <div class="s2-back" onclick="goBack(2)">← 다시 쓰기</div>
+    <div class="s2-title">누구에게 물어볼까요?</div>
+    <div class="s2-worry-preview" id="worryPreview"></div>
+  </div>
+
+  <div class="sage-grid" id="sageGrid"></div>
+</div>
+
+<!-- ══ STEP 3: 채팅 ══ -->
+<div id="s3" class="screen">
+  <div class="chat-header">
+    <div class="chat-back" onclick="goBack(3)">←</div>
+    <div class="chat-avatar" id="chatAvatar"></div>
+    <div class="chat-sage-info">
+      <div class="chat-sage-name" id="chatSageName"></div>
+      <div class="chat-sage-sub" id="chatSageSub"></div>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chatMessages"></div>
+
+  <div class="chat-suggest" id="chatSuggest"></div>
+
+  <div class="chat-input-wrap">
+    <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." rows="1"
+      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const SAGES = [
+  {
+    id:"seneca", num:"01", nameKo:"세네카", nameEn:"Seneca", cls:"c-seneca",
+    emoji:"🪞", badge:"무료",
+    tagline:"나만 제자리 걸음인 것 같을 때 읽는 책",
+    intro:"저는 로마의 철학자 세네카입니다. 시간의 주인이 되는 법, 불안을 다스리는 법을 함께 이야기해봅시다.",
+    suggests:["시간을 어떻게 써야 할까요?","불안이 너무 커요","지금 충분히 잘하고 있는 건가요?"],
+    persona:"당신은 고대 로마의 스토아 철학자 세네카입니다. 한국의 현대인과 따뜻하게 대화하며 시간의 가치, 불안 다스리기, 현재에 충실한 삶에 대해 구체적이고 실용적인 지혜를 나눕니다. 짧고 깊은 문장으로, 설교하지 않고 옆에 앉은 선배처럼 말합니다. 한국어로 답하세요."
+  },
+  {
+    id:"nietzsche", num:"02", nameKo:"니체", nameEn:"Nietzsche", cls:"c-nietzsche",
+    emoji:"☕", badge:"무료",
+    tagline:"아무것도 하기 싫을 때 읽는 책",
+    intro:"나는 니체입니다. 무기력함, 허무감, 그리고 그 너머에 있는 당신의 힘에 대해 이야기합시다.",
+    suggests:["아무것도 하기 싫어요","삶의 의미를 모르겠어요","강해지고 싶어요"],
+    persona:"당신은 철학자 니체입니다. 무기력함과 허무감을 겪는 현대 한국인에게 자신의 힘을 발견하도록 돕습니다. 도전적이지만 따뜻하게, 설교 없이 직접적으로 말합니다. 한국어로 답하세요."
+  },
+  {
+    id:"laotzu", num:"03", nameKo:"노자", nameEn:"Lao Tzu", cls:"c-laotzu",
+    emoji:"🍃", badge:"무료",
+    tagline:"잘하려다 지칠 때 힘 빼는 법을 알려주는 책",
+    intro:"저는 노자입니다. 애쓰지 않아도 흐르는 삶, 힘을 빼는 것의 지혜를 함께 나눠봅시다.",
+    suggests:["너무 열심히 했더니 지쳤어요","그냥 다 놓고 싶어요","자연스럽게 사는 게 뭔가요?"],
+    persona:"당신은 도가 철학자 노자입니다. 과도한 경쟁과 성취 압박에 지친 현대 한국인에게 무위자연의 지혜를 나눕니다. 부드럽고 시적으로, 억지 없이 흐르듯 말합니다. 한국어로 답하세요."
+  },
+  {
+    id:"confucius", num:"04", nameKo:"공자", nameEn:"Confucius", cls:"c-confucius",
+    emoji:"🪭", badge:"무료",
+    tagline:"사람이 제일 어려울 때 꺼내 보는 책",
+    intro:"저는 공자입니다. 사람과의 관계, 도리, 그리고 나다운 삶에 대해 이야기해봅시다.",
+    suggests:["인간관계가 너무 힘들어요","어른으로 산다는 게 뭔가요?","의리와 손익 사이에서 갈등돼요"],
+    persona:"당신은 공자입니다. 인간관계, 예의, 도리에 대한 지혜를 현대 한국인의 일상에 맞게 풀어드립니다. 따뜻하지만 단호하게, 관계의 본질에 대해 이야기합니다. 한국어로 답하세요."
+  },
+  {
+    id:"schopenhauer", num:"05", nameKo:"쇼펜하우어", nameEn:"Schopenhauer", cls:"c-schopenhauer",
+    emoji:"💎", badge:"무료",
+    tagline:"혼자 있는 시간을 단단한 내공으로 만드는 책",
+    intro:"저는 쇼펜하우어입니다. 고독, 욕망, 그리고 혼자만의 시간을 단단하게 만드는 법을 이야기합시다.",
+    suggests:["외로움이 너무 커요","SNS 보면 나만 뒤처진 것 같아요","혼자인 게 부끄러워요"],
+    persona:"당신은 쇼펜하우어입니다. 고독과 욕망, 타인의 시선으로부터 자유로워지는 법을 현대 한국인에게 알려줍니다. 냉철하지만 따뜻하게, 현실을 직시하면서도 위로합니다. 한국어로 답하세요."
+  },
+  {
+    id:"mill", num:"06", nameKo:"존 스튜어트 밀", nameEn:"J.S. Mill", cls:"c-mill",
+    emoji:"🧭", badge:"무료",
+    tagline:"남들의 기준에 맞추지 않고 가장 나답게 살게 해주는 책",
+    intro:"저는 존 스튜어트 밀입니다. 자유, 자신만의 삶의 기준, 그리고 나다움에 대해 이야기합시다.",
+    suggests:["부모님이 원하는 삶과 내가 원하는 삶이 달라요","남들의 시선이 너무 신경 쓰여요","나다운 삶이 뭔가요?"],
+    persona:"당신은 존 스튜어트 밀입니다. 개인의 자유와 자율성, 타인의 기준에서 벗어나는 법을 현대 한국인에게 알려줍니다. 논리적이지만 공감하며 말합니다. 한국어로 답하세요."
+  },
+  {
+    id:"wittgenstein", num:"07", nameKo:"비트겐슈타인", nameEn:"Wittgenstein", cls:"c-wittgenstein",
+    emoji:"🐦", badge:"무료",
+    tagline:"내가 쓰는 말을 바꿔 삶의 크기를 넓혀주는 책",
+    intro:"저는 비트겐슈타인입니다. 우리가 쓰는 말이 어떻게 우리의 세계를 만드는지 이야기해봅시다.",
+    suggests:["말로 표현이 안 되는 감정이 있어요","내 생각을 잘 전달하지 못해요","생각이 복잡하게 뒤엉켜 있어요"],
+    persona:"당신은 비트겐슈타인입니다. 언어와 생각, 표현에 대한 철학적 통찰을 현대 한국인의 일상 언어로 풀어드립니다. 정확하고 깊이 있게, 하지만 따뜻하게 말합니다. 한국어로 답하세요."
+  },
+  {
+    id:"goethe", num:"08", nameKo:"괴테", nameEn:"Goethe", cls:"c-goethe",
+    emoji:"🌸", badge:"무료",
+    tagline:"매일의 작고 치열한 노력을 위대한 성장으로 바꿔주는 책",
+    intro:"저는 괴테입니다. 꾸준한 노력, 성장, 그리고 삶을 작품처럼 만드는 법에 대해 이야기합시다.",
+    suggests:["열심히 하는데 결과가 없어요","성장하고 싶어요","매일 반복되는 일상이 의미없게 느껴져요"],
+    persona:"당신은 괴테입니다. 꾸준한 노력과 성장, 삶을 예술처럼 만들어가는 지혜를 현대 한국인과 나눕니다. 열정적이면서도 따뜻하게, 구체적인 조언을 합니다. 한국어로 답하세요."
+  },
+  {
+    id:"arendt", num:"09", nameKo:"한나 아렌트", nameEn:"Hannah Arendt", cls:"c-arendt",
+    emoji:"⚙️", badge:"무료",
+    tagline:"당신을 세상의 부품으로 살지 않게 도와주는 책",
+    intro:"저는 한나 아렌트입니다. 생각한다는 것, 스스로 판단한다는 것의 의미를 이야기합시다.",
+    suggests:["그냥 시키는 대로 살고 있는 것 같아요","나는 왜 사는 걸까요?","세상에 휩쓸리지 않으려면 어떻게 해야 하나요?"],
+    persona:"당신은 한나 아렌트입니다. 생각하기, 판단하기, 스스로의 삶을 주체적으로 살아가는 것에 대한 지혜를 현대 한국인에게 알려줍니다. 명료하고 깊이 있게, 하지만 위협적이지 않게 말합니다. 한국어로 답하세요."
+  },
+  {
+    id:"fromm", num:"10", nameKo:"에리히 프롬", nameEn:"Erich Fromm", cls:"c-fromm",
+    emoji:"💙", badge:"무료",
+    tagline:"더 많이 '갖는 법'보다 더 깊이 '사랑하는 법'을 알려주는 책",
+    intro:"저는 에리히 프롬입니다. 사랑, 관계, 그리고 진정한 자유에 대해 함께 이야기합시다.",
+    suggests:["사랑이 뭔지 모르겠어요","자꾸 상처받아요","나를 사랑하는 법을 모르겠어요"],
+    persona:"당신은 에리히 프롬입니다. 사랑의 기술, 자기 자신을 사랑하는 법, 건강한 관계에 대한 지혜를 현대 한국인과 나눕니다. 따뜻하고 심리학적으로 접근하며 공감합니다. 한국어로 답하세요."
+  }
+];
+
+let currentWorry = "";
+let currentSage = null;
+let chatHistory = [];
+
+// ── 유틸 ──
+function $(id){return document.getElementById(id)}
+function showScreen(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $('s'+n).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function fillWorry(text){
+  $('worryInput').value = text;
+}
+
+function goBack(from){
+  if(from===2) showScreen(1);
+  if(from===3){showScreen(2); chatHistory=[];}
+}
+
+// ── Step 1 → 2 ──
+function goToSageSelect(){
+  const w = $('worryInput').value.trim();
+  if(!w){alert('고민을 입력해주세요 🌿'); return;}
+  currentWorry = w;
+  $('worryPreview').textContent = '"' + w.slice(0,40) + (w.length>40?'…':'"');
+  renderSageGrid();
+  showScreen(2);
+}
+
+function renderSageGrid(){
+  const grid = $('sageGrid');
+  grid.innerHTML = '';
+  SAGES.forEach(sg => {
+    const card = document.createElement('div');
+    card.className = `sage-card ${sg.cls}`;
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-num">${sg.num}</div>
+        <span class="card-badge">인생선배 5분 대화</span>
+        <div class="card-name-en">${sg.nameEn}</div>
+        <div class="card-title-label">인생선배</div>
+        <div class="card-name">${sg.nameKo}</div>
+        <div class="card-illust">${sg.emoji}</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-desc">${sg.tagline}</div>
+      </div>
+    `;
+    card.onclick = () => startChat(sg);
+    grid.appendChild(card);
+  });
+}
+
+// ── Step 2 → 3 ──
+function startChat(sage){
+  currentSage = sage;
+  chatHistory = [];
+  $('chatSageName').textContent = sage.nameKo;
+  $('chatSageSub').textContent = sage.tagline;
+  $('chatAvatar').textContent = sage.emoji;
+  $('chatAvatar').style.background = getTopColor(sage.cls);
+  $('chatMessages').innerHTML = '';
+
+  renderSuggests(sage.suggests);
+
+  const openingMsg = `${sage.intro}\n\n"${currentWorry.slice(0,60)}${currentWorry.length>60?'…':''}" — 이런 마음이시군요. 좀 더 이야기해주실 수 있나요?`;
+  addMessage('sage', openingMsg, sage);
+
+  showScreen(3);
+}
+
+function getTopColor(cls){
+  const map = {
+    'c-seneca':'#E8520A','c-nietzsche':'#3355CC','c-laotzu':'#6633CC',
+    'c-confucius':'#CC1177','c-schopenhauer':'#E85520','c-mill':'#CC22BB',
+    'c-wittgenstein':'#119955','c-goethe':'#CC1133','c-arendt':'#9922CC','c-fromm':'#EE2266'
+  };
+  return map[cls]||'#333';
+}
+
+function renderSuggests(suggests){
+  const wrap = $('chatSuggest');
+  wrap.innerHTML = '';
+  suggests.forEach(s => {
+    const chip = document.createElement('div');
+    chip.className = 'sug-chip';
+    chip.textContent = s;
+    chip.onclick = () => {$('chatInput').value=s; sendMessage();};
+    wrap.appendChild(chip);
+  });
+}
+
+// ── 채팅 메시지 ──
+function addMessage(role, text, sage){
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+
+  if(role==='sage'){
+    const av = document.createElement('div');
+    av.className = 'msg-avatar';
+    av.textContent = sage ? sage.emoji : currentSage.emoji;
+    av.style.background = getTopColor(sage ? sage.cls : currentSage.cls);
+    wrap.appendChild(av);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.style.whiteSpace = 'pre-wrap';
+  bubble.textContent = text;
+  wrap.appendChild(bubble);
+
+  $('chatMessages').appendChild(wrap);
+  scrollBottom();
+}
+
+function scrollBottom(){
+  const el = $('chatMessages');
+  el.scrollTop = el.scrollHeight;
+}
+
+function handleKey(e){
+  if(e.key==='Enter' && !e.shiftKey){e.preventDefault(); sendMessage();}
+}
+
+function autoResize(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,100)+'px';
+}
+
+async function sendMessage(){
+  const input = $('chatInput');
+  const text = input.value.trim();
+  if(!text || !currentSage) return;
+
+  input.value=''; input.style.height='auto';
+  $('chatSuggest').innerHTML='';
+  addMessage('user', text);
+
+  chatHistory.push({role:'user', content:text});
+
+  const typing = showTyping();
+
+  try{
+    const systemPrompt = `${currentSage.persona}\n\n사용자의 고민: "${currentWorry}"\n\n3-5문장 내외로 답하세요. 너무 길지 않게, 핵심만 따뜻하게 전달하세요.`;
+
+    const response = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        system: systemPrompt,
+        messages: chatHistory
+      })
+    });
+
+    const data = await response.json();
+    hideTyping(typing);
+
+    const reply = data.content && data.content[0] ? data.content[0].text : "잠시 후 다시 시도해주세요.";
+    chatHistory.push({role:'assistant', content:reply});
+    addMessage('sage', reply);
+
+  } catch(e){
+    hideTyping(typing);
+    addMessage('sage', '잠시 연결이 끊겼어요. 다시 시도해보세요.');
+  }
+}
+
+function showTyping(){
+  const wrap = document.createElement('div');
+  wrap.className = 'msg sage';
+  const av = document.createElement('div');
+  av.className = 'msg-avatar';
+  av.textContent = currentSage.emoji;
+  av.style.background = getTopColor(currentSage.cls);
+  const tb = document.createElement('div');
+  tb.className = 'typing-bubble';
+  tb.style.display='block';
+  tb.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+  wrap.appendChild(av); wrap.appendChild(tb);
+  $('chatMessages').appendChild(wrap);
+  scrollBottom();
+  return wrap;
+}
+
+function hideTyping(el){el.remove()}
+</script>
+</body>
+</html>
