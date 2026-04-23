@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta property="og:title" content="고민 탈곡기 🌾">
+<meta property="og:description" content="고민을 탈탈 털어드립니다. 귀한 씨앗이 나올 거예요.">
+<title>고민 탈곡기 🌾</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FDFAF4;
+  --card:#FFFFFF;
+  --ink:#1A1A10;
+  --ink2:#4A4230;
+  --ink3:#8A7A5A;
+  --border:#E8DFC8;
+  --gold:#C8961A;
+  --gold-light:#FFF8E0;
+  --brown:#7B5C2A;
+  --green:#3A7D2A;
+  --green-light:#EAF5E0;
+}
+html,body{height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--ink);overflow-x:hidden}
+
+.screen{display:none;position:fixed;inset:0;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto}
+.screen.active{display:flex}
+
+/* ══ 인트로 ══ */
+#s-intro{background:linear-gradient(180deg,#FFF8E0 0%,#FDFAF4 70%)}
+.intro-inner{width:100%;max-width:380px;text-align:center}
+
+/* 탈곡기 SVG */
+.thresher-icon{width:100px;height:100px;margin:0 auto 16px;display:block;animation:throb 2.5s ease-in-out infinite}
+@keyframes throb{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+.app-title{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.app-sub{font-size:13px;color:var(--ink3);margin-bottom:26px;line-height:1.7}
+.intro-start-btn{width:100%;padding:15px;background:var(--brown);color:#fff;border:none;border-radius:16px;font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600;cursor:pointer;transition:background .15s;letter-spacing:0.04em}
+.intro-start-btn:hover{background:#5A3A10}
+.intro-hint{font-size:11px;color:var(--ink3);margin-top:12px;line-height:1.6}
+
+/* ══ 입력 ══ */
+#s-input{background:var(--bg);justify-content:flex-start;padding-top:0}
+.input-header{width:100%;max-width:420px;display:flex;align-items:center;padding:18px 20px 12px;gap:12px}
+.header-icon{font-size:22px}
+.header-title{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;color:var(--ink)}
+.header-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.input-body{width:100%;max-width:420px;flex:1;display:flex;flex-direction:column;padding:0 16px 20px}
+.worry-textarea{flex:1;width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;font-size:15px;color:var(--ink);resize:none;outline:none;line-height:1.75;min-height:180px;max-height:300px;transition:border-color .2s;font-family:'Noto Sans KR',sans-serif}
+.worry-textarea:focus{border-color:var(--gold)}
+.worry-textarea::placeholder{color:#C0B090}
+.char-count{text-align:right;font-size:11px;color:var(--ink3);margin-top:6px;margin-bottom:12px}
+.hint-text{font-size:11px;color:var(--brown);text-align:center;margin-bottom:14px;line-height:1.65;background:var(--gold-light);border-radius:10px;padding:8px 12px;border:1px solid #EDD890}
+.thresh-btn{width:100%;padding:15px;background:var(--brown);color:#fff;border:none;border-radius:16px;font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.thresh-btn:hover{background:#5A3A10}
+.thresh-btn:disabled{background:#C0B090;cursor:not-allowed}
+
+/* ══ 탈곡 애니메이션 ══ */
+#s-thresh{background:#1A1208;overflow:hidden}
+.thresh-inner{width:100%;max-width:360px;text-align:center;position:relative;z-index:2}
+.thresh-title{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:#FFE08A;margin-bottom:6px}
+.thresh-sub{font-size:13px;color:#9A8A5A;margin-bottom:28px;line-height:1.65}
+
+/* 탈곡기 SVG 애니메이션 */
+.thresher-anim-wrap{width:220px;height:220px;margin:0 auto 22px;position:relative}
+.thresher-drum{transform-origin:50% 50%;animation:drumSpin 0s linear infinite}
+@keyframes drumSpin{to{transform:rotate(360deg)}}
+.thresher-drum.spinning{animation-duration:.4s}
+.thresher-drum.fast{animation-duration:.15s}
+.grain-fly{position:absolute;font-size:14px;animation:grainFly 0.8s ease-out forwards;pointer-events:none}
+@keyframes grainFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0.3)}}
+.stalk-item{position:absolute;font-size:20px;animation:stalkFeed .6s ease-in forwards;pointer-events:none;left:50%;transform:translateX(-50%)}
+@keyframes stalkFeed{0%{top:-40px;opacity:1}100%{top:80px;opacity:0;transform:translateX(-50%) scale(0.5)}}
+@keyframes threshShake{
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-5px) rotate(-1.5deg)}
+  30%{transform:translateX(5px) rotate(1.5deg)}
+  45%{transform:translateX(-4px) rotate(-1deg)}
+  60%{transform:translateX(4px) rotate(1deg)}
+  75%{transform:translateX(-2px)}
+  90%{transform:translateX(2px)}
+}
+.thresh-shaking{animation:threshShake .12s linear infinite}
+.seed-appear{position:absolute;font-size:22px;animation:seedPop .6s ease-out forwards;pointer-events:none}
+@keyframes seedPop{0%{transform:scale(0) rotate(-20deg);opacity:0}60%{transform:scale(1.3) rotate(5deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.particle-container{position:fixed;inset:0;pointer-events:none;z-index:1}
+.particle{position:absolute;font-size:14px;animation:particleFloat 1.5s ease-out forwards;pointer-events:none}
+@keyframes particleFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-100px) scale(0.3)}}
+.thresh-progress{width:100%;height:6px;background:#2A2010;border-radius:3px;overflow:hidden;margin-bottom:10px}
+.thresh-fill{height:100%;background:linear-gradient(90deg,#C8961A,#FFE08A);border-radius:3px;width:0%;transition:width .35s ease}
+.thresh-status{font-size:13px;color:#C8961A;font-weight:500;min-height:22px;margin-bottom:8px}
+
+/* ══ 1차 결과 — 현자 조언 ══ */
+#s-sage{background:var(--bg);justify-content:flex-start;padding:0;overflow-y:auto}
+.sage-result-wrap{width:100%;max-width:420px;padding:0 0 36px}
+.sage-hero{text-align:center;padding:28px 20px 20px;background:linear-gradient(180deg,var(--gold-light),var(--bg))}
+.sage-hero-label{font-size:10px;font-weight:600;color:var(--gold);letter-spacing:0.22em;text-transform:uppercase;margin-bottom:10px}
+.sage-hero-emoji{font-size:62px;display:block;margin-bottom:10px;animation:sageFloat 3s ease-in-out infinite}
+@keyframes sageFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.sage-hero-name{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.sage-hero-sub{font-size:12px;color:var(--ink3);letter-spacing:0.12em;margin-bottom:18px}
+.sage-advice-card{margin:0 16px 16px;background:var(--card);border-radius:16px;border:2px solid var(--gold);overflow:hidden}
+.sac-header{background:var(--brown);padding:10px 16px;display:flex;align-items:center;gap:6px}
+.sac-header-text{font-size:12px;font-weight:600;color:#FFE08A;letter-spacing:0.08em}
+.sac-body{padding:18px 18px 16px}
+.sac-worry{font-size:12px;color:var(--ink3);font-style:italic;margin-bottom:12px;padding:8px 12px;background:var(--gold-light);border-radius:8px;border-left:3px solid var(--gold);line-height:1.55}
+.sac-advice{font-family:'Noto Serif KR',serif;font-size:14px;color:var(--ink);line-height:1.85;white-space:pre-line}
+.sac-quote{font-size:12px;color:var(--brown);font-style:italic;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-family:'Noto Serif KR',serif;line-height:1.6}
+.sage-next-btn{width:calc(100% - 32px);margin:0 16px;padding:14px;background:var(--green);color:#fff;border:none;border-radius:14px;font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.sage-next-btn:hover{background:#2A5A1A}
+
+/* ══ 최종 결과 ══ */
+#s-result{background:var(--bg);justify-content:flex-start;padding:0;overflow-y:auto}
+.result-scroll{width:100%;max-width:420px;padding:0 0 40px}
+.result-hero{text-align:center;padding:26px 20px 18px;background:linear-gradient(180deg,var(--green-light),var(--bg))}
+.result-icon{font-size:60px;display:block;margin-bottom:10px;animation:seedGrow 1.2s ease-out forwards}
+@keyframes seedGrow{0%{transform:scale(0) rotate(-15deg);opacity:0}70%{transform:scale(1.12) rotate(3deg)}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.result-title{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.4}
+.result-desc{font-size:13px;color:var(--ink3);line-height:1.8;margin-bottom:14px}
+.seed-preview{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 14px;font-size:12px;color:var(--ink2);line-height:1.65;text-align:left;font-style:italic;margin:0 16px 18px;position:relative}
+.seed-preview::before{content:"탈곡된 고민";position:absolute;top:-10px;left:12px;background:var(--brown);color:#fff;font-size:9px;font-weight:600;padding:2px 8px;border-radius:10px}
+
+.section-title{font-size:11px;font-weight:600;color:var(--ink3);letter-spacing:0.14em;text-transform:uppercase;margin:0 20px 10px}
+.sage-list{display:flex;flex-direction:column;gap:10px;padding:0 16px;margin-bottom:18px}
+.sage-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;display:flex;align-items:center;gap:11px;cursor:default;transition:transform .1s}
+.sage-item:hover{transform:translateY(-1px)}
+.sage-item.featured{border:2px solid var(--gold);background:var(--gold-light)}
+.si-emoji{font-size:30px;flex-shrink:0;width:42px;text-align:center}
+.si-info{flex:1;min-width:0}
+.si-name{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;color:var(--ink)}
+.si-tag{font-size:11px;color:var(--ink3);margin-top:2px}
+.si-quote{font-size:10px;color:var(--brown);font-style:italic;margin-top:3px;font-family:'Noto Serif KR',serif;line-height:1.4}
+.si-btn{flex-shrink:0;padding:6px 11px;background:var(--brown);color:#fff;border:none;border-radius:9px;font-size:10px;font-weight:600;cursor:default;white-space:nowrap}
+.si-btn.muted{background:#E0D8C8;color:#888}
+
+/* 숲 현황판 */
+.korea-board{margin:0 16px 16px;background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden}
+.kb-header{background:#1A2E1A;padding:11px 14px;display:flex;align-items:center;gap:8px}
+.kb-icon{font-size:16px}.kb-title{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;color:#fff}
+.kb-sub{font-size:10px;color:#90EE90;margin-top:1px}
+.forest-scene{position:relative;width:100%;height:190px;overflow:hidden;background:linear-gradient(180deg,#B8E4FF 0%,#D4F0FF 42%,#7BC67A 58%,#5A9E58 100%)}
+.fs-sun{position:absolute;top:10px;right:16px;width:28px;height:28px;background:#FFE566;border-radius:50%;box-shadow:0 0 16px rgba(255,229,102,0.7)}
+.fs-cloud{position:absolute;background:rgba(255,255,255,0.82);border-radius:50px}
+.fs-ground{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(180deg,#7BC67A,#4A8448)}
+.fs-items{position:absolute;bottom:48px;left:0;right:0;display:flex;align-items:flex-end;justify-content:space-around;padding:0 8px}
+.fs-item{display:flex;flex-direction:column;align-items:center;position:relative;cursor:default}
+.fs-item:hover .fs-tooltip{opacity:1}
+.fs-plant{line-height:1;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2))}
+.fs-rank-badge{position:absolute;top:-8px;right:-5px;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff;border:1px solid rgba(255,255,255,0.6)}
+.fs-name{font-size:8px;font-weight:600;color:#fff;text-align:center;margin-top:2px;max-width:48px;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)}
+.fs-pct{font-size:8px;font-weight:700;color:#FFE566;text-shadow:0 1px 2px rgba(0,0,0,0.7)}
+.fs-tooltip{position:absolute;bottom:105%;left:50%;transform:translateX(-50%);background:rgba(15,30,15,0.92);color:#fff;font-size:9px;padding:4px 8px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:10;line-height:1.4;text-align:center;max-width:110px;white-space:normal}
+.kb-list{padding:7px 13px 9px;display:flex;flex-direction:column;gap:4px;border-top:1px solid #EEF5EE}
+.kb-row{display:flex;align-items:flex-start;gap:6px}
+.kb-rnum{font-weight:800;font-size:12px;width:14px;flex-shrink:0;margin-top:1px}
+.kb-rnum.r1{color:#FF6B35}.kb-rnum.r2{color:#888}.kb-rnum.r3{color:#B8860B}.kb-rnum.r4{color:#4CAF50}.kb-rnum.r5{color:#2196F3}
+.kb-rtext{flex:1;font-size:11px;color:var(--ink2);line-height:1.4}
+.kb-rpct{font-size:10px;font-weight:700;color:var(--ink3);flex-shrink:0}
+.kb-rtrend{font-size:10px;font-weight:700;flex-shrink:0}
+.kb-footer{padding:3px 14px 8px;font-size:9px;color:#AAA;text-align:center}
+
+/* 공유 */
+.share-box{margin:0 16px 10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+.share-box-title{font-family:'Noto Serif KR',serif;font-size:12px;font-weight:600;color:var(--ink);margin-bottom:10px;text-align:center}
+.btn-kakao{width:100%;padding:13px;background:#FEE500;color:#1A1A1A;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.btn-kakao:hover{background:#F5DB00}
+.btn-link{width:100%;padding:10px;background:transparent;color:var(--ink3);border:1px solid var(--border);border-radius:12px;font-size:12px;cursor:pointer;margin-bottom:8px}
+.btn-retry{width:100%;padding:10px;background:transparent;color:var(--ink3);border:none;font-size:12px;cursor:pointer}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ══ 인트로 ══ -->
+<div id="s-intro" class="screen active">
+  <div class="intro-inner">
+    <!-- 탈곡기 SVG 아이콘 -->
+    <svg class="thresher-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 바퀴 -->
+      <circle cx="22" cy="72" r="12" fill="#8B6914" stroke="#5A3A10" stroke-width="2"/>
+      <circle cx="22" cy="72" r="5" fill="#C8961A"/>
+      <circle cx="78" cy="72" r="12" fill="#8B6914" stroke="#5A3A10" stroke-width="2"/>
+      <circle cx="78" cy="72" r="5" fill="#C8961A"/>
+      <!-- 본체 -->
+      <rect x="14" y="38" width="72" height="34" rx="5" fill="#C8961A" stroke="#8B6914" stroke-width="2"/>
+      <!-- 드럼 -->
+      <circle cx="50" cy="55" r="14" fill="#8B6914" stroke="#5A3A10" stroke-width="1.5"/>
+      <line x1="50" y1="41" x2="50" y2="69" stroke="#C8961A" stroke-width="2"/>
+      <line x1="36" y1="55" x2="64" y2="55" stroke="#C8961A" stroke-width="2"/>
+      <line x1="40" y1="45" x2="60" y2="65" stroke="#C8961A" stroke-width="1.5"/>
+      <line x1="60" y1="45" x2="40" y2="65" stroke="#C8961A" stroke-width="1.5"/>
+      <!-- 투입구 -->
+      <rect x="30" y="28" width="40" height="12" rx="4" fill="#E8B830" stroke="#8B6914" stroke-width="1.5"/>
+      <polygon points="38,28 62,28 58,20 42,20" fill="#E8B830" stroke="#8B6914" stroke-width="1.5"/>
+      <!-- 배출구 -->
+      <rect x="68" y="55" width="18" height="8" rx="3" fill="#6B4A10" stroke="#5A3A10" stroke-width="1"/>
+      <!-- 볏짚/씨앗 파티클 -->
+      <circle cx="82" cy="51" r="3" fill="#FFE08A" opacity="0.9"/>
+      <circle cx="88" cy="57" r="2" fill="#FFE08A" opacity="0.7"/>
+      <circle cx="85" cy="64" r="2.5" fill="#FFE08A" opacity="0.8"/>
+    </svg>
+
+    <div class="app-title">고민 탈곡기</div>
+    <div class="app-sub">고민을 탈탈 털어드립니다<br>귀한 씨앗이 나올 거예요 🌾</div>
+    <button class="intro-start-btn" onclick="goInput()">고민 털러 가기</button>
+    <div class="intro-hint">✓ 저장 안 됨 &nbsp;·&nbsp; ✓ 완전 탈곡 &nbsp;·&nbsp; ✓ 씨앗으로 재탄생</div>
+  </div>
+</div>
+
+<!-- ══ 입력 ══ -->
+<div id="s-input" class="screen">
+  <div class="input-header">
+    <span class="header-icon">🌾</span>
+    <div>
+      <div class="header-title">지금 고민이 뭐예요?</div>
+      <div class="header-sub">탈탈 털어드릴게요</div>
+    </div>
+  </div>
+  <div class="input-body">
+    <textarea class="worry-textarea" id="worryText" maxlength="200"
+      placeholder="회사가 너무 힘들어&#10;내가 뭘 하고 싶은지 모르겠어&#10;관계가 자꾸 어긋나&#10;미래가 너무 불안해&#10;...마음껏 털어놓으세요"
+      oninput="updateChar()"></textarea>
+    <div class="char-count"><span id="charCount">0</span>/200</div>
+    <div class="hint-text">🌾 탈곡 후 귀한 씨앗이 나와요 — 저장되지 않으니 솔직하게!</div>
+    <button class="thresh-btn" id="threshBtn" onclick="startThresh()" disabled>
+      🌾 탈곡하기
+    </button>
+  </div>
+</div>
+
+<!-- ══ 탈곡 애니메이션 ══ -->
+<div id="s-thresh" class="screen">
+  <div class="particle-container" id="particles"></div>
+  <div class="thresh-inner">
+    <div class="thresh-title" id="threshTitle">고민을 탈탈 털어드립니다</div>
+    <div class="thresh-sub" id="threshSub">잠깐만요...</div>
+
+    <!-- 탈곡기 SVG 애니메이션 -->
+    <div class="thresher-anim-wrap" id="thresherWrap">
+      <svg id="thresherSvg" viewBox="0 0 220 220" width="220" height="220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 바닥 -->
+        <ellipse cx="110" cy="195" rx="70" ry="10" fill="rgba(200,150,26,0.18)"/>
+        <!-- 바퀴 -->
+        <circle cx="44" cy="164" r="22" fill="#8B6914" stroke="#5A3A10" stroke-width="3"/>
+        <circle cx="44" cy="164" r="9" fill="#C8961A"/>
+        <line x1="44" y1="142" x2="44" y2="186" stroke="#5A3A10" stroke-width="2"/>
+        <line x1="22" y1="164" x2="66" y2="164" stroke="#5A3A10" stroke-width="2"/>
+        <circle cx="176" cy="164" r="22" fill="#8B6914" stroke="#5A3A10" stroke-width="3"/>
+        <circle cx="176" cy="164" r="9" fill="#C8961A"/>
+        <line x1="176" y1="142" x2="176" y2="186" stroke="#5A3A10" stroke-width="2"/>
+        <line x1="154" y1="164" x2="198" y2="164" stroke="#5A3A10" stroke-width="2"/>
+        <!-- 연결봉 -->
+        <rect x="30" y="155" width="160" height="10" rx="4" fill="#5A3A10"/>
+        <!-- 본체 -->
+        <rect x="26" y="88" width="168" height="72" rx="10" fill="#C8961A" stroke="#8B6914" stroke-width="3"/>
+        <!-- 드럼 (회전) -->
+        <g id="threshDrum" style="transform-origin:110px 124px">
+          <circle cx="110" cy="124" r="28" fill="#8B6914" stroke="#5A3A10" stroke-width="2"/>
+          <line x1="110" y1="96" x2="110" y2="152" stroke="#C8961A" stroke-width="3"/>
+          <line x1="82" y1="124" x2="138" y2="124" stroke="#C8961A" stroke-width="3"/>
+          <line x1="90" y1="104" x2="130" y2="144" stroke="#C8961A" stroke-width="2"/>
+          <line x1="130" y1="104" x2="90" y2="144" stroke="#C8961A" stroke-width="2"/>
+          <circle cx="110" cy="124" r="7" fill="#E8B830"/>
+        </g>
+        <!-- 투입구 -->
+        <rect x="68" y="62" width="84" height="30" rx="7" fill="#E8B830" stroke="#8B6914" stroke-width="2"/>
+        <polygon points="78,62 142,62 132,44 88,44" fill="#E8B830" stroke="#8B6914" stroke-width="2"/>
+        <text x="110" y="82" text-anchor="middle" font-size="11" fill="#8B6914" font-weight="bold" font-family="sans-serif">투입구</text>
+        <!-- 배출구 -->
+        <rect x="152" y="112" width="40" height="18" rx="5" fill="#6B4A10" stroke="#5A3A10" stroke-width="1.5"/>
+        <text x="172" y="125" text-anchor="middle" font-size="9" fill="#E8B830" font-family="sans-serif">배출</text>
+        <!-- 씨앗 배출 파티클 (JS로 제어) -->
+        <g id="seedParticles"></g>
+      </svg>
+    </div>
+
+    <div class="thresh-progress"><div class="thresh-fill" id="threshFill"></div></div>
+    <div class="thresh-status" id="threshStatus">투입 준비 중...</div>
+  </div>
+</div>
+
+<!-- ══ 1차 결과: 현자 조언 ══ -->
+<div id="s-sage" class="screen">
+  <div class="sage-result-wrap">
+    <div class="sage-hero">
+      <div class="sage-hero-label">🌾 탈곡 완료 — 귀한 씨앗이 나왔어요</div>
+      <span class="sage-hero-emoji" id="sageEmoji">🏺</span>
+      <div class="sage-hero-name" id="sageName">소크라테스</div>
+      <div class="sage-hero-sub" id="sageSub">당신의 고민에 가장 잘 맞는 인생선배</div>
+    </div>
+
+    <div class="sage-advice-card">
+      <div class="sac-header">
+        <span>💬</span>
+        <div class="sac-header-text" id="sageHeaderText">인생선배의 조언</div>
+      </div>
+      <div class="sac-body">
+        <div class="sac-worry" id="sageWorryPreview"></div>
+        <div class="sac-advice" id="sageAdvice"></div>
+        <div class="sac-quote" id="sageQuote"></div>
+      </div>
+    </div>
+
+    <button class="sage-next-btn" onclick="showFinalResult()">
+      🌱 씨앗 심으러 가기 →
+    </button>
+  </div>
+</div>
+
+<!-- ══ 최종 결과 ══ -->
+<div id="s-result" class="screen">
+  <div class="result-scroll" id="resultScroll">
+    <div class="result-hero">
+      <span class="result-icon">🌱</span>
+      <div class="result-title">귀한 씨앗이 나왔어요 🌾</div>
+      <div class="result-desc">
+        탈곡을 통해 고민 속 씨앗이 드러났어요.<br>
+        인생선배와 상담을 통해<br>
+        <strong>함께 키워보면 어떨까요?</strong>
+      </div>
+    </div>
+
+    <div class="seed-preview" id="worryPreview"></div>
+
+    <div class="section-title">🗺️ 지금 한국사회 고민의 숲</div>
+    <div class="korea-board">
+      <div class="kb-header">
+        <span class="kb-icon">🌲</span>
+        <div>
+          <div class="kb-title">2026 한국사회 고민 현황판</div>
+          <div class="kb-sub">클수록 더 많은 사람이 고민 중 · 20-40대</div>
+        </div>
+      </div>
+      <div class="forest-scene">
+        <div class="fs-sun"></div>
+        <div class="fs-cloud" style="width:48px;height:17px;top:16px;left:28px;opacity:0.9"></div>
+        <div class="fs-cloud" style="width:34px;height:13px;top:12px;left:52px;opacity:0.7"></div>
+        <div class="fs-cloud" style="width:40px;height:15px;top:26px;left:130px;opacity:0.8"></div>
+        <div style="position:absolute;bottom:64px;left:4px;font-size:20px;opacity:0.45">🌲</div>
+        <div style="position:absolute;bottom:66px;right:5px;font-size:18px;opacity:0.4">🌳</div>
+        <div class="fs-ground"></div>
+        <div class="fs-items">
+          <div class="fs-item">
+            <div class="fs-tooltip">AI·자동화 일자리 위협<br>84% 불안 · ↑ 급증</div>
+            <span class="fs-plant" style="font-size:56px">🌲</span>
+            <div class="fs-rank-badge" style="background:#FF6B35">1</div>
+            <div class="fs-name">AI<br>일자리</div>
+            <div class="fs-pct">84%</div>
+          </div>
+          <div class="fs-item">
+            <div class="fs-tooltip">돈 부족·물가·주거<br>78% 경험 · → 지속</div>
+            <span class="fs-plant" style="font-size:46px">🌳</span>
+            <div class="fs-rank-badge" style="background:#888">2</div>
+            <div class="fs-name">돈<br>부족</div>
+            <div class="fs-pct">78%</div>
+          </div>
+          <div class="fs-item">
+            <div class="fs-tooltip">빈부격차 상실감·박탈감<br>71% 공감 · ↑ 증가</div>
+            <span class="fs-plant" style="font-size:38px">🍎</span>
+            <div class="fs-rank-badge" style="background:#B8860B">3</div>
+            <div class="fs-name">빈부<br>격차</div>
+            <div class="fs-pct">71%</div>
+          </div>
+          <div class="fs-item">
+            <div class="fs-tooltip">번아웃·무기력<br>65% 경험 · ↑ 증가</div>
+            <span class="fs-plant" style="font-size:32px">🌻</span>
+            <div class="fs-rank-badge" style="background:#4CAF50">4</div>
+            <div class="fs-name">번아웃<br>무기력</div>
+            <div class="fs-pct">65%</div>
+          </div>
+          <div class="fs-item">
+            <div class="fs-tooltip">나는 제대로 살고 있나?<br>58% 고민 · → 지속</div>
+            <span class="fs-plant" style="font-size:24px">🌱</span>
+            <div class="fs-rank-badge" style="background:#2196F3">5</div>
+            <div class="fs-name">정체성<br>방향</div>
+            <div class="fs-pct">58%</div>
+          </div>
+        </div>
+      </div>
+      <div class="kb-list">
+        <div class="kb-row"><span class="kb-rnum r1">1</span><span class="kb-rtext">AI·자동화로 인한 일자리 대체 위협</span><span class="kb-rpct">84%</span><span class="kb-rtrend" style="color:#FF6B35">↑</span></div>
+        <div class="kb-row"><span class="kb-rnum r2">2</span><span class="kb-rtext">돈이 늘 부족하다 — 물가·주거 부담</span><span class="kb-rpct">78%</span><span class="kb-rtrend" style="color:#888">→</span></div>
+        <div class="kb-row"><span class="kb-rnum r3">3</span><span class="kb-rtext">빈부격차 심화로 인한 상실감·박탈감</span><span class="kb-rpct">71%</span><span class="kb-rtrend" style="color:#FF6B35">↑</span></div>
+        <div class="kb-row"><span class="kb-rnum r4">4</span><span class="kb-rtext">번아웃·무기력 — 열심히 해도 나아지지 않아</span><span class="kb-rpct">65%</span><span class="kb-rtrend" style="color:#FF6B35">↑</span></div>
+        <div class="kb-row"><span class="kb-rnum r5">5</span><span class="kb-rtext">나는 지금 제대로 살고 있는 건가? (정체성)</span><span class="kb-rpct">58%</span><span class="kb-rtrend" style="color:#888">→</span></div>
+      </div>
+      <div class="kb-footer">🌿 지혜의 숲 이용자 데이터 기반 · 나무가 클수록 더 많은 사람이 고민 중</div>
+    </div>
+
+    <div class="section-title">🌿 지혜의 숲 심리상담소에서 현자들을 만나보세요</div>
+    <div class="sage-list" id="sageList"></div>
+
+    <div class="share-box">
+      <div class="share-box-title">— 친구에게 고민 탈곡기 알려주기 —</div>
+      <button class="btn-kakao" onclick="shareKakao()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.82 5.47 4.58 6.96L5.5 21l4.13-2.16A11.6 11.6 0 0012 19.5c5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>
+        카카오톡으로 공유하기
+      </button>
+      <button class="btn-link" onclick="copyLink()">🔗 링크 복사하기</button>
+    </div>
+    <button class="btn-retry" onclick="goInput()">또 다른 고민 탈곡하러 가기</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ 현자 데이터 (조언 스타일 포함) ══
+const SAGES = [
+  {
+    emoji:"🪞", name:"세네카", nameEn:"Seneca",
+    tag:"나만 제자리인 것 같을 때",
+    quote:"우리는 시간이 부족한 게 아니라, 낭비하고 있을 뿐이다.",
+    keywords:["시간","제자리","불안","늦었","나이","뒤처"],
+    style:"stoa", // 짧고 단호한 스토아 철학
+    advice:{
+      default:"그대는 지금 얼마나 많은 시간을 근심하는 데 쓰고 있는가?\n\n세네카가 말했다 — 우리가 잃는 것은 시간이 아니라, 지금 이 순간을 살지 못하는 것이다. 제자리처럼 보이는 것이 사실은 뿌리를 내리는 과정일 수 있다.\n\n오늘 그대에게 주어진 단 하나의 시간에 집중해보게. 비교는 내려놓고.",
+      time:"시간은 공정하다 — 모두에게 하루 24시간이 주어진다. 그 시간을 어디에 쓰느냐가 그대를 만든다. 지금 이 순간, 무엇이 정말 중요한지 다시 물어보게.",
+      anxiety:"불안은 아직 오지 않은 것에 대한 두려움이다. 세네카는 말했지 — '상상 속의 고통이 실제 고통보다 더 크다.' 지금 당장 일어난 일에만 집중하게."
+    }
+  },
+  {
+    emoji:"☕", name:"니체", nameEn:"Nietzsche",
+    tag:"아무것도 하기 싫을 때",
+    quote:"나를 죽이지 못하는 것은 나를 더 강하게 만든다.",
+    keywords:["하기싫","무기력","허무","의미","지겨","권태"],
+    style:"challenge", // 도발적·직설적
+    advice:{
+      default:"그 무기력함을 똑바로 들여다보게. 그것은 나약함이 아니라 — 지금까지의 방식이 더 이상 통하지 않는다는 신호다.\n\n니체는 말했다 — 허무의 밑바닥에서 진짜 나의 의지를 발견한다. 아무것도 하기 싫다면, 지금껏 '해야 했던 것들'로부터 해방될 기회다.\n\n당신이 진짜 원하는 것은 무엇인가?",
+      tired:"지쳤다는 것은 당신이 그동안 무언가를 위해 치열하게 살았다는 증거다. 니체라면 물을 것이다 — '무엇이 당신을 지치게 했는가, 그것이 진짜 당신의 것인가?'"
+    }
+  },
+  {
+    emoji:"🍃", name:"노자", nameEn:"Lao Tzu",
+    tag:"잘하려다 지칠 때",
+    quote:"아무것도 하지 않음으로써 모든 것이 이루어진다.",
+    keywords:["지쳤","힘들","잘하","완벽","노력","쉬","번아웃"],
+    style:"gentle", // 부드럽고 시적
+    advice:{
+      default:"강물은 애쓰지 않아도 바다에 닿는다네.\n\n노자가 말했지 — 曲則全(곡즉전), 구부러져야 온전해진다. 지금 그대가 느끼는 지침은 너무 곧게, 너무 빠르게 가려 했기 때문일 수 있다네.\n\n잠시 멈추는 것이 게으름이 아니라 — 더 멀리 가기 위한 숨 고르기임을 기억하게나.",
+      burnout:"물은 낮은 곳으로 흐르면서도 결국 가장 강해진다. 힘을 빼보게. 노자는 말했지 — 過猶不及(과유불급), 지나침은 모자람과 같다네."
+    }
+  },
+  {
+    emoji:"🪭", name:"공자", nameEn:"Confucius",
+    tag:"사람이 제일 어려울 때",
+    quote:"세 사람이 함께 걸으면 반드시 내 스승이 있다.",
+    keywords:["관계","사람","친구","직장","상사","가족","외롭"],
+    style:"relation", // 관계·도리 중심
+    advice:{
+      default:"사람이 어렵다 했는가. 그것은 당연한 일이네.\n\n공자가 말했지 — 己所不欲 勿施於人(기소불욕 물시어인), 자신이 원하지 않는 것을 남에게 베풀지 말라. 그 관계에서 그대가 먼저 어떻게 하고 싶은지를 살펴보게나.\n\n인(仁)이란 결국 사람을 사랑하는 것이니, 그 시작은 언제나 자기 자신에서 비롯되네.",
+      lonely:"혼자라 느끼는가. 공자는 말했지 — 德不孤必有鄰(덕불고필유린), 덕 있는 사람은 반드시 이웃이 생긴다. 먼저 자신을 갈고닦으면 자연히 뜻이 맞는 이가 나타나네."
+    }
+  },
+  {
+    emoji:"🏺", name:"소크라테스", nameEn:"Socrates",
+    tag:"내가 뭘 원하는지 모를 때",
+    quote:"너 자신을 알라. 검토되지 않은 삶은 살 가치가 없다.",
+    keywords:["모르겠","방향","뭘원","정체","나는","살고있","목적"],
+    style:"question", // 질문으로 끌어내는
+    advice:{
+      default:"그대는 자신이 무엇을 원하는지 모른다 했는가?\n\n소크라테스라면 이렇게 물을 것이다 — '그대가 원하지 않는 것은 무엇인가?' 때로는 원하는 것을 모를 때, 원하지 않는 것을 제거해가다 보면 진짜 원하는 것이 드러나지.\n\n검토되지 않은 삶은 살 가치가 없다. 지금 이 질문을 스스로에게 던지는 것 자체가 이미 시작이네.",
+      direction:"방향을 잃었다는 것은 더 넓은 가능성 앞에 서 있다는 것일 수 있다. 소크라테스는 물었지 — '무지를 아는 것이 지혜의 시작이다.' 모른다는 것을 인정하는 용기, 그것이 이미 앎이네."
+    }
+  },
+  {
+    emoji:"🌿", name:"아리스토텔레스", nameEn:"Aristotle",
+    tag:"행복하게 사는 법이 궁금할 때",
+    quote:"우리는 반복적으로 하는 것이 곧 우리 자신이다.",
+    keywords:["행복","잘사","좋은삶","의미있","습관","반복"],
+    style:"practical", // 실용적
+    advice:{
+      default:"행복이란 감정이 아니라 활동이라네.\n\n아리스토텔레스는 말했지 — Eudaimonia(에우다이모니아), 잘 기능하는 삶이 곧 행복이다. 그대가 가장 잘 할 수 있는 것, 그리고 그것이 타인에게도 도움이 되는 것 — 그 교차점에서 행복을 찾게나.\n\n오늘 하루 무엇을 반복하고 싶은가? 그것이 그대를 만들어갈 것이네.",
+      habit:"아리스토텔레스는 말했지 — 덕이란 한 번의 행동이 아니라 습관이다. 작은 것부터, 오늘부터 반복해보게."
+    }
+  },
+  {
+    emoji:"🍇", name:"에피쿠로스", nameEn:"Epicurus",
+    tag:"불안과 걱정을 줄이고 싶을 때",
+    quote:"단순한 삶에서 가장 큰 쾌락이 온다.",
+    keywords:["불안","걱정","두렵","미래","공포","긴장"],
+    style:"calm", // 평온·쾌락주의적
+    advice:{
+      default:"불안의 대부분은 실제로 일어나지 않는 일에 대한 것이라네.\n\n에피쿠로스가 말했지 — 죽음은 우리에게 아무것도 아니다. 우리가 있는 한 죽음은 없고, 죽음이 오면 우리가 없기 때문이지. 이처럼 미래의 두려움도 — 실제로 오기 전에는 아직 아무것도 아니라네.\n\n지금 이 순간, 가진 것 중 하나에 감사해보게. 단순한 것에서 진짜 쾌락이 온다네.",
+      anxiety:"불안은 원하는 것이 너무 많을 때 커진다. 에피쿠로스는 말했지 — 필요한 것은 적고, 필요한 것을 얻기는 쉽다. 무엇이 정말 필요한지 줄여보게."
+    }
+  },
+  {
+    emoji:"☸️", name:"붓다", nameEn:"Buddha",
+    tag:"마음의 평온을 찾고 싶을 때",
+    quote:"삶은 고통이다. 그러나 고통의 원인은 집착이다.",
+    keywords:["평온","집착","내려놓","고통","상처","아프","마음"],
+    style:"peace", // 평온·수용
+    advice:{
+      default:"고통은 피할 수 없지만, 괴로움은 선택이라네.\n\n붓다가 가르쳤지 — 모든 고통의 뿌리는 집착이다. 지금 그대가 놓지 못하고 있는 것이 무엇인가? 그것이 정말 그대 것인가, 아니면 그래야 한다는 생각이 만든 것인가?\n\n집착을 내려놓는 것은 포기가 아니라 — 자유로워지는 것이라네.",
+      pain:"붓다는 말했지 — 아픔은 필연이지만 고통은 선택이다. 지금 느끼는 감정을 판단하지 말고, 그저 관찰해보게. 감정은 구름처럼 지나간다네."
+    }
+  },
+  {
+    emoji:"🦋", name:"장자", nameEn:"Zhuangzi",
+    tag:"자유롭게 살고 싶을 때",
+    quote:"나비 꿈을 꾸는 사람인가, 사람 꿈을 꾸는 나비인가.",
+    keywords:["자유","자연","틀","벗어","남들","기준","억압"],
+    style:"free", // 자유롭고 역설적
+    advice:{
+      default:"그대는 지금 누가 만든 틀 안에서 자유롭지 못한가?\n\n장자가 말했지 — 나비가 되는 꿈을 꿨는데, 깨고 나니 내가 사람인지, 나비가 사람이 되는 꿈을 꾸는 건지 알 수 없었다고. 지금 그대가 당연하다 여기는 기준, 혹시 원래부터 그대 것이 아닐 수 있지 않은가?\n\n자유란 밖에서 오는 것이 아니라, 그대 안의 집착을 내려놓을 때 생겨난다네.",
+      free:"장자는 말했지 — 大知閑閑(대지한한), 큰 앎은 여유롭다. 작은 일에 얽매이지 않을 때, 세상이 달리 보인다네."
+    }
+  },
+  {
+    emoji:"🌍", name:"마르쿠스 아우렐리우스", nameEn:"Marcus Aurelius",
+    tag:"힘든 상황을 견디고 싶을 때",
+    quote:"장애물이 길을 막으면, 그 장애물 자체가 길이 된다.",
+    keywords:["힘들","견디","어렵","포기","한계","극복","버티"],
+    style:"stoic", // 단단하고 의지적
+    advice:{
+      default:"힘들다 했는가. 그 힘듦을 없애려 하지 말게.\n\n마르쿠스 아우렐리우스는 황제였지만 매일 아침 스스로에게 이렇게 말했다 — '오늘도 어렵고 불편한 사람들을 만날 것이다. 하지만 나는 그들을 통해 더 나은 내가 된다.'\n\n지금 그대 앞의 장애물 — 그것을 넘어가는 법이 아니라, 그것을 통해 강해지는 법을 찾아보게.",
+      hard:"마르쿠스는 말했지 — 통제할 수 없는 것에 에너지를 쓰지 말라. 지금 그대가 바꿀 수 있는 것 한 가지에만 집중해보게."
+    }
+  }
+];
+
+let myWorry = "";
+let matchedSage = null;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goInput(){
+  document.getElementById('worryText').value='';
+  document.getElementById('charCount').textContent='0';
+  document.getElementById('threshBtn').disabled=true;
+  showScreen('s-input');
+  setTimeout(()=>document.getElementById('worryText').focus(),100);
+}
+
+function updateChar(){
+  const v=document.getElementById('worryText').value;
+  document.getElementById('charCount').textContent=v.length;
+  document.getElementById('threshBtn').disabled=v.trim().length<2;
+}
+
+// ══ 탈곡 시작 ══
+function startThresh(){
+  myWorry=document.getElementById('worryText').value.trim();
+  if(!myWorry)return;
+  initThresher();
+  showScreen('s-thresh');
+  runThreshAnimation();
+}
+
+function initThresher(){
+  document.getElementById('particles').innerHTML='';
+  document.getElementById('threshFill').style.width='0%';
+  document.getElementById('threshTitle').textContent='고민을 탈탈 털어드립니다';
+  document.getElementById('threshSub').textContent='잠깐만요...';
+  document.getElementById('threshStatus').textContent='투입 준비 중...';
+  document.getElementById('threshDrum').style.animation='';
+  document.getElementById('seedParticles').innerHTML='';
+  document.getElementById('thresherWrap').classList.remove('thresh-shaking');
+}
+
+function vibrate(pattern){
+  if(navigator.vibrate) navigator.vibrate(pattern);
+}
+
+function spawnParticles(emojis){
+  const container=document.getElementById('particles');
+  const list=emojis||['🌾','✨','💨','🌿','🌱'];
+  for(let i=0;i<8;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.textContent=list[Math.floor(Math.random()*list.length)];
+    p.style.left=Math.random()*100+'%';
+    p.style.top=(30+Math.random()*40)+'%';
+    p.style.animationDelay=(Math.random()*0.6)+'s';
+    container.appendChild(p);
+    setTimeout(()=>p.remove(),2200);
+  }
+}
+
+function addSeedParticle(x, y){
+  const sp=document.getElementById('seedParticles');
+  const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  circle.setAttribute('cx', x);
+  circle.setAttribute('cy', y);
+  circle.setAttribute('r', 4+Math.random()*4);
+  circle.setAttribute('fill','#FFE08A');
+  circle.setAttribute('opacity','0.9');
+  sp.appendChild(circle);
+  setTimeout(()=>circle.remove(), 800);
+}
+
+function runThreshAnimation(){
+  const fill=document.getElementById('threshFill');
+  const status=document.getElementById('threshStatus');
+  const title=document.getElementById('threshTitle');
+  const sub=document.getElementById('threshSub');
+  const drum=document.getElementById('threshDrum');
+  const wrap=document.getElementById('thresherWrap');
+
+  const steps=[
+    {t:200, fn:()=>{
+      status.textContent='고민 투입 중... 🌾';
+      fill.style.width='10%';
+      vibrate(80);
+    }},
+    {t:700, fn:()=>{
+      // 드럼 회전 시작
+      drum.style.animation='drumSpin .5s linear infinite';
+      drum.style.transformOrigin='110px 124px';
+      wrap.classList.add('thresh-shaking');
+      vibrate([100,40,100,40,200]);
+      status.textContent='탈탈탈... 🌀';
+      fill.style.width='28%';
+      // 씨앗 파티클
+      for(let i=0;i<5;i++) setTimeout(()=>addSeedParticle(155+Math.random()*20, 112+Math.random()*18), i*120);
+    }},
+    {t:1400, fn:()=>{
+      drum.style.animationDuration='.25s';
+      vibrate([150,30,150,30,250]);
+      status.textContent='고민이 털리고 있어요... 💨';
+      fill.style.width='50%';
+      spawnParticles(['🌾','✨','💛','🌀']);
+      for(let i=0;i<8;i++) setTimeout(()=>addSeedParticle(152+Math.random()*24, 110+Math.random()*20), i*80);
+    }},
+    {t:2200, fn:()=>{
+      drum.style.animationDuration='.12s';
+      vibrate([200,20,200,20,300]);
+      status.textContent='귀한 씨앗이 나오고 있어요... 🌱';
+      fill.style.width='72%';
+      spawnParticles(['🌱','✨','💫','🌾']);
+      for(let i=0;i<10;i++) setTimeout(()=>addSeedParticle(150+Math.random()*28, 108+Math.random()*22), i*60);
+    }},
+    {t:3100, fn:()=>{
+      drum.style.animation='';
+      wrap.classList.remove('thresh-shaking');
+      vibrate(500);
+      status.textContent='✅ 탈곡 완료! 씨앗이 나왔어요';
+      fill.style.width='100%';
+      title.textContent='귀한 씨앗이 나왔어요! 🌾';
+      sub.textContent='인생선배가 기다리고 있어요...';
+      spawnParticles(['🌱','🌾','✨','💛','🌿']);
+    }},
+    {t:4500, fn:()=>{
+      matchSage();
+      showScreen('s-sage');
+    }}
+  ];
+  steps.forEach(s=>setTimeout(s.fn,s.t));
+}
+
+// ══ 현자 매칭 ══
+function matchSage(){
+  const w=myWorry.toLowerCase();
+  let best=null, bestScore=0;
+  SAGES.forEach(sg=>{
+    let score=0;
+    sg.keywords.forEach(k=>{ if(w.includes(k)) score+=2; });
+    if(score>bestScore){ bestScore=score; best=sg; }
+  });
+  // 매칭 없으면 랜덤
+  if(!best) best=SAGES[Math.floor(Math.random()*SAGES.length)];
+  matchedSage=best;
+
+  // 조언 선택
+  let advice=best.advice.default;
+  Object.entries(best.advice).forEach(([key,val])=>{
+    if(key!=='default' && w.includes(key)) advice=val;
+  });
+
+  // 화면 채우기
+  document.getElementById('sageEmoji').textContent=best.emoji;
+  document.getElementById('sageName').textContent=best.name;
+  document.getElementById('sageSub').textContent=best.tag+' · 당신의 고민에 맞는 인생선배';
+  document.getElementById('sageHeaderText').textContent=best.name+'의 조언';
+  document.getElementById('sageWorryPreview').textContent='"'+myWorry.slice(0,60)+(myWorry.length>60?'...':'')+'"';
+  document.getElementById('sageAdvice').textContent=advice;
+  document.getElementById('sageQuote').textContent='📜 "'+best.quote+'" — '+best.name;
+}
+
+// ══ 최종 결과 ══
+function showFinalResult(){
+  buildFinalResult();
+  showScreen('s-result');
+  document.getElementById('resultScroll').scrollTop=0;
+}
+
+function buildFinalResult(){
+  document.getElementById('worryPreview').textContent=myWorry.length>80?myWorry.slice(0,80)+'...':myWorry;
+
+  const shuffled=[...SAGES].sort(()=>Math.random()-.5);
+  // 매칭된 현자 맨 앞
+  const others=shuffled.filter(s=>s.name!==matchedSage.name);
+  const picked=[matchedSage, ...others.slice(0,2)];
+
+  const list=document.getElementById('sageList');
+  list.innerHTML='';
+  picked.forEach((sg,idx)=>{
+    const item=document.createElement('div');
+    item.className='sage-item'+(idx===0?' featured':'');
+    item.innerHTML=`
+      <div class="si-emoji">${sg.emoji}</div>
+      <div class="si-info">
+        <div class="si-name">${sg.name}${idx===0?' ⭐':''}</div>
+        <div class="si-tag">${sg.tag}</div>
+        <div class="si-quote">"${sg.quote}"</div>
+      </div>
+      <button class="si-btn${idx===0?'':' muted'}">${sg.name}와<br>대화하기</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function shareKakao(){
+  const url=window.location.href.split('?')[0];
+  const sage=matchedSage?matchedSage.name:'현자';
+  window.open('https://story.kakao.com/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent('고민을 탈곡했더니 '+sage+'가 나왔어요 🌾 너도 털러 와!'),'_blank','width=560,height=600');
+}
+
+function copyLink(){
+  const url=window.location.href.split('?')[0];
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>showToast('링크가 복사됐어요!'));
+  }else{
+    const el=document.createElement('textarea');
+    el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+    showToast('링크가 복사됐어요!');
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+showScreen('s-intro');
+</script>
+</body>
+</html>
