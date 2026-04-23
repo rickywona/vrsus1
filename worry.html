@@ -60,25 +60,110 @@ html,body{height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif
 .grind-title{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
 .grind-sub{font-size:13px;color:#999;margin-bottom:32px;line-height:1.65}
 
-/* 파쇄기 SVG 스타일 */
-.shredder-wrap{width:220px;height:280px;margin:0 auto 28px;position:relative}
-.shredder-body{width:200px;height:220px;background:#2A2A2A;border-radius:12px;border:2px solid #444;position:absolute;bottom:0;left:50%;transform:translateX(-50%);overflow:hidden}
-.shredder-slot{position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:16px;background:#111;border-radius:0 0 8px 8px}
-.shredder-rollers{position:absolute;top:18px;left:0;right:0;height:20px;display:flex;align-items:center;justify-content:center;gap:3px}
-.roller{width:8px;height:20px;background:#555;border-radius:2px;animation:rollSpin 0s linear infinite}
-@keyframes rollSpin{to{transform:rotateY(360deg)}}
-.roller.active{animation-duration:.2s}
-.shredded-strips{position:absolute;top:44px;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:3px;padding:6px;overflow:hidden}
-.strip{width:8px;height:0;background:linear-gradient(180deg,#4CAF50,#2E7D32);border-radius:2px;opacity:0;transition:height .3s ease,opacity .3s ease}
-.strip.grow{height:60px;opacity:0.8}
-.paper-input{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:120px;height:80px;background:#fff;border-radius:4px;display:flex;flex-direction:column;padding:8px;gap:3px;transition:top .8s ease}
-.paper-input.feeding{top:-10px}
-.paper-line{height:4px;background:#E0E0E0;border-radius:2px}
-.paper-line.dark{background:#BDBDBD}
+/* 음식물 쓰레기통 */
+@keyframes binShake{
+  0%,100%{transform:translateX(-50%) rotate(0deg)}
+  10%{transform:translateX(-50%) rotate(-3deg)}
+  20%{transform:translateX(-50%) rotate(3deg)}
+  30%{transform:translateX(-50%) rotate(-2.5deg)}
+  40%{transform:translateX(-50%) rotate(2.5deg)}
+  50%{transform:translateX(-50%) rotate(-2deg)}
+  60%{transform:translateX(-50%) rotate(2deg)}
+  70%{transform:translateX(-50%) rotate(-1.5deg)}
+  80%{transform:translateX(-50%) rotate(1.5deg)}
+  90%{transform:translateX(-50%) rotate(-0.5deg)}
+}
+@keyframes lidBounce{
+  0%,100%{transform:rotate(0deg);transform-origin:left center}
+  30%{transform:rotate(-18deg);transform-origin:left center}
+  60%{transform:rotate(-8deg);transform-origin:left center}
+}
+@keyframes foodDrop{
+  0%{transform:translateY(-80px) rotate(-10deg);opacity:1}
+  80%{transform:translateY(10px) rotate(5deg);opacity:1}
+  100%{transform:translateY(30px) rotate(0deg);opacity:0}
+}
+@keyframes steam{
+  0%{opacity:0;transform:translateY(0) scaleX(1)}
+  40%{opacity:0.8}
+  100%{opacity:0;transform:translateY(-30px) scaleX(1.5)}
+}
+@keyframes binGlow{
+  0%,100%{box-shadow:0 0 0 rgba(76,175,80,0)}
+  50%{box-shadow:0 0 20px rgba(76,175,80,0.4)}
+}
 
-/* 진동 클래스 */
+.bin-wrap{position:relative;width:180px;height:240px;margin:0 auto 24px}
+.bin-body{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:150px;height:180px;
+  background:linear-gradient(135deg,#2A2A2A 0%,#1A1A1A 60%,#333 100%);
+  border-radius:10px 10px 18px 18px;
+  border:2px solid #444;
+  overflow:hidden;
+}
+.bin-body.shaking{animation:binShake .15s ease-in-out infinite;animation-origin:center bottom}
+.bin-body.glowing{animation:binGlow 1s ease-in-out infinite}
+.bin-inner-top{
+  position:absolute;top:0;left:0;right:0;height:44px;
+  background:linear-gradient(180deg,#222 0%,#1A1A1A 100%);
+  border-bottom:2px solid #555;
+  display:flex;align-items:center;justify-content:center;gap:4px;overflow:hidden;
+}
+.bin-sensor{width:8px;height:8px;border-radius:50%;background:#333;border:1px solid #555;transition:background .3s}
+.bin-sensor.active{background:#4CAF50;box-shadow:0 0 6px #4CAF50}
+.bin-brand{font-size:9px;color:#555;font-weight:700;letter-spacing:0.1em}
+.bin-content{position:absolute;top:46px;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;padding:4px}
+.bin-fill-liquid{
+  position:absolute;bottom:0;left:0;right:0;height:0;
+  background:linear-gradient(180deg,rgba(100,180,80,0.6),rgba(60,120,40,0.85));
+  transition:height 2s ease;border-radius:0 0 16px 16px;
+}
+.bin-bubbles{position:absolute;bottom:0;left:0;right:0;height:40px;overflow:hidden}
+.bubble-dot{position:absolute;border-radius:50%;background:rgba(150,220,100,0.5);animation:bubbleRise 2s ease-in infinite}
+@keyframes bubbleRise{0%{transform:translateY(0);opacity:0.8}100%{transform:translateY(-50px);opacity:0}}
+.bin-lid{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:158px;height:28px;
+  background:linear-gradient(135deg,#333 0%,#222 100%);
+  border-radius:8px 8px 0 0;border:2px solid #555;
+  transform-origin:0% 50%;
+  transition:transform .4s ease;
+  z-index:5;
+}
+.bin-lid.open{animation:lidBounce .5s ease-out}
+.bin-lid-handle{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:30px;height:7px;background:#555;border-radius:4px;
+}
+.bin-base{
+  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  width:160px;height:14px;
+  background:#1A1A1A;border-radius:4px;border:1px solid #333;
+}
+.bin-button{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  width:10px;height:10px;border-radius:50%;
+  background:#333;border:1px solid #555;transition:background .3s;
+}
+.bin-button.on{background:#4CAF50;box-shadow:0 0 6px #4CAF50}
+
+/* 음식 이모지 투입 */
+.food-item{
+  position:absolute;top:-70px;left:50%;transform:translateX(-50%);
+  font-size:36px;z-index:6;
+  animation:foodDrop .8s ease-in forwards;
+  pointer-events:none;
+}
+
+/* 증기 */
+.steam-wrap{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:80px;height:30px;pointer-events:none;opacity:0;transition:opacity .3s}
+.steam-wrap.active{opacity:1}
+.steam-puff{position:absolute;border-radius:50%;background:rgba(200,240,180,0.5);animation:steam 1.5s ease-out infinite}
+
+/* 진동 클래스 (기존 유지) */
 @keyframes shake{0%,100%{transform:translateX(0)}10%,50%,90%{transform:translateX(-4px)}30%,70%{transform:translateX(4px)}}
-.shaking{animation:shake .08s linear infinite}
+.shaking-h{animation:shake .08s linear infinite}
 
 /* 진행바 */
 .grind-progress{width:100%;height:6px;background:#333;border-radius:3px;overflow:hidden;margin-bottom:12px}
@@ -125,29 +210,35 @@ html,body{height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif
 .btn-link:hover{background:var(--green-light)}
 .btn-retry{width:100%;padding:10px;background:transparent;color:var(--ink3);border:none;font-size:12px;cursor:pointer;margin:0 16px}
 
-/* 한국사회 고민 현황판 */
+/* 한국사회 고민 현황판 — 숲 시각화 */
 .korea-board{margin:0 16px 16px;background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden}
-.kb-header{background:#1A1A2E;padding:13px 16px;display:flex;align-items:center;gap:8px}
+.kb-header{background:#1A2E1A;padding:12px 16px;display:flex;align-items:center;gap:8px}
 .kb-icon{font-size:18px}
 .kb-title{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;color:#fff}
-.kb-sub{font-size:10px;color:#888;margin-top:1px}
-.kb-items{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
-.kb-item{display:flex;align-items:center;gap:10px}
-.kb-rank{font-size:16px;font-weight:700;width:24px;flex-shrink:0;text-align:center}
-.kb-rank.r1{color:#FF6B35}
-.kb-rank.r2{color:#888}
-.kb-rank.r3{color:#B8860B}
-.kb-content{flex:1;min-width:0}
-.kb-label{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
-.kb-tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
-.kb-tag{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
-.kb-bar{height:6px;background:#F0F0F0;border-radius:3px;overflow:hidden}
-.kb-fill{height:100%;border-radius:3px;transition:width 1.4s ease}
-.kb-meta{display:flex;justify-content:space-between;align-items:center;margin-top:3px}
-.kb-pct{font-size:11px;color:var(--ink3)}
-.kb-trend{font-size:10px;font-weight:600}
-.kb-divider{height:1px;background:#F0F0F0;margin:2px 0}
-.kb-footer{padding:8px 16px 12px;font-size:10px;color:#AAA;text-align:center}
+.kb-sub{font-size:10px;color:#90EE90;margin-top:1px}
+/* 숲 장면 */
+.forest-scene{position:relative;width:100%;height:210px;overflow:hidden;background:linear-gradient(180deg,#B8E4FF 0%,#D4F0FF 42%,#7BC67A 58%,#5A9E58 100%)}
+.fs-sun{position:absolute;top:10px;right:18px;width:30px;height:30px;background:#FFE566;border-radius:50%;box-shadow:0 0 18px rgba(255,229,102,0.7)}
+.fs-cloud{position:absolute;background:rgba(255,255,255,0.82);border-radius:50px}
+.fs-ground{position:absolute;bottom:0;left:0;right:0;height:88px;background:linear-gradient(180deg,#7BC67A 0%,#5A9E58 40%,#4A8448 100%)}
+.fs-items{position:absolute;bottom:52px;left:0;right:0;display:flex;align-items:flex-end;justify-content:space-around;padding:0 8px}
+.fs-item{display:flex;flex-direction:column;align-items:center;position:relative;cursor:default}
+.fs-item:hover .fs-tooltip{opacity:1;transform:translateY(0)}
+.fs-plant{line-height:1;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.18))}
+.fs-rank-badge{position:absolute;top:-8px;right:-6px;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;border:1.5px solid rgba(255,255,255,0.6)}
+.fs-name{font-size:9px;font-weight:600;color:#fff;text-align:center;margin-top:2px;max-width:52px;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)}
+.fs-pct{font-size:9px;font-weight:700;color:#FFE566;text-shadow:0 1px 2px rgba(0,0,0,0.7)}
+.fs-tooltip{position:absolute;bottom:110%;left:50%;transform:translateX(-50%) translateY(4px);background:rgba(15,30,15,0.92);color:#fff;font-size:10px;padding:5px 9px;border-radius:9px;white-space:nowrap;pointer-events:none;opacity:0;transition:all .2s;z-index:10;line-height:1.4;text-align:center;max-width:120px;white-space:normal}
+.fs-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:rgba(15,30,15,0.92)}
+/* 목록 */
+.kb-list{padding:8px 14px 10px;display:flex;flex-direction:column;gap:5px;border-top:1px solid #EEF5EE}
+.kb-row{display:flex;align-items:flex-start;gap:7px}
+.kb-rnum{font-weight:800;font-size:13px;width:16px;flex-shrink:0;margin-top:1px}
+.kb-rnum.r1{color:#FF6B35}.kb-rnum.r2{color:#888}.kb-rnum.r3{color:#B8860B}.kb-rnum.r4{color:#4CAF50}.kb-rnum.r5{color:#2196F3}
+.kb-rtext{flex:1;font-size:11px;color:var(--ink2);line-height:1.45}
+.kb-rpct{font-size:10px;font-weight:700;color:var(--ink3);flex-shrink:0;margin-top:1px}
+.kb-rtrend{font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.kb-footer{padding:4px 16px 9px;font-size:10px;color:#AAA;text-align:center}
 
 /* 복사됨 토스트 */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;z-index:999}
@@ -195,19 +286,35 @@ html,body{height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif
     <div class="grind-title" id="grindTitle">고민을 갈아드립니다</div>
     <div class="grind-sub" id="grindSub">잠깐만요...</div>
 
-    <div class="shredder-wrap" id="shredderWrap">
-      <div class="paper-input" id="paperInput">
-        <div class="paper-line"></div>
-        <div class="paper-line dark"></div>
-        <div class="paper-line"></div>
-        <div class="paper-line dark"></div>
-        <div class="paper-line"></div>
+    <div class="bin-wrap" id="binWrap">
+      <!-- 증기 -->
+      <div class="steam-wrap" id="steamWrap">
+        <div class="steam-puff" style="width:12px;height:12px;left:10px;animation-delay:0s"></div>
+        <div class="steam-puff" style="width:8px;height:8px;left:36px;animation-delay:.4s"></div>
+        <div class="steam-puff" style="width:10px;height:10px;left:56px;animation-delay:.8s"></div>
       </div>
-      <div class="shredder-body" id="shredderBody">
-        <div class="shredder-slot"></div>
-        <div class="shredder-rollers" id="rollers"></div>
-        <div class="shredded-strips" id="strips"></div>
+
+      <!-- 뚜껑 -->
+      <div class="bin-lid" id="binLid">
+        <div class="bin-lid-handle"></div>
       </div>
+
+      <!-- 본체 -->
+      <div class="bin-body" id="binBody">
+        <!-- 상단 패널 -->
+        <div class="bin-inner-top">
+          <div class="bin-sensor" id="binSensor"></div>
+          <div class="bin-brand">WORRY BIN</div>
+          <div class="bin-button" id="binButton"></div>
+        </div>
+        <!-- 내부 내용물 -->
+        <div class="bin-content">
+          <div class="bin-fill-liquid" id="binFill"></div>
+          <div class="bin-bubbles" id="binBubbles"></div>
+        </div>
+      </div>
+
+      <div class="bin-base"></div>
     </div>
 
     <div class="grind-progress"><div class="grind-fill" id="grindFill"></div></div>
@@ -233,82 +340,92 @@ html,body{height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif
     <div class="sage-section-title">🗺️ 지금 한국사회 고민 현황판</div>
     <div class="korea-board">
       <div class="kb-header">
-        <span class="kb-icon">📊</span>
+        <span class="kb-icon">🌲</span>
         <div>
-          <div class="kb-title">2026 한국사회 고민 순위</div>
-          <div class="kb-sub">실시간 집계 · 20-40대 기준</div>
+          <div class="kb-title">2026 한국사회 고민의 숲</div>
+          <div class="kb-sub">클수록 더 많은 사람이 고민 중 · 20-40대 기준</div>
         </div>
       </div>
-      <div class="kb-items">
-        <div class="kb-item">
-          <div class="kb-rank r1">1</div>
-          <div class="kb-content">
-            <div class="kb-label">AI·자동화로 인한 일자리 대체 위협</div>
-            <div class="kb-tag-row">
-              <span class="kb-tag" style="background:#FFF3E0;color:#E65100">경제</span>
-              <span class="kb-tag" style="background:#FCE4EC;color:#C62828">생존</span>
-            </div>
-            <div class="kb-bar"><div class="kb-fill" style="background:#FF6B35;width:0%" data-w="84"></div></div>
-            <div class="kb-meta"><span class="kb-pct">84%가 불안 호소</span><span class="kb-trend" style="color:#FF6B35">↑ 급증</span></div>
+
+      <!-- 숲 장면 -->
+      <div class="forest-scene">
+        <div class="fs-sun"></div>
+        <!-- 구름들 -->
+        <div class="fs-cloud" style="width:50px;height:18px;top:18px;left:30px;opacity:0.9"></div>
+        <div class="fs-cloud" style="width:36px;height:14px;top:14px;left:56px;opacity:0.7"></div>
+        <div class="fs-cloud" style="width:42px;height:16px;top:28px;left:130px;opacity:0.8"></div>
+        <div class="fs-cloud" style="width:30px;height:12px;top:24px;left:163px;opacity:0.65"></div>
+
+        <!-- 배경 나무들 (작게) -->
+        <div style="position:absolute;bottom:70px;left:4px;font-size:22px;opacity:0.5">🌲</div>
+        <div style="position:absolute;bottom:72px;right:6px;font-size:20px;opacity:0.45">🌳</div>
+        <div style="position:absolute;bottom:68px;left:22px;font-size:16px;opacity:0.4">🌿</div>
+
+        <div class="fs-ground"></div>
+
+        <!-- 메인 식물 아이템 5개 -->
+        <div class="fs-items">
+
+          <!-- 1위: AI 일자리 위협 - 가장 큰 나무 -->
+          <div class="fs-item">
+            <div class="fs-tooltip">AI·자동화 일자리 위협<br>84% 불안 · ↑ 급증</div>
+            <span class="fs-plant" style="font-size:60px">🌲</span>
+            <div class="fs-rank-badge" style="background:#FF6B35">1</div>
+            <div class="fs-name">AI<br>일자리</div>
+            <div class="fs-pct">84%</div>
           </div>
-        </div>
-        <div class="kb-divider"></div>
-        <div class="kb-item">
-          <div class="kb-rank r2">2</div>
-          <div class="kb-content">
-            <div class="kb-label">돈이 늘 부족하다 — 물가·주거 부담</div>
-            <div class="kb-tag-row">
-              <span class="kb-tag" style="background:#FFF3E0;color:#E65100">경제</span>
-              <span class="kb-tag" style="background:#E8EAF6;color:#3949AB">일상</span>
-            </div>
-            <div class="kb-bar"><div class="kb-fill" style="background:#888;width:0%" data-w="78"></div></div>
-            <div class="kb-meta"><span class="kb-pct">78%가 경험</span><span class="kb-trend" style="color:#888">→ 지속</span></div>
+
+          <!-- 2위: 돈 부족 - 큰 나무 -->
+          <div class="fs-item">
+            <div class="fs-tooltip">돈 부족·물가·주거<br>78% 경험 · → 지속</div>
+            <span class="fs-plant" style="font-size:50px">🌳</span>
+            <div class="fs-rank-badge" style="background:#888">2</div>
+            <div class="fs-name">돈<br>부족</div>
+            <div class="fs-pct">78%</div>
           </div>
-        </div>
-        <div class="kb-divider"></div>
-        <div class="kb-item">
-          <div class="kb-rank r3">3</div>
-          <div class="kb-content">
-            <div class="kb-label">빈부격차 심화로 인한 상실감·박탈감</div>
-            <div class="kb-tag-row">
-              <span class="kb-tag" style="background:#F3E5F5;color:#6A1B9A">심리</span>
-              <span class="kb-tag" style="background:#E8F5E9;color:#2E7D32">사회</span>
-            </div>
-            <div class="kb-bar"><div class="kb-fill" style="background:#B8860B;width:0%" data-w="71"></div></div>
-            <div class="kb-meta"><span class="kb-pct">71%가 공감</span><span class="kb-trend" style="color:#B8860B">↑ 증가</span></div>
+
+          <!-- 3위: 빈부격차 - 중간 나무 + 열매 -->
+          <div class="fs-item">
+            <div class="fs-tooltip">빈부격차 상실감·박탈감<br>71% 공감 · ↑ 증가</div>
+            <span class="fs-plant" style="font-size:42px">🍎</span>
+            <div class="fs-rank-badge" style="background:#B8860B">3</div>
+            <div class="fs-name">빈부<br>격차</div>
+            <div class="fs-pct">71%</div>
           </div>
-        </div>
-        <div class="kb-divider"></div>
-        <div class="kb-item">
-          <div class="kb-rank" style="color:#4CAF50;font-size:14px">4</div>
-          <div class="kb-content">
-            <div class="kb-label">번아웃·무기력 — 열심히 해도 나아지지 않아</div>
-            <div class="kb-tag-row">
-              <span class="kb-tag" style="background:#F3E5F5;color:#6A1B9A">심리</span>
-              <span class="kb-tag" style="background:#E3F2FD;color:#1565C0">직장</span>
-            </div>
-            <div class="kb-bar"><div class="kb-fill" style="background:#4CAF50;width:0%" data-w="65"></div></div>
-            <div class="kb-meta"><span class="kb-pct">65%가 경험</span><span class="kb-trend" style="color:#4CAF50">↑ 증가</span></div>
+
+          <!-- 4위: 번아웃 - 시든 꽃 -->
+          <div class="fs-item">
+            <div class="fs-tooltip">번아웃·무기력<br>65% 경험 · ↑ 증가</div>
+            <span class="fs-plant" style="font-size:36px">🌻</span>
+            <div class="fs-rank-badge" style="background:#4CAF50">4</div>
+            <div class="fs-name">번아웃<br>무기력</div>
+            <div class="fs-pct">65%</div>
           </div>
-        </div>
-        <div class="kb-divider"></div>
-        <div class="kb-item">
-          <div class="kb-rank" style="color:#2196F3;font-size:14px">5</div>
-          <div class="kb-content">
-            <div class="kb-label">나는 지금 제대로 살고 있는 건가? (정체성)</div>
-            <div class="kb-tag-row">
-              <span class="kb-tag" style="background:#E3F2FD;color:#1565C0">정체성</span>
-              <span class="kb-tag" style="background:#E8EAF6;color:#3949AB">30대</span>
-            </div>
-            <div class="kb-bar"><div class="kb-fill" style="background:#2196F3;width:0%" data-w="58"></div></div>
-            <div class="kb-meta"><span class="kb-pct">58%가 고민</span><span class="kb-trend" style="color:#2196F3">→ 지속</span></div>
+
+          <!-- 5위: 정체성 - 새싹 -->
+          <div class="fs-item">
+            <div class="fs-tooltip">나는 제대로 살고 있나?<br>58% 고민 · → 지속</div>
+            <span class="fs-plant" style="font-size:28px">🌱</span>
+            <div class="fs-rank-badge" style="background:#2196F3">5</div>
+            <div class="fs-name">정체성<br>방향</div>
+            <div class="fs-pct">58%</div>
           </div>
+
         </div>
       </div>
-      <div class="kb-footer">* 지혜의 숲 이용자 데이터 기반 집계 · 매월 업데이트</div>
+
+      <!-- 텍스트 목록 -->
+      <div class="kb-list">
+        <div class="kb-row"><span class="kb-rnum r1">1</span><span class="kb-rtext">AI·자동화로 인한 일자리 대체 위협</span><span class="kb-rpct">84%</span><span class="kb-rtrend" style="color:#FF6B35">↑</span></div>
+        <div class="kb-row"><span class="kb-rnum r2">2</span><span class="kb-rtext">돈이 늘 부족하다 — 물가·주거 부담</span><span class="kb-rpct">78%</span><span class="kb-rtrend" style="color:#888">→</span></div>
+        <div class="kb-row"><span class="kb-rnum r3">3</span><span class="kb-rtext">빈부격차 심화로 인한 상실감·박탈감</span><span class="kb-rpct">71%</span><span class="kb-rtrend" style="color:#FF6B35">↑</span></div>
+        <div class="kb-row"><span class="kb-rnum r4">4</span><span class="kb-rtext">번아웃·무기력 — 열심히 해도 나아지지 않아</span><span class="kb-rpct">65%</span><span class="kb-rtrend" style="color:#FF6B35">↑</span></div>
+        <div class="kb-row"><span class="kb-rnum r5">5</span><span class="kb-rtext">나는 지금 제대로 살고 있는 건가? (정체성)</span><span class="kb-rpct">58%</span><span class="kb-rtrend" style="color:#888">→</span></div>
+      </div>
+      <div class="kb-footer">🌿 지혜의 숲 이용자 데이터 기반 · 나무가 클수록 더 많은 사람이 고민 중</div>
     </div>
 
-    <div class="sage-section-title">🧑‍🏫 당신의 인생선배를 만나보세요</div>
+    <div class="sage-section-title">🌿 지혜의 숲 심리상담소에서 현자들을 만나보세요</div>
     <div class="sage-list" id="sageList"></div>
 
     <div class="share-box">
@@ -370,34 +487,21 @@ function startGrind(){
 }
 
 function buildShredder(){
-  // 롤러 생성
-  const rollers=document.getElementById('rollers');
-  rollers.innerHTML='';
-  for(let i=0;i<14;i++){
-    const r=document.createElement('div');
-    r.className='roller';
-    r.id='roller_'+i;
-    rollers.appendChild(r);
-  }
-  // 파쇄 조각 생성
-  const strips=document.getElementById('strips');
-  strips.innerHTML='';
-  const colors=['#4CAF50','#2E7D32','#66BB6A','#388E3C','#81C784','#1B5E20'];
-  for(let i=0;i<24;i++){
-    const s=document.createElement('div');
-    s.className='strip';
-    s.id='strip_'+i;
-    s.style.background=colors[i%colors.length];
-    strips.appendChild(s);
-  }
-  // 파티클 초기화
+  // 초기화
   document.getElementById('particles').innerHTML='';
-  // 진행바 초기화
   document.getElementById('grindFill').style.width='0%';
   document.getElementById('grindTitle').textContent='고민을 갈아드립니다';
   document.getElementById('grindSub').textContent='잠깐만요...';
   document.getElementById('grindStatus').textContent='투입 준비 중...';
-  document.getElementById('paperInput').style.top='-80px';
+  document.getElementById('binFill').style.height='0%';
+  document.getElementById('binBody').classList.remove('shaking','glowing');
+  document.getElementById('binLid').classList.remove('open');
+  document.getElementById('binSensor').classList.remove('active');
+  document.getElementById('binButton').classList.remove('on');
+  document.getElementById('steamWrap').classList.remove('active');
+  document.getElementById('binBubbles').innerHTML='';
+  // 기존 음식 제거
+  document.querySelectorAll('.food-item').forEach(f=>f.remove());
 }
 
 function vibrate(duration){
@@ -406,7 +510,7 @@ function vibrate(duration){
 
 function spawnParticles(){
   const container=document.getElementById('particles');
-  const emojis=['💨','✨','🌿','💚','🍃','⚡'];
+  const emojis=['💨','✨','🌿','💚','🍃','🌱'];
   for(let i=0;i<8;i++){
     const p=document.createElement('div');
     p.className='particle';
@@ -419,74 +523,94 @@ function spawnParticles(){
   }
 }
 
+function dropFood(emoji){
+  const wrap=document.getElementById('binWrap');
+  const food=document.createElement('div');
+  food.className='food-item';
+  food.textContent=emoji;
+  wrap.appendChild(food);
+  setTimeout(()=>food.remove(),1000);
+}
+
+function addBubble(){
+  const bubbles=document.getElementById('binBubbles');
+  const b=document.createElement('div');
+  b.className='bubble-dot';
+  const size=4+Math.random()*8;
+  b.style.cssText=`width:${size}px;height:${size}px;left:${10+Math.random()*80}%;animation-delay:${Math.random()*1.5}s;animation-duration:${1.5+Math.random()}s`;
+  bubbles.appendChild(b);
+}
+
 function runGrindAnimation(){
   const fill=document.getElementById('grindFill');
   const status=document.getElementById('grindStatus');
   const title=document.getElementById('grindTitle');
   const sub=document.getElementById('grindSub');
-  const shredder=document.getElementById('shredderBody');
-  const paper=document.getElementById('paperInput');
-  const wrap=document.getElementById('shredderWrap');
+  const body=document.getElementById('binBody');
+  const lid=document.getElementById('binLid');
+  const sensor=document.getElementById('binSensor');
+  const btn=document.getElementById('binButton');
+  const binFill=document.getElementById('binFill');
+  const steam=document.getElementById('steamWrap');
+
+  const foodEmojis=['🥗','🍎','🥑','🥕','🍌','🍅','🥦','🍋'];
 
   const steps=[
-    {t:300, fn:()=>{
+    {t:200, fn:()=>{
+      status.textContent='투입구 열리는 중... 🔓';
+      fill.style.width='8%';
+      lid.classList.add('open');
+      sensor.classList.add('active');
+      vibrate(80);
+    }},
+    {t:700, fn:()=>{
+      dropFood(foodEmojis[Math.floor(Math.random()*foodEmojis.length)]);
       status.textContent='고민 투입 중... 💭';
-      fill.style.width='10%';
-      paper.style.top='-10px';
-      paper.classList.add('feeding');
+      fill.style.width='22%';
+      binFill.style.height='15%';
+      vibrate([60,30,60]);
     }},
-    {t:1000, fn:()=>{
-      // 롤러 시작
-      document.querySelectorAll('.roller').forEach(r=>r.classList.add('active'));
-      shredder.classList.add('shaking');
-      wrap.classList.add('shaking');
-      vibrate([100,50,100,50,200]);
-      status.textContent='지이이잉... 🔄';
-      fill.style.width='30%';
-      // 파쇄 조각 등장
-      for(let i=0;i<8;i++){
-        setTimeout(()=>{
-          const s=document.getElementById('strip_'+i);
-          if(s)s.classList.add('grow');
-        },i*60);
-      }
+    {t:1100, fn:()=>{
+      body.classList.add('shaking');
+      vibrate([120,40,120,40,200]);
+      status.textContent='지이이잉... 🌀';
+      fill.style.width='40%';
+      binFill.style.height='32%';
+      for(let i=0;i<4;i++) setTimeout(addBubble, i*200);
     }},
-    {t:1800, fn:()=>{
+    {t:1600, fn:()=>{
+      dropFood(foodEmojis[Math.floor(Math.random()*foodEmojis.length)]);
+      vibrate([200,20,200,20,200]);
+      status.textContent='갈리고 있어요... 💨';
+      fill.style.width='58%';
+      binFill.style.height='52%';
+      steam.classList.add('active');
+      btn.classList.add('on');
       spawnParticles();
-      vibrate([200,30,200,30,200]);
-      status.textContent='갈리고 있어요... 분쇄 중 💨';
-      fill.style.width='55%';
-      for(let i=8;i<16;i++){
-        setTimeout(()=>{
-          const s=document.getElementById('strip_'+i);
-          if(s)s.classList.add('grow');
-        },(i-8)*50);
-      }
+      for(let i=0;i<5;i++) setTimeout(addBubble, i*150);
     }},
-    {t:2600, fn:()=>{
+    {t:2400, fn:()=>{
       vibrate([300,20,300]);
-      status.textContent='거의 다 됐어요... 🌿';
+      status.textContent='고민이 녹아들고 있어요 🌿';
       fill.style.width='78%';
-      for(let i=16;i<24;i++){
-        setTimeout(()=>{
-          const s=document.getElementById('strip_'+i);
-          if(s)s.classList.add('grow');
-        },(i-16)*40);
-      }
+      binFill.style.height='70%';
+      body.classList.add('glowing');
+      for(let i=0;i<6;i++) setTimeout(addBubble, i*100);
       spawnParticles();
     }},
-    {t:3400, fn:()=>{
-      shredder.classList.remove('shaking');
-      wrap.classList.remove('shaking');
-      document.querySelectorAll('.roller').forEach(r=>r.classList.remove('active'));
-      vibrate(500);
-      status.textContent='✅ 분쇄 완료!';
+    {t:3200, fn:()=>{
+      body.classList.remove('shaking');
+      lid.classList.remove('open');
+      vibrate(600);
+      status.textContent='✅ 분해 완료! 비료가 됐어요';
       fill.style.width='100%';
+      binFill.style.height='88%';
       title.textContent='고민이 사라졌어요!';
       sub.textContent='비료로 변환 중... 🌱';
+      steam.classList.remove('active');
       spawnParticles();
     }},
-    {t:4800, fn:()=>{
+    {t:4600, fn:()=>{
       buildResult();
       showScreen('s-result');
       document.getElementById('resultScroll').scrollTop=0;
@@ -497,12 +621,6 @@ function runGrindAnimation(){
 
 // ══ 결과 구성 ══
 function buildResult(){
-  // 현황판 바 애니메이션
-  setTimeout(()=>{
-    document.querySelectorAll('.kb-fill').forEach(el=>{
-      el.style.width=el.dataset.w+'%';
-    });
-  },400);
   const preview=document.getElementById('worryPreview');
   preview.textContent=myWorry.length>80?myWorry.slice(0,80)+'...':myWorry;
 
