@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>지혜의 숲 : 인문학 심리상담소</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FFFBF5;--card:#FFFFFF;--ink:#1C1810;--ink2:#4A4035;--ink3:#8A7A6A;--border:#EDE0CC;--green:#3A7D44;--green-light:#E8F5E9;--amber:#F5A623;--brown:#7B5C3A;--brown-light:#F5EDE0;}
+html,body{min-height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--ink)}
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center}
+.screen.active{display:flex}
+
+/* 인트로 */
+#s-intro{justify-content:center;padding:2rem 1.5rem;background:linear-gradient(180deg,#E8F5E9 0%,#FFFBF5 60%)}
+.intro-wrap{width:100%;max-width:400px;text-align:center}
+.forest-emoji{font-size:52px;margin-bottom:12px;display:block;animation:sway 4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.brand-name{font-family:'Noto Serif KR',serif;font-size:23px;font-weight:700;color:var(--green);margin-bottom:3px}
+.brand-sub{font-size:12px;font-weight:500;color:var(--ink3);letter-spacing:0.18em;margin-bottom:18px}
+.intro-desc{font-size:13px;color:var(--ink2);line-height:1.8;margin-bottom:16px}
+.intro-flow{display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0 20px;flex-wrap:wrap}
+.flow-step{display:flex;flex-direction:column;align-items:center;gap:3px}
+.flow-emoji{font-size:20px}
+.flow-label{font-size:9px;color:var(--ink3);font-weight:500}
+.flow-arrow{color:var(--ink3);font-size:12px;margin-top:-10px}
+.intro-meta{display:flex;justify-content:center;gap:16px;margin-bottom:22px;padding:10px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.im{font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:4px}
+.im-dot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.start-btn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:14px;font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s}
+.start-btn:hover{background:#2D6B38}
+
+/* 질문 */
+#s-quiz{padding:0;background:var(--bg)}
+.quiz-header{width:100%;max-width:460px;padding:16px 20px 0}
+.prog-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:5px}
+.prog-fill{height:100%;background:var(--green);border-radius:3px;transition:width .5s ease}
+.prog-label{font-size:11px;color:var(--ink3);text-align:right;font-family:'Noto Serif KR',serif}
+.quiz-card{width:100%;max-width:460px;padding:18px 20px 12px}
+.q-category{display:inline-flex;align-items:center;gap:5px;background:var(--green-light);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:var(--green);margin-bottom:10px;letter-spacing:0.1em}
+.q-text{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600;color:var(--ink);line-height:1.6;margin-bottom:6px}
+.q-desc{font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.6}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;background:var(--card);font-size:13px;color:var(--ink2);text-align:left;cursor:pointer;transition:all .15s;line-height:1.5;display:flex;align-items:center;gap:10px}
+.opt:hover{background:var(--green-light);border-color:var(--green)}
+.opt.selected{background:var(--green-light);border-color:var(--green);color:var(--ink)}
+.opt-letter{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ink3);flex-shrink:0;transition:all .15s}
+.opt.selected .opt-letter{background:var(--green);color:#fff}
+.quiz-nav{width:100%;max-width:460px;padding:6px 20px 20px;display:flex;justify-content:space-between}
+.nav-back{font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Noto Serif KR',serif}
+
+/* 분쇄 */
+#s-blend{justify-content:center;padding:2rem 1.5rem;background:var(--bg)}
+.blend-wrap{width:100%;max-width:340px;text-align:center}
+.blend-title{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.blend-sub{font-size:13px;color:var(--ink3);margin-bottom:24px;line-height:1.7;white-space:pre-line}
+.blender{position:relative;width:180px;height:240px;margin:0 auto 18px}
+.blender-lid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:110px;height:36px;background:#C8E6C9;border-radius:8px 8px 0 0;border:2px solid #A5C879;border-bottom:none;z-index:2}
+.blender-body{position:absolute;top:34px;left:50%;transform:translateX(-50%);width:130px;height:166px;background:#DCEDC8;border-radius:8px 8px 18px 18px;border:2px solid #A5C879;overflow:hidden}
+.blender-base{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:150px;height:20px;background:#8D6E63;border-radius:5px}
+.worry-items{position:absolute;top:8px;left:0;right:0;display:flex;flex-wrap:wrap;justify-content:center;gap:3px;padding:4px;z-index:3}
+.wi{font-size:10px;background:rgba(255,255,255,0.8);border-radius:5px;padding:2px 5px;color:var(--ink2);transition:all .4s}
+.blade{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:56px;height:7px;background:#90A4AE;border-radius:4px;animation:spin 0s linear infinite;z-index:4}
+@keyframes spin{to{transform:translateX(-50%) rotate(360deg)}}
+.blade.spinning{animation-duration:.25s}
+.liquid{position:absolute;bottom:0;left:0;right:0;height:0;background:linear-gradient(180deg,rgba(129,199,132,0.5),rgba(76,175,80,0.75));transition:height 1.6s ease;border-radius:0 0 16px 16px}
+.progress-bar{width:100%;height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:10px}
+.progress-fill{height:100%;background:var(--green);border-radius:4px;transition:width .4s ease;width:0%}
+.blend-status{font-size:13px;color:var(--green);font-weight:500;min-height:20px;margin-bottom:16px}
+.pot-section{display:none;text-align:center;margin-top:6px}
+.pot-emoji{font-size:44px;display:block;animation:grow 1.5s ease-out forwards}
+@keyframes grow{0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.pot-label{font-family:'Noto Serif KR',serif;font-size:14px;color:var(--green);font-weight:600;margin-top:8px}
+.pot-sub{font-size:12px;color:var(--ink3);margin-top:4px;line-height:1.6}
+
+/* 결과 */
+#s-result{padding:0 0 40px;background:var(--bg)}
+.result-header{width:100%;background:linear-gradient(180deg,#E8F5E9,var(--bg));padding:22px 20px 16px;text-align:center}
+.rh-label{font-size:10px;font-weight:600;color:var(--green);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px}
+.rh-emoji{font-size:44px;display:block;margin-bottom:8px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.rh-title{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.rh-sub{font-size:12px;color:var(--ink3);line-height:1.65;margin-bottom:12px}
+.rh-types{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.rh-type-pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;background:var(--green-light);color:var(--green)}
+.section-title{font-size:11px;font-weight:600;color:var(--ink3);letter-spacing:0.12em;text-transform:uppercase;margin:16px 20px 10px}
+.sage-grid-result{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:18px}
+.sgr-card{background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.sgr-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.1)}
+.sgr-card.match-1{border:2px solid var(--green);box-shadow:0 4px 14px rgba(58,125,68,0.15)}
+.sgr-card.match-2{border:2px solid var(--amber)}
+.sgr-top{padding:14px 10px 10px;text-align:center;position:relative}
+.sgr-badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px}
+.badge-best{background:var(--green);color:#fff}
+.badge-great{background:var(--amber);color:#fff}
+.sgr-emoji{font-size:30px;display:block;margin-bottom:5px}
+.sgr-name{font-family:'Noto Serif KR',serif;font-size:12px;font-weight:700;color:var(--ink)}
+.sgr-name-en{font-size:9px;color:var(--ink3);margin-top:1px}
+.sgr-bottom{padding:7px 10px 11px;text-align:center}
+.sgr-tag{font-size:10px;color:var(--ink3);line-height:1.45}
+.sgr-match{font-size:11px;font-weight:600;margin-top:4px}
+
+/* 현황판 */
+.worry-board{margin:0 16px 18px;background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden}
+.wb-header{background:var(--brown-light);padding:11px 14px;display:flex;align-items:center;gap:8px}
+.wb-icon{font-size:16px}
+.wb-title{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:600;color:var(--brown)}
+.wb-sub{font-size:10px;color:var(--ink3);margin-top:1px}
+.wb-items{padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+.wb-item{display:flex;align-items:center;gap:8px}
+.wb-rank{font-size:12px;font-weight:700;color:var(--ink3);width:16px;flex-shrink:0}
+.wb-rank.r1{color:#E8520A}.wb-rank.r2{color:#888}.wb-rank.r3{color:#A07840}
+.wb-bar-wrap{flex:1}
+.wb-label{font-size:11px;color:var(--ink2);margin-bottom:3px}
+.wb-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.wb-fill{height:100%;border-radius:3px;transition:width 1.2s ease}
+.wb-pct{font-size:10px;color:var(--ink3);min-width:28px;text-align:right}
+
+/* 공유 */
+.share-section{padding:0 16px}
+.share-title{font-family:'Noto Serif KR',serif;font-size:11px;color:var(--ink3);letter-spacing:0.16em;text-align:center;margin-bottom:10px}
+.share-link-wrap{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:9px}
+.share-link-text{flex:1;font-size:11px;color:var(--ink3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
+.copy-btn{flex-shrink:0;padding:4px 9px;background:var(--ink);color:#fff;border:none;border-radius:6px;font-size:10px;font-weight:500;cursor:pointer;transition:background .15s}
+.copy-btn.copied{background:var(--green)}
+.btn-kakao{width:100%;padding:13px;background:#FEE500;color:#1A1A1A;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.btn-kakao:hover{background:#F5DB00}
+.btn-retry{width:100%;padding:10px;background:transparent;color:var(--ink3);border:1px solid var(--border);border-radius:12px;font-size:13px;cursor:pointer}
+.btn-retry:hover{background:var(--card)}
+</style>
+</head>
+<body>
+
+<!-- 인트로 -->
+<div id="s-intro" class="screen active">
+  <div class="intro-wrap">
+    <span class="forest-emoji">🌿</span>
+    <div class="brand-name">지혜의 숲</div>
+    <div class="brand-sub">인문학 심리상담소</div>
+    <div class="intro-desc">당신의 고민 성향을 분석해<br>딱 맞는 인생 현자를 찾아드립니다</div>
+    <div class="intro-flow">
+      <div class="flow-step"><span class="flow-emoji">💭</span><span class="flow-label">고민 투입</span></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><span class="flow-emoji">🗑️</span><span class="flow-label">음쓰통 분쇄</span></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><span class="flow-emoji">🌱</span><span class="flow-label">비료화</span></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><span class="flow-emoji">🧑‍🏫</span><span class="flow-label">현자 매칭</span></div>
+    </div>
+    <div class="intro-meta">
+      <div class="im"><div class="im-dot"></div>5개 질문</div>
+      <div class="im"><div class="im-dot"></div>약 2분</div>
+      <div class="im"><div class="im-dot"></div>12명 현자</div>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">고민 투입하기 🗑️</button>
+  </div>
+</div>
+
+<!-- 질문 -->
+<div id="s-quiz" class="screen">
+  <div class="quiz-header">
+    <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:10%"></div></div>
+    <div class="prog-label" id="progLabel">1 / 5</div>
+  </div>
+  <div class="quiz-card">
+    <div class="q-category" id="qCat"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="q-desc" id="qDesc"></div>
+    <div class="opts" id="optsWrap"></div>
+  </div>
+  <div class="quiz-nav">
+    <button class="nav-back" id="navBack" onclick="goBack()">← 이전</button>
+    <span></span>
+  </div>
+</div>
+
+<!-- 분쇄 -->
+<div id="s-blend" class="screen">
+  <div class="blend-wrap">
+    <div class="blend-title">고민을 갈아드리는 중입니다</div>
+    <div class="blend-sub">걱정하지 마세요. 고민이 분쇄되어
+지혜의 비료로 변환됩니다 🌱</div>
+    <div class="blender">
+      <div class="blender-lid"></div>
+      <div class="blender-body">
+        <div class="worry-items" id="worryItems"></div>
+        <div class="liquid" id="liquid"></div>
+        <div class="blade" id="blade"></div>
+      </div>
+      <div class="blender-base"></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="blendProgress"></div></div>
+    <div class="blend-status" id="blendStatus">고민 투입 중...</div>
+    <div class="pot-section" id="potSection">
+      <span class="pot-emoji">🪴</span>
+      <div class="pot-label">고민 새싹이 피어나고 있어요!</div>
+      <div class="pot-sub">이 새싹이 어떻게 커질 수 있을까요?<br>당신의 현자를 찾아드릴게요</div>
+    </div>
+  </div>
+</div>
+
+<!-- 결과 -->
+<div id="s-result" class="screen">
+  <div class="result-header">
+    <div class="rh-label">나의 현자 매칭 결과</div>
+    <span class="rh-emoji" id="rhEmoji">🌿</span>
+    <div class="rh-title" id="rhTitle"></div>
+    <div class="rh-sub" id="rhSub"></div>
+    <div class="rh-types" id="rhTypes"></div>
+  </div>
+
+  <div class="section-title">✨ 당신에게 맞는 현자들</div>
+  <div class="sage-grid-result" id="sageGridResult"></div>
+
+  <div class="section-title">📊 같은 유형 사람들의 고민 현황</div>
+  <div class="worry-board">
+    <div class="wb-header">
+      <span class="wb-icon">🗑️</span>
+      <div><div class="wb-title" id="wbTitle">고민 현황판</div><div class="wb-sub">실시간 고민 통계</div></div>
+    </div>
+    <div class="wb-items" id="wbItems"></div>
+  </div>
+
+  <div class="section-title" style="text-align:center">— 결과 공유하기 —</div>
+  <div class="share-section">
+    <div class="share-link-wrap">
+      <span class="share-link-text" id="shareLinkText"></span>
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">복사</button>
+    </div>
+    <button class="btn-kakao" onclick="shareKakao()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.82 5.47 4.58 6.96L5.5 21l4.13-2.16A11.6 11.6 0 0012 19.5c5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>
+      카카오톡으로 공유하기
+    </button>
+    <button class="btn-retry" onclick="restart()">다시 테스트하기</button>
+  </div>
+</div>
+
+<script>
+const QS=[
+  {
+    cat:"😤 스트레스 반응",
+    text:"스트레스를 받으면 나는 주로...",
+    desc:"가장 먼저 드는 행동이나 충동을 선택해주세요",
+    opts:[
+      {t:"주변 사람들과 떠들거나 수다를 떤다",v:{social:2,emotion:1}},
+      {t:"혼자 조용히 잠을 자거나 쉰다",v:{inner:2,solo:1}},
+      {t:"쇼핑하거나 맛있는 걸 먹는다",v:{escape:2,physical:1}},
+      {t:"원인을 분석하고 해결책을 찾으려 한다",v:{rational:2,control:1}}
+    ]
+  },
+  {
+    cat:"🤔 고민의 종류",
+    text:"요즘 가장 자주 하는 고민은?",
+    desc:"솔직하게 가장 가까운 것을 골라주세요",
+    opts:[
+      {t:"나는 지금 제대로 살고 있는 걸까? (정체성·방향)",v:{identity:2,meaning:1}},
+      {t:"이 관계가 맞는 걸까? (인간관계·사랑)",v:{relation:2,emotion:1}},
+      {t:"이 일을 계속해야 할까? (커리어·직장)",v:{work:2,rational:1}},
+      {t:"돈이 충분하지 않다 (경제·미래 불안)",v:{survival:2,physical:1}}
+    ]
+  },
+  {
+    cat:"💭 혼자 있을 때",
+    text:"혼자 있는 시간이 주어졌을 때 나는...",
+    desc:"본능적으로 어떻게 행동하나요?",
+    opts:[
+      {t:"유튜브·SNS·넷플릭스로 시간을 보낸다",v:{escape:2,social:1}},
+      {t:"산책하거나 음악 들으며 생각에 잠긴다",v:{inner:2,meaning:1}},
+      {t:"뭔가 배우거나 책을 읽는다",v:{rational:2,meaning:1}},
+      {t:"집을 정리하거나 운동을 한다",v:{control:2,physical:1}}
+    ]
+  },
+  {
+    cat:"😔 힘들 때 위로",
+    text:"힘들 때 가장 듣고 싶은 말은?",
+    desc:"내면 깊은 곳에서 원하는 것을 선택하세요",
+    opts:[
+      {t:'"괜찮아, 다 잘 될 거야" — 따뜻한 공감',v:{emotion:2,relation:1}},
+      {t:'"이렇게 해봐" — 구체적인 해결책',v:{rational:2,control:1}},
+      {t:'"왜 그런 감정이 들었을까?" — 깊은 탐구',v:{meaning:2,inner:1}},
+      {t:'"그냥 쉬어. 아무것도 안 해도 돼" — 허락',v:{solo:2,inner:1}}
+    ]
+  },
+  {
+    cat:"🌱 변화의 방식",
+    text:"지금 삶을 바꾸고 싶다면, 나는...",
+    desc:"변화에 접근하는 나만의 방식은?",
+    opts:[
+      {t:"완전히 새로운 것을 시작하고 싶다",v:{identity:2,escape:1}},
+      {t:"지금 있는 것을 더 깊게 파고들고 싶다",v:{meaning:2,rational:1}},
+      {t:"사람들과 함께 부딪히며 바꾸고 싶다",v:{social:2,relation:1}},
+      {t:"천천히, 내 속도대로 바뀌고 싶다",v:{inner:2,solo:1}}
+    ]
+  }
+];
+
+const SAGES=[
+  {id:"seneca",name:"세네카",nameEn:"Seneca",emoji:"🪞",colorLight:"#FFF3E0",keys:["inner","meaning","control"],tag:"나만 제자리 걸음인 것 같을 때"},
+  {id:"nietzsche",name:"니체",nameEn:"Nietzsche",emoji:"☕",colorLight:"#E8EAF6",keys:["identity","meaning","escape"],tag:"아무것도 하기 싫을 때"},
+  {id:"laotzu",name:"노자",nameEn:"Lao Tzu",emoji:"🍃",colorLight:"#E0F2F1",keys:["solo","inner","physical"],tag:"잘하려다 지칠 때"},
+  {id:"confucius",name:"공자",nameEn:"Confucius",emoji:"🪭",colorLight:"#FCE4EC",keys:["relation","social","emotion"],tag:"사람이 제일 어려울 때"},
+  {id:"socrates",name:"소크라테스",nameEn:"Socrates",emoji:"🏺",colorLight:"#EFEBE9",keys:["identity","meaning","rational"],tag:"내가 진짜 원하는 게 뭔지 모를 때"},
+  {id:"aristotle",name:"아리스토텔레스",nameEn:"Aristotle",emoji:"🌿",colorLight:"#F1F8E9",keys:["rational","work","control"],tag:"행복하게 사는 법이 궁금할 때"},
+  {id:"epicurus",name:"에피쿠로스",nameEn:"Epicurus",emoji:"🍇",colorLight:"#F3E5F5",keys:["escape","physical","solo"],tag:"불안과 걱정을 줄이고 싶을 때"},
+  {id:"buddha",name:"붓다",nameEn:"Buddha",emoji:"☸️",colorLight:"#FFF8E1",keys:["inner","solo","emotion"],tag:"마음의 평온을 찾고 싶을 때"},
+  {id:"descartes",name:"데카르트",nameEn:"Descartes",emoji:"📐",colorLight:"#E3F2FD",keys:["rational","identity","control"],tag:"생각이 너무 많아 복잡할 때"},
+  {id:"kierkegaard",name:"키에르케고르",nameEn:"Kierkegaard",emoji:"🧭",colorLight:"#FCE4EC",keys:["identity","meaning","escape"],tag:"삶의 선택이 두려울 때"},
+  {id:"zhuangzi",name:"장자",nameEn:"Zhuangzi",emoji:"🦋",colorLight:"#E0F7FA",keys:["escape","solo","meaning"],tag:"자유롭게 살고 싶을 때"},
+  {id:"marcus",name:"마르쿠스 아우렐리우스",nameEn:"Marcus Aurelius",emoji:"🌍",colorLight:"#EFEBE9",keys:["control","survival","rational"],tag:"힘든 상황을 견디는 단단한 마음"}
+];
+
+const WORRY_DATA={
+  identity:[
+    {label:"나는 지금 제대로 살고 있는 건가요?",pct:68,color:"#3A7D44"},
+    {label:"이 선택이 맞는 건지 모르겠어요",pct:54,color:"#5B9E64"},
+    {label:"30대인데 아직도 방향을 모르겠어요",pct:47,color:"#82B88A"},
+    {label:"남들과 비교하면 뒤처진 것 같아요",pct:41,color:"#A5CCA9"}
+  ],
+  relation:[
+    {label:"이 관계를 계속해야 할지 모르겠어요",pct:72,color:"#E91E8C"},
+    {label:"친구가 점점 멀어지는 것 같아요",pct:58,color:"#F06292"},
+    {label:"사랑받고 있는 건지 확신이 없어요",pct:45,color:"#F48FB1"},
+    {label:"혼자인 게 편한데 외롭기도 해요",pct:38,color:"#F8BBD0"}
+  ],
+  work:[
+    {label:"퇴사하고 싶은데 용기가 안 나요",pct:76,color:"#795548"},
+    {label:"일이 의미없게 느껴져요",pct:61,color:"#8D6E63"},
+    {label:"번아웃인 것 같아요",pct:53,color:"#A1887F"},
+    {label:"능력을 인정받지 못하는 것 같아요",pct:42,color:"#BCAAA4"}
+  ],
+  survival:[
+    {label:"돈이 항상 부족한 것 같아요",pct:69,color:"#F57F17"},
+    {label:"미래가 불안해요",pct:63,color:"#FB8C00"},
+    {label:"집값 때문에 꿈을 포기해야 할 것 같아요",pct:49,color:"#FFA726"},
+    {label:"노후가 걱정돼요",pct:37,color:"#FFB74D"}
+  ],
+  meaning:[
+    {label:"아무것도 하기 싫어요",pct:71,color:"#3F51B5"},
+    {label:"삶의 의미를 모르겠어요",pct:55,color:"#5C6BC0"},
+    {label:"매일이 똑같아 재미없어요",pct:48,color:"#7986CB"},
+    {label:"열심히 해도 나아지는 게 없어요",pct:44,color:"#9FA8DA"}
+  ],
+  inner:[
+    {label:"나 자신을 잘 모르겠어요",pct:65,color:"#00897B"},
+    {label:"감정 조절이 어려워요",pct:52,color:"#26A69A"},
+    {label:"혼자 있는 게 불편해요",pct:43,color:"#4DB6AC"},
+    {label:"내면이 텅 빈 것 같아요",pct:38,color:"#80CBC4"}
+  ],
+  rational:[
+    {label:"머릿속이 너무 복잡해요",pct:67,color:"#1565C0"},
+    {label:"생각이 너무 많아 결정을 못해요",pct:58,color:"#1976D2"},
+    {label:"완벽하게 하려다 시작을 못해요",pct:46,color:"#1E88E5"},
+    {label:"논리적으로 생각하면 답이 안 나와요",pct:33,color:"#42A5F5"}
+  ],
+  escape:[
+    {label:"현실에서 도망치고 싶어요",pct:73,color:"#7B1FA2"},
+    {label:"아무 생각 없이 쉬고 싶어요",pct:61,color:"#8E24AA"},
+    {label:"지금 이 상황이 싫어요",pct:49,color:"#AB47BC"},
+    {label:"새로운 곳으로 떠나고 싶어요",pct:44,color:"#CE93D8"}
+  ],
+  social:[
+    {label:"인간관계가 피곤해요",pct:69,color:"#E65100"},
+    {label:"사람들이 나를 이해 못하는 것 같아요",pct:54,color:"#EF6C00"},
+    {label:"새로운 사람 만나기가 두려워요",pct:47,color:"#F57C00"},
+    {label:"진짜 내 편이 없는 것 같아요",pct:41,color:"#FB8C00"}
+  ],
+  emotion:[
+    {label:"감정을 표현하는 게 어려워요",pct:62,color:"#C62828"},
+    {label:"자주 우울하거나 무기력해요",pct:55,color:"#D32F2F"},
+    {label:"화를 잘 못 참아요",pct:43,color:"#E53935"},
+    {label:"감정이 너무 격해요",pct:36,color:"#EF5350"}
+  ],
+  control:[
+    {label:"뭔가 통제하지 못하는 느낌이에요",pct:64,color:"#37474F"},
+    {label:"계획대로 되는 게 없어요",pct:56,color:"#455A64"},
+    {label:"의지력이 약한 것 같아요",pct:44,color:"#546E7A"},
+    {label:"작심삼일이 반복돼요",pct:38,color:"#607D8B"}
+  ],
+  solo:[
+    {label:"혼자여도 괜찮은 건지 모르겠어요",pct:58,color:"#004D40"},
+    {label:"고독이 때로 버거워요",pct:49,color:"#00695C"},
+    {label:"나만의 시간이 필요해요",pct:44,color:"#00796B"},
+    {label:"조용한 삶을 살고 싶어요",pct:37,color:"#00897B"}
+  ],
+  physical:[
+    {label:"몸이 자꾸 아파요",pct:55,color:"#558B2F"},
+    {label:"잠을 못 자거나 너무 자요",pct:63,color:"#689F38"},
+    {label:"밥맛이 없거나 폭식해요",pct:47,color:"#7CB342"},
+    {label:"운동을 해야 하는데 못해요",pct:41,color:"#8BC34A"}
+  ]
+};
+
+const TYPE_MAP={
+  inner:"내면 탐구형",meaning:"의미 추구형",rational:"이성 분석형",
+  social:"관계 중심형",emotion:"감정 공감형",identity:"정체성 탐색형",
+  relation:"관계 회복형",escape:"일탈 해소형",control:"자기 통제형",
+  physical:"몸으로 해소형",solo:"고독 치유형",work:"현실 직면형",survival:"생존 안정형"
+};
+
+let cur=0,answers=[],scores={},mainType="meaning";
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startQuiz(){cur=0;answers=[];scores={};renderQ();showScreen('s-quiz');}
+
+function renderQ(){
+  const q=QS[cur];
+  document.getElementById('qCat').textContent=q.cat;
+  document.getElementById('qText').textContent=q.text;
+  document.getElementById('qDesc').textContent=q.desc;
+  document.getElementById('progFill').style.width=((cur+1)/QS.length*100)+'%';
+  document.getElementById('progLabel').textContent=(cur+1)+' / '+QS.length;
+  document.getElementById('navBack').style.visibility=cur===0?'hidden':'visible';
+  const wrap=document.getElementById('optsWrap');
+  wrap.innerHTML='';
+  const L=['A','B','C','D'];
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(answers[cur]===i?' selected':'');
+    b.innerHTML=`<span class="opt-letter">${L[i]}</span>${o.t}`;
+    b.onclick=()=>pick(i);
+    wrap.appendChild(b);
+  });
+}
+
+function pick(i){
+  answers[cur]=i;
+  document.querySelectorAll('.opt').forEach((b,j)=>b.classList.toggle('selected',j===i));
+  setTimeout(()=>{
+    Object.entries(QS[cur].opts[i].v).forEach(([k,v])=>{scores[k]=(scores[k]||0)+v;});
+    cur++;
+    if(cur>=QS.length) runBlender();
+    else renderQ();
+  },320);
+}
+
+function goBack(){if(cur>0){cur--;renderQ();}}
+
+function runBlender(){
+  showScreen('s-blend');
+  const labels=['정체성','관계','미래','직장','의미','불안','돈','사랑','번아웃','자유'];
+  const items=document.getElementById('worryItems');
+  items.innerHTML='';
+  labels.slice(0,6).forEach(w=>{
+    const el=document.createElement('div');el.className='wi';el.textContent=w;items.appendChild(el);
+  });
+  const blade=document.getElementById('blade');
+  const liquid=document.getElementById('liquid');
+  const status=document.getElementById('blendStatus');
+  const progress=document.getElementById('blendProgress');
+  const steps=[
+    {t:500,fn:()=>{status.textContent='고민 투입 중... 💭';progress.style.width='12%';}},
+    {t:1200,fn:()=>{blade.classList.add('spinning');status.textContent='분쇄 시작! 🔄';progress.style.width='30%';liquid.style.height='25%';}},
+    {t:2400,fn:()=>{status.textContent='고민이 갈리고 있어요... 💨';progress.style.width='55%';liquid.style.height='55%';document.querySelectorAll('.wi').forEach(el=>{el.style.opacity='0.25';el.style.transform='scale(0.7)';});}},
+    {t:3600,fn:()=>{status.textContent='비료로 변환 중... 🌿';progress.style.width='78%';liquid.style.height='80%';blade.style.animationDuration='.12s';}},
+    {t:4800,fn:()=>{blade.classList.remove('spinning');blade.style.animationDuration='0s';status.textContent='✅ 분쇄 완료! 비료가 되었어요';progress.style.width='100%';liquid.style.background='linear-gradient(180deg,rgba(129,199,132,0.7),rgba(56,142,60,0.9))';}},
+    {t:5800,fn:()=>{document.querySelector('.blend-title').textContent='고민이 비료로 변환됐어요!';document.querySelector('.blend-sub').textContent='이제 텃밭에 뿌려볼까요? 🌱';document.getElementById('potSection').style.display='block';}},
+    {t:7600,fn:()=>{computeResult();showScreen('s-result');}}
+  ];
+  steps.forEach(s=>setTimeout(s.fn,s.t));
+}
+
+function computeResult(){
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const top3=sorted.slice(0,3).map(e=>e[0]);
+  mainType=top3[0]||'meaning';
+  const sageScores=SAGES.map(sg=>{
+    let s=0;
+    sg.keys.forEach((k,i)=>{if(scores[k])s+=scores[k]*(3-i);});
+    return {...sg,score:s};
+  }).sort((a,b)=>b.score-a.score);
+  const typeLabel=TYPE_MAP[mainType]||'복합 성향형';
+  document.getElementById('rhTitle').textContent='당신은 '+typeLabel+'입니다';
+  document.getElementById('rhEmoji').textContent=sageScores[0].emoji;
+  document.getElementById('rhSub').textContent='고민 패턴을 분석한 결과, 아래 현자들이 당신에게 가장 잘 맞아요';
+  const types=[typeLabel,...top3.slice(1).map(t=>TYPE_MAP[t]||t).slice(0,1)];
+  document.getElementById('rhTypes').innerHTML=types.map(t=>`<span class="rh-type-pill">${t}</span>`).join('');
+  const grid=document.getElementById('sageGridResult');
+  grid.innerHTML='';
+  sageScores.slice(0,4).forEach((sg,idx)=>{
+    const card=document.createElement('div');
+    card.className='sgr-card'+(idx===0?' match-1':idx===1?' match-2':'');
+    const badge=idx===0?'<span class="sgr-badge badge-best">BEST</span>':idx===1?'<span class="sgr-badge badge-great">추천</span>':'';
+    const matchPct=Math.min(98,Math.round(68+(sageScores[0].score>0?(sg.score/sageScores[0].score*28):0)));
+    card.innerHTML=`<div class="sgr-top" style="background:${sg.colorLight}">${badge}<span class="sgr-emoji">${sg.emoji}</span><div class="sgr-name">${sg.name}</div><div class="sgr-name-en">${sg.nameEn}</div></div><div class="sgr-bottom"><div class="sgr-tag">${sg.tag}</div>${idx<2?`<div class="sgr-match" style="color:${idx===0?'#3A7D44':'#F5A623'}">${idx===0?'★ '+matchPct+'% 일치':'☆ 추천 현자'}</div>`:''}</div>`;
+    grid.appendChild(card);
+  });
+  const wbData=WORRY_DATA[mainType]||WORRY_DATA.meaning;
+  document.getElementById('wbTitle').textContent=typeLabel+' 고민 현황판';
+  const wbItems=document.getElementById('wbItems');
+  wbItems.innerHTML='';
+  wbData.forEach((item,i)=>{
+    const el=document.createElement('div');
+    el.className='wb-item';
+    el.innerHTML=`<div class="wb-rank r${i+1}">${i+1}</div><div class="wb-bar-wrap"><div class="wb-label">${item.label}</div><div class="wb-bar"><div class="wb-fill" style="background:${item.color};width:0%" data-pct="${item.pct}"></div></div></div><div class="wb-pct">${item.pct}%</div>`;
+    wbItems.appendChild(el);
+  });
+  setTimeout(()=>{document.querySelectorAll('.wb-fill').forEach(el=>{el.style.width=el.dataset.pct+'%';});},300);
+  const rp=btoa(encodeURIComponent(JSON.stringify({type:mainType,sage:sageScores[0].id})));
+  const url=window.location.href.split('?')[0]+'?r='+rp;
+  document.getElementById('shareLinkText').textContent=url;
+  window._shareURL=url;
+  window._shareSage=sageScores[0].name;
+  window._shareType=typeLabel;
+}
+
+function copyLink(){
+  const url=window._shareURL||window.location.href;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn=document.getElementById('copyBtn');
+      btn.textContent='복사됨';btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='복사';btn.classList.remove('copied');},2000);
+    });
+  }
+}
+
+function shareKakao(){
+  const url=window._shareURL||window.location.href;
+  const sage=window._shareSage||'현자';
+  const type=window._shareType||'고민 성향';
+  window.open('https://story.kakao.com/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent('나는 '+type+'! 지혜의 숲에서 '+sage+'와 연결됐어요 🌿 너도 해봐!'),'_blank','width=560,height=600');
+}
+
+function restart(){
+  cur=0;answers=[];scores={};
+  document.getElementById('worryItems').innerHTML='';
+  document.getElementById('liquid').style.height='0';
+  document.getElementById('liquid').style.background='linear-gradient(180deg,rgba(129,199,132,0.5),rgba(76,175,80,0.75))';
+  document.getElementById('blade').classList.remove('spinning');
+  document.getElementById('blade').style.animationDuration='0s';
+  document.getElementById('blendProgress').style.width='0%';
+  document.getElementById('blendStatus').textContent='고민 투입 중...';
+  document.getElementById('potSection').style.display='none';
+  document.querySelector('.blend-title').textContent='고민을 갈아드리는 중입니다';
+  document.querySelector('.blend-sub').textContent='걱정하지 마세요. 고민이 분쇄되어\n지혜의 비료로 변환됩니다 🌱';
+  showScreen('s-intro');
+}
+
+(function(){
+  const r=new URLSearchParams(window.location.search).get('r');
+  if(r){
+    try{
+      const data=JSON.parse(decodeURIComponent(atob(r)));
+      if(data.type){
+        mainType=data.type;
+        scores[data.type]=10;
+        computeResult();showScreen('s-result');
+        const banner=document.createElement('div');
+        banner.style.cssText='background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:9px 14px;margin:0 16px 14px;font-size:12px;color:#2E7D32;display:flex;align-items:center;gap:6px';
+        banner.innerHTML='<span>🌿</span><span>친구가 공유한 결과예요. 나도 테스트해볼까요?</span>';
+        document.querySelector('.result-header').after(banner);
+      }
+    }catch(e){}
+  }
+})();
+</script>
+</body>
+</html>
