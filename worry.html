@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta property="og:title" content="고민 음쓰기 🗑️">
+<meta property="og:description" content="고민을 갈아드립니다. 마음껏 털어놓으세요.">
+<title>고민 음쓰기 🗑️</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8FBF8;
+  --card:#FFFFFF;
+  --ink:#1A1A1A;
+  --ink2:#444;
+  --ink3:#888;
+  --border:#E0E8E0;
+  --green:#2E7D32;
+  --green2:#4CAF50;
+  --green-light:#E8F5E9;
+  --red:#D32F2F;
+}
+html,body{height:100%;background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--ink);overflow-x:hidden}
+
+/* ══ 공통 스크린 ══ */
+.screen{display:none;position:fixed;inset:0;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem}
+.screen.active{display:flex}
+
+/* ══ 인트로 ══ */
+#s-intro{background:var(--bg)}
+.intro-inner{width:100%;max-width:380px;text-align:center}
+.app-icon{font-size:56px;margin-bottom:14px;display:block;animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.app-title{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.app-sub{font-size:13px;color:var(--ink3);margin-bottom:28px;line-height:1.7}
+.intro-start-btn{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:16px;font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600;cursor:pointer;transition:background .15s;letter-spacing:0.04em}
+.intro-start-btn:hover{background:#333}
+.intro-hint{font-size:11px;color:var(--ink3);margin-top:12px;line-height:1.6}
+
+/* ══ 입력 화면 ══ */
+#s-input{background:var(--bg);justify-content:flex-start;padding-top:0}
+.input-header{width:100%;max-width:420px;display:flex;align-items:center;padding:16px 20px 10px;gap:12px}
+.header-icon{font-size:22px}
+.header-title{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;color:var(--ink)}
+.header-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.input-body{width:100%;max-width:420px;flex:1;display:flex;flex-direction:column;padding:0 16px}
+.worry-textarea{flex:1;width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;font-family:'Noto Sans KR',sans-serif;font-size:15px;color:var(--ink);resize:none;outline:none;line-height:1.75;transition:border-color .2s;min-height:180px;max-height:320px}
+.worry-textarea:focus{border-color:var(--green2)}
+.worry-textarea::placeholder{color:#B0B0B0}
+.char-count{text-align:right;font-size:11px;color:var(--ink3);margin-top:6px;margin-bottom:12px}
+.hint-text{font-size:11px;color:var(--ink3);text-align:center;margin-bottom:14px;line-height:1.6;background:var(--green-light);border-radius:10px;padding:8px 12px}
+.grind-btn{width:100%;padding:15px;background:var(--green);color:#fff;border:none;border-radius:16px;font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.grind-btn:hover{background:#1B5E20}
+.grind-btn:disabled{background:#B0B0B0;cursor:not-allowed}
+
+/* ══ 분쇄 화면 ══ */
+#s-grind{background:#1A1A1A;overflow:hidden}
+.grind-inner{width:100%;max-width:360px;text-align:center;position:relative;z-index:2}
+.grind-title{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+.grind-sub{font-size:13px;color:#999;margin-bottom:32px;line-height:1.65}
+
+/* 파쇄기 SVG 스타일 */
+.shredder-wrap{width:220px;height:280px;margin:0 auto 28px;position:relative}
+.shredder-body{width:200px;height:220px;background:#2A2A2A;border-radius:12px;border:2px solid #444;position:absolute;bottom:0;left:50%;transform:translateX(-50%);overflow:hidden}
+.shredder-slot{position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:16px;background:#111;border-radius:0 0 8px 8px}
+.shredder-rollers{position:absolute;top:18px;left:0;right:0;height:20px;display:flex;align-items:center;justify-content:center;gap:3px}
+.roller{width:8px;height:20px;background:#555;border-radius:2px;animation:rollSpin 0s linear infinite}
+@keyframes rollSpin{to{transform:rotateY(360deg)}}
+.roller.active{animation-duration:.2s}
+.shredded-strips{position:absolute;top:44px;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:3px;padding:6px;overflow:hidden}
+.strip{width:8px;height:0;background:linear-gradient(180deg,#4CAF50,#2E7D32);border-radius:2px;opacity:0;transition:height .3s ease,opacity .3s ease}
+.strip.grow{height:60px;opacity:0.8}
+.paper-input{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:120px;height:80px;background:#fff;border-radius:4px;display:flex;flex-direction:column;padding:8px;gap:3px;transition:top .8s ease}
+.paper-input.feeding{top:-10px}
+.paper-line{height:4px;background:#E0E0E0;border-radius:2px}
+.paper-line.dark{background:#BDBDBD}
+
+/* 진동 클래스 */
+@keyframes shake{0%,100%{transform:translateX(0)}10%,50%,90%{transform:translateX(-4px)}30%,70%{transform:translateX(4px)}}
+.shaking{animation:shake .08s linear infinite}
+
+/* 진행바 */
+.grind-progress{width:100%;height:6px;background:#333;border-radius:3px;overflow:hidden;margin-bottom:12px}
+.grind-fill{height:100%;background:linear-gradient(90deg,#4CAF50,#8BC34A);border-radius:3px;width:0%;transition:width .3s ease}
+.grind-status{font-size:13px;color:#4CAF50;font-weight:500;min-height:22px;margin-bottom:20px}
+
+/* 파티클 */
+.particle-container{position:fixed;inset:0;pointer-events:none;z-index:1}
+.particle{position:absolute;font-size:14px;animation:particleFloat 1.5s ease-out forwards;pointer-events:none}
+@keyframes particleFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(0.3)}}
+
+/* ══ 결과 화면 ══ */
+#s-result{background:var(--bg);justify-content:flex-start;padding:0;overflow-y:auto}
+.result-scroll{width:100%;max-width:420px;padding:0 0 40px}
+
+.result-hero{text-align:center;padding:30px 20px 20px;background:linear-gradient(180deg,#E8F5E9,var(--bg))}
+.result-icon{font-size:64px;display:block;margin-bottom:12px;animation:grow 1s ease-out forwards}
+@keyframes grow{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.result-title{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.4}
+.result-desc{font-size:13px;color:var(--ink3);line-height:1.75;margin-bottom:16px}
+.my-worry-preview{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--ink2);line-height:1.65;text-align:left;font-style:italic;margin:0 16px 20px;position:relative}
+.my-worry-preview::before{content:"분쇄된 고민";position:absolute;top:-10px;left:12px;background:var(--green);color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+
+/* 현자 섹션 */
+.sage-section-title{font-size:12px;font-weight:600;color:var(--ink3);letter-spacing:0.14em;text-transform:uppercase;margin:0 20px 12px}
+.sage-list{display:flex;flex-direction:column;gap:10px;padding:0 16px;margin-bottom:20px}
+.sage-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;cursor:default;transition:transform .1s}
+.sage-item:hover{transform:translateY(-1px)}
+.sage-item.featured{border:2px solid var(--green2);background:var(--green-light)}
+.si-emoji{font-size:32px;flex-shrink:0;width:44px;text-align:center}
+.si-info{flex:1;min-width:0}
+.si-name{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;color:var(--ink)}
+.si-tag{font-size:11px;color:var(--ink3);margin-top:2px}
+.si-quote{font-size:11px;color:var(--green);font-style:italic;margin-top:4px;font-family:'Noto Serif KR',serif;line-height:1.4}
+.si-btn{flex-shrink:0;padding:7px 12px;background:var(--green);color:#fff;border:none;border-radius:9px;font-size:11px;font-weight:600;cursor:default;white-space:nowrap}
+.si-btn.muted{background:#E0E0E0;color:#888}
+
+/* 공유 */
+.share-box{margin:0 16px 10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+.share-box-title{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:12px;text-align:center}
+.btn-kakao{width:100%;padding:13px;background:#FEE500;color:#1A1A1A;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.btn-kakao:hover{background:#F5DB00}
+.btn-link{width:100%;padding:11px;background:transparent;color:var(--ink3);border:1px solid var(--border);border-radius:12px;font-size:13px;cursor:pointer;margin-bottom:8px}
+.btn-link:hover{background:var(--green-light)}
+.btn-retry{width:100%;padding:10px;background:transparent;color:var(--ink3);border:none;font-size:12px;cursor:pointer;margin:0 16px}
+
+/* 한국사회 고민 현황판 */
+.korea-board{margin:0 16px 16px;background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden}
+.kb-header{background:#1A1A2E;padding:13px 16px;display:flex;align-items:center;gap:8px}
+.kb-icon{font-size:18px}
+.kb-title{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;color:#fff}
+.kb-sub{font-size:10px;color:#888;margin-top:1px}
+.kb-items{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.kb-item{display:flex;align-items:center;gap:10px}
+.kb-rank{font-size:16px;font-weight:700;width:24px;flex-shrink:0;text-align:center}
+.kb-rank.r1{color:#FF6B35}
+.kb-rank.r2{color:#888}
+.kb-rank.r3{color:#B8860B}
+.kb-content{flex:1;min-width:0}
+.kb-label{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.kb-tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.kb-tag{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.kb-bar{height:6px;background:#F0F0F0;border-radius:3px;overflow:hidden}
+.kb-fill{height:100%;border-radius:3px;transition:width 1.4s ease}
+.kb-meta{display:flex;justify-content:space-between;align-items:center;margin-top:3px}
+.kb-pct{font-size:11px;color:var(--ink3)}
+.kb-trend{font-size:10px;font-weight:600}
+.kb-divider{height:1px;background:#F0F0F0;margin:2px 0}
+.kb-footer{padding:8px 16px 12px;font-size:10px;color:#AAA;text-align:center}
+
+/* 복사됨 토스트 */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- 인트로 -->
+<div id="s-intro" class="screen active">
+  <div class="intro-inner">
+    <span class="app-icon">🗑️</span>
+    <div class="app-title">고민 음쓰기</div>
+    <div class="app-sub">마음속 고민을 마구 털어놓으세요<br>갈아드립니다. 흔적도 없이.</div>
+    <button class="intro-start-btn" onclick="goInput()">고민 버리러 가기</button>
+    <div class="intro-hint">✓ 저장 안 됨 &nbsp;·&nbsp; ✓ 완전 분쇄 &nbsp;·&nbsp; ✓ 새싹으로 재탄생</div>
+  </div>
+</div>
+
+<!-- 입력 -->
+<div id="s-input" class="screen">
+  <div class="input-header">
+    <span class="header-icon">💭</span>
+    <div>
+      <div class="header-title">지금 고민이 뭐예요?</div>
+      <div class="header-sub">적으면 좀 나아지지도요</div>
+    </div>
+  </div>
+  <div class="input-body">
+    <textarea class="worry-textarea" id="worryText" maxlength="200"
+      placeholder="회사 상사가 너무 싫어&#10;내가 뭘 하고 싶은지 모르겠어&#10;돈이 없어서 너무 힘들어&#10;그냥 다 때려치우고 싶다&#10;...아무거나 털어놓으세요"
+      oninput="updateChar()"></textarea>
+    <div class="char-count"><span id="charCount">0</span>/200</div>
+    <div class="hint-text">🌿 갈아버린 고민은 지혜의 비료가 됩니다<br>저장되지 않으니 마음껏 쓰세요</div>
+    <button class="grind-btn" id="grindBtn" onclick="startGrind()" disabled>
+      🗑️ 갈아버리기
+    </button>
+  </div>
+</div>
+
+<!-- 분쇄 -->
+<div id="s-grind" class="screen">
+  <div class="particle-container" id="particles"></div>
+  <div class="grind-inner">
+    <div class="grind-title" id="grindTitle">고민을 갈아드립니다</div>
+    <div class="grind-sub" id="grindSub">잠깐만요...</div>
+
+    <div class="shredder-wrap" id="shredderWrap">
+      <div class="paper-input" id="paperInput">
+        <div class="paper-line"></div>
+        <div class="paper-line dark"></div>
+        <div class="paper-line"></div>
+        <div class="paper-line dark"></div>
+        <div class="paper-line"></div>
+      </div>
+      <div class="shredder-body" id="shredderBody">
+        <div class="shredder-slot"></div>
+        <div class="shredder-rollers" id="rollers"></div>
+        <div class="shredded-strips" id="strips"></div>
+      </div>
+    </div>
+
+    <div class="grind-progress"><div class="grind-fill" id="grindFill"></div></div>
+    <div class="grind-status" id="grindStatus">투입 준비 중...</div>
+  </div>
+</div>
+
+<!-- 결과 -->
+<div id="s-result" class="screen">
+  <div class="result-scroll" id="resultScroll">
+    <div class="result-hero">
+      <span class="result-icon">🪴</span>
+      <div class="result-title">새싹이 심어졌어요 🌱</div>
+      <div class="result-desc">
+        고민이 분쇄되어 지혜의 비료가 됐어요.<br>
+        이제 인생선배와 상담을 통해<br>
+        <strong>삶의 꽃을 피워보면 어떨까요?</strong>
+      </div>
+    </div>
+
+    <div class="my-worry-preview" id="worryPreview"></div>
+
+    <div class="sage-section-title">🗺️ 지금 한국사회 고민 현황판</div>
+    <div class="korea-board">
+      <div class="kb-header">
+        <span class="kb-icon">📊</span>
+        <div>
+          <div class="kb-title">2026 한국사회 고민 순위</div>
+          <div class="kb-sub">실시간 집계 · 20-40대 기준</div>
+        </div>
+      </div>
+      <div class="kb-items">
+        <div class="kb-item">
+          <div class="kb-rank r1">1</div>
+          <div class="kb-content">
+            <div class="kb-label">AI·자동화로 인한 일자리 대체 위협</div>
+            <div class="kb-tag-row">
+              <span class="kb-tag" style="background:#FFF3E0;color:#E65100">경제</span>
+              <span class="kb-tag" style="background:#FCE4EC;color:#C62828">생존</span>
+            </div>
+            <div class="kb-bar"><div class="kb-fill" style="background:#FF6B35;width:0%" data-w="84"></div></div>
+            <div class="kb-meta"><span class="kb-pct">84%가 불안 호소</span><span class="kb-trend" style="color:#FF6B35">↑ 급증</span></div>
+          </div>
+        </div>
+        <div class="kb-divider"></div>
+        <div class="kb-item">
+          <div class="kb-rank r2">2</div>
+          <div class="kb-content">
+            <div class="kb-label">돈이 늘 부족하다 — 물가·주거 부담</div>
+            <div class="kb-tag-row">
+              <span class="kb-tag" style="background:#FFF3E0;color:#E65100">경제</span>
+              <span class="kb-tag" style="background:#E8EAF6;color:#3949AB">일상</span>
+            </div>
+            <div class="kb-bar"><div class="kb-fill" style="background:#888;width:0%" data-w="78"></div></div>
+            <div class="kb-meta"><span class="kb-pct">78%가 경험</span><span class="kb-trend" style="color:#888">→ 지속</span></div>
+          </div>
+        </div>
+        <div class="kb-divider"></div>
+        <div class="kb-item">
+          <div class="kb-rank r3">3</div>
+          <div class="kb-content">
+            <div class="kb-label">빈부격차 심화로 인한 상실감·박탈감</div>
+            <div class="kb-tag-row">
+              <span class="kb-tag" style="background:#F3E5F5;color:#6A1B9A">심리</span>
+              <span class="kb-tag" style="background:#E8F5E9;color:#2E7D32">사회</span>
+            </div>
+            <div class="kb-bar"><div class="kb-fill" style="background:#B8860B;width:0%" data-w="71"></div></div>
+            <div class="kb-meta"><span class="kb-pct">71%가 공감</span><span class="kb-trend" style="color:#B8860B">↑ 증가</span></div>
+          </div>
+        </div>
+        <div class="kb-divider"></div>
+        <div class="kb-item">
+          <div class="kb-rank" style="color:#4CAF50;font-size:14px">4</div>
+          <div class="kb-content">
+            <div class="kb-label">번아웃·무기력 — 열심히 해도 나아지지 않아</div>
+            <div class="kb-tag-row">
+              <span class="kb-tag" style="background:#F3E5F5;color:#6A1B9A">심리</span>
+              <span class="kb-tag" style="background:#E3F2FD;color:#1565C0">직장</span>
+            </div>
+            <div class="kb-bar"><div class="kb-fill" style="background:#4CAF50;width:0%" data-w="65"></div></div>
+            <div class="kb-meta"><span class="kb-pct">65%가 경험</span><span class="kb-trend" style="color:#4CAF50">↑ 증가</span></div>
+          </div>
+        </div>
+        <div class="kb-divider"></div>
+        <div class="kb-item">
+          <div class="kb-rank" style="color:#2196F3;font-size:14px">5</div>
+          <div class="kb-content">
+            <div class="kb-label">나는 지금 제대로 살고 있는 건가? (정체성)</div>
+            <div class="kb-tag-row">
+              <span class="kb-tag" style="background:#E3F2FD;color:#1565C0">정체성</span>
+              <span class="kb-tag" style="background:#E8EAF6;color:#3949AB">30대</span>
+            </div>
+            <div class="kb-bar"><div class="kb-fill" style="background:#2196F3;width:0%" data-w="58"></div></div>
+            <div class="kb-meta"><span class="kb-pct">58%가 고민</span><span class="kb-trend" style="color:#2196F3">→ 지속</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="kb-footer">* 지혜의 숲 이용자 데이터 기반 집계 · 매월 업데이트</div>
+    </div>
+
+    <div class="sage-section-title">🧑‍🏫 당신의 인생선배를 만나보세요</div>
+    <div class="sage-list" id="sageList"></div>
+
+    <div class="share-box">
+      <div class="share-box-title">— 친구에게 고민 음쓰기 알려주기 —</div>
+      <button class="btn-kakao" onclick="shareKakao()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.82 5.47 4.58 6.96L5.5 21l4.13-2.16A11.6 11.6 0 0012 19.5c5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>
+        카카오톡으로 공유하기
+      </button>
+      <button class="btn-link" onclick="copyLink()">🔗 링크 복사하기</button>
+    </div>
+    <button class="btn-retry" onclick="goInput()">또 다른 고민 버리러 가기</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SAGES=[
+  {emoji:"🪞",name:"세네카",tag:"나만 제자리인 것 같을 때",quote:"우리는 시간이 부족한 게 아니라, 낭비하고 있을 뿐이다.",featured:false},
+  {emoji:"☕",name:"니체",tag:"아무것도 하기 싫을 때",quote:"나를 죽이지 못하는 것은 나를 더 강하게 만든다.",featured:false},
+  {emoji:"🍃",name:"노자",tag:"잘하려다 지칠 때",quote:"아무것도 하지 않음으로써 모든 것이 이루어진다.",featured:false},
+  {emoji:"🪭",name:"공자",tag:"사람이 제일 어려울 때",quote:"세 사람이 함께 걸으면 반드시 내 스승이 있다.",featured:false},
+  {emoji:"🏺",name:"소크라테스",tag:"내가 뭘 원하는지 모를 때",quote:"너 자신을 알라.",featured:false},
+  {emoji:"🌿",name:"아리스토텔레스",tag:"행복하게 사는 법이 궁금할 때",quote:"우리는 반복적으로 하는 것이 곧 우리 자신이다.",featured:false},
+  {emoji:"🍇",name:"에피쿠로스",tag:"불안과 걱정을 줄이고 싶을 때",quote:"단순한 삶에서 가장 큰 쾌락이 온다.",featured:false},
+  {emoji:"☸️",name:"붓다",tag:"마음의 평온을 찾고 싶을 때",quote:"삶은 고통이다. 그러나 고통의 원인은 집착이다.",featured:false},
+  {emoji:"🦋",name:"장자",tag:"자유롭게 살고 싶을 때",quote:"나비 꿈을 꾸는 사람인가, 사람 꿈을 꾸는 나비인가.",featured:false},
+  {emoji:"🌍",name:"마르쿠스 아우렐리우스",tag:"힘든 상황을 견디고 싶을 때",quote:"장애물이 길을 막으면, 그 장애물 자체가 길이 된다.",featured:false}
+];
+
+let myWorry="";
+
+function goInput(){
+  document.getElementById('worryText').value='';
+  document.getElementById('charCount').textContent='0';
+  document.getElementById('grindBtn').disabled=true;
+  showScreen('s-input');
+  setTimeout(()=>document.getElementById('worryText').focus(),100);
+}
+
+function updateChar(){
+  const v=document.getElementById('worryText').value;
+  document.getElementById('charCount').textContent=v.length;
+  document.getElementById('grindBtn').disabled=v.trim().length<2;
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══ 분쇄 시작 ══
+function startGrind(){
+  myWorry=document.getElementById('worryText').value.trim();
+  if(!myWorry)return;
+  buildShredder();
+  showScreen('s-grind');
+  runGrindAnimation();
+}
+
+function buildShredder(){
+  // 롤러 생성
+  const rollers=document.getElementById('rollers');
+  rollers.innerHTML='';
+  for(let i=0;i<14;i++){
+    const r=document.createElement('div');
+    r.className='roller';
+    r.id='roller_'+i;
+    rollers.appendChild(r);
+  }
+  // 파쇄 조각 생성
+  const strips=document.getElementById('strips');
+  strips.innerHTML='';
+  const colors=['#4CAF50','#2E7D32','#66BB6A','#388E3C','#81C784','#1B5E20'];
+  for(let i=0;i<24;i++){
+    const s=document.createElement('div');
+    s.className='strip';
+    s.id='strip_'+i;
+    s.style.background=colors[i%colors.length];
+    strips.appendChild(s);
+  }
+  // 파티클 초기화
+  document.getElementById('particles').innerHTML='';
+  // 진행바 초기화
+  document.getElementById('grindFill').style.width='0%';
+  document.getElementById('grindTitle').textContent='고민을 갈아드립니다';
+  document.getElementById('grindSub').textContent='잠깐만요...';
+  document.getElementById('grindStatus').textContent='투입 준비 중...';
+  document.getElementById('paperInput').style.top='-80px';
+}
+
+function vibrate(duration){
+  if(navigator.vibrate) navigator.vibrate(duration);
+}
+
+function spawnParticles(){
+  const container=document.getElementById('particles');
+  const emojis=['💨','✨','🌿','💚','🍃','⚡'];
+  for(let i=0;i<8;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left=Math.random()*100+'%';
+    p.style.top=(40+Math.random()*30)+'%';
+    p.style.animationDelay=(Math.random()*0.5)+'s';
+    container.appendChild(p);
+    setTimeout(()=>p.remove(),2000);
+  }
+}
+
+function runGrindAnimation(){
+  const fill=document.getElementById('grindFill');
+  const status=document.getElementById('grindStatus');
+  const title=document.getElementById('grindTitle');
+  const sub=document.getElementById('grindSub');
+  const shredder=document.getElementById('shredderBody');
+  const paper=document.getElementById('paperInput');
+  const wrap=document.getElementById('shredderWrap');
+
+  const steps=[
+    {t:300, fn:()=>{
+      status.textContent='고민 투입 중... 💭';
+      fill.style.width='10%';
+      paper.style.top='-10px';
+      paper.classList.add('feeding');
+    }},
+    {t:1000, fn:()=>{
+      // 롤러 시작
+      document.querySelectorAll('.roller').forEach(r=>r.classList.add('active'));
+      shredder.classList.add('shaking');
+      wrap.classList.add('shaking');
+      vibrate([100,50,100,50,200]);
+      status.textContent='지이이잉... 🔄';
+      fill.style.width='30%';
+      // 파쇄 조각 등장
+      for(let i=0;i<8;i++){
+        setTimeout(()=>{
+          const s=document.getElementById('strip_'+i);
+          if(s)s.classList.add('grow');
+        },i*60);
+      }
+    }},
+    {t:1800, fn:()=>{
+      spawnParticles();
+      vibrate([200,30,200,30,200]);
+      status.textContent='갈리고 있어요... 분쇄 중 💨';
+      fill.style.width='55%';
+      for(let i=8;i<16;i++){
+        setTimeout(()=>{
+          const s=document.getElementById('strip_'+i);
+          if(s)s.classList.add('grow');
+        },(i-8)*50);
+      }
+    }},
+    {t:2600, fn:()=>{
+      vibrate([300,20,300]);
+      status.textContent='거의 다 됐어요... 🌿';
+      fill.style.width='78%';
+      for(let i=16;i<24;i++){
+        setTimeout(()=>{
+          const s=document.getElementById('strip_'+i);
+          if(s)s.classList.add('grow');
+        },(i-16)*40);
+      }
+      spawnParticles();
+    }},
+    {t:3400, fn:()=>{
+      shredder.classList.remove('shaking');
+      wrap.classList.remove('shaking');
+      document.querySelectorAll('.roller').forEach(r=>r.classList.remove('active'));
+      vibrate(500);
+      status.textContent='✅ 분쇄 완료!';
+      fill.style.width='100%';
+      title.textContent='고민이 사라졌어요!';
+      sub.textContent='비료로 변환 중... 🌱';
+      spawnParticles();
+    }},
+    {t:4800, fn:()=>{
+      buildResult();
+      showScreen('s-result');
+      document.getElementById('resultScroll').scrollTop=0;
+    }}
+  ];
+  steps.forEach(s=>setTimeout(s.fn,s.t));
+}
+
+// ══ 결과 구성 ══
+function buildResult(){
+  // 현황판 바 애니메이션
+  setTimeout(()=>{
+    document.querySelectorAll('.kb-fill').forEach(el=>{
+      el.style.width=el.dataset.w+'%';
+    });
+  },400);
+  const preview=document.getElementById('worryPreview');
+  preview.textContent=myWorry.length>80?myWorry.slice(0,80)+'...':myWorry;
+
+  // 랜덤으로 3명 추천 (첫 번째만 featured)
+  const shuffled=[...SAGES].sort(()=>Math.random()-.5);
+  const picked=shuffled.slice(0,3);
+  picked[0].featured=true;
+  picked[1].featured=false;
+  picked[2].featured=false;
+
+  const list=document.getElementById('sageList');
+  list.innerHTML='';
+  picked.forEach((sg,idx)=>{
+    const item=document.createElement('div');
+    item.className='sage-item'+(idx===0?' featured':'');
+    item.innerHTML=`
+      <div class="si-emoji">${sg.emoji}</div>
+      <div class="si-info">
+        <div class="si-name">${sg.name}${idx===0?' ⭐':''}</div>
+        <div class="si-tag">${sg.tag}</div>
+        <div class="si-quote">"${sg.quote}"</div>
+      </div>
+      <button class="si-btn${idx===0?'':' muted'}">${sg.name}와<br>대화하기</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function shareKakao(){
+  const url=window.location.href.split('?')[0];
+  const text='고민을 갈아버렸어요 🗑️ 나도 고민 버리러 가볼까? 지혜의 숲 — 고민 음쓰기';
+  window.open('https://story.kakao.com/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank','width=560,height=600');
+}
+
+function copyLink(){
+  const url=window.location.href.split('?')[0];
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>showToast('링크가 복사됐어요!'));
+  }else{
+    const el=document.createElement('textarea');
+    el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+    showToast('링크가 복사됐어요!');
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// 초기 화면
+showScreen('s-intro');
+</script>
+</body>
+</html>
