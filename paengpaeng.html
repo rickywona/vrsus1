@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>팽팽 — 대한민국 찬반 줄다리기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #3B5BDB;
+  --blue-light: #EEF2FF;
+  --blue-dark: #1E3A8A;
+  --red: #E03131;
+  --red-light: #FFF5F5;
+  --red-dark: #7F1D1D;
+  --gray-bg: #F8F9FA;
+  --gray-1: #F1F3F5;
+  --gray-2: #DEE2E6;
+  --gray-3: #ADB5BD;
+  --gray-4: #495057;
+  --dark: #1A1A2E;
+  --white: #FFFFFF;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--gray-bg);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+/* ── 화면 전환 ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ═══════════════════════════════
+   MAIN VIEW
+═══════════════════════════════ */
+#view-main { background: var(--gray-bg); min-height: 100vh; }
+
+/* 상단 바 */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-2);
+  padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.logo {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 22px;
+  background: linear-gradient(135deg, var(--blue), var(--red));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+.topbar-right { display: flex; gap: 8px; align-items: center; }
+.btn-post {
+  background: var(--blue); color: white;
+  border: none; border-radius: 8px;
+  padding: 8px 16px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 카테고리 탭 */
+.cat-wrap {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-2);
+  padding: 0 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex; gap: 4px; align-items: center;
+  height: 48px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.cat-wrap::-webkit-scrollbar { display: none; }
+.cat-chip {
+  display: inline-flex; align-items: center;
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 13px; font-weight: 500;
+  border: 1.5px solid var(--gray-2);
+  background: var(--white); color: var(--gray-4);
+  cursor: pointer; white-space: nowrap;
+  transition: all .15s;
+}
+.cat-chip.active {
+  background: var(--blue); color: white; border-color: var(--blue);
+}
+
+/* 피처 카드 (지금 뜨는 토론) */
+.featured-wrap { padding: 16px 20px 8px; }
+.featured-card {
+  background: linear-gradient(135deg, #1E3A8A 0%, #3B5BDB 60%, #7B4FD4 100%);
+  border-radius: 20px;
+  padding: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+}
+.featured-card::before {
+  content: '';
+  position: absolute; top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+}
+.featured-card::after {
+  content: '';
+  position: absolute; bottom: -20px; right: 40px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.live-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px; padding: 4px 10px;
+  font-size: 11px; font-weight: 700;
+  margin-bottom: 10px;
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #69DB7C;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.3); }
+}
+.featured-title {
+  font-size: 18px; font-weight: 900;
+  line-height: 1.4; margin-bottom: 14px;
+  font-family: 'Black Han Sans', sans-serif;
+  letter-spacing: -0.5px;
+}
+.featured-bar {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px; height: 8px;
+  margin-bottom: 8px; overflow: hidden;
+}
+.featured-bar-fill {
+  height: 100%; border-radius: 10px;
+  background: linear-gradient(90deg, #74C0FC, white);
+  width: 62%;
+}
+.featured-stats {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.featured-pcts { font-size: 12px; opacity: .85; }
+.featured-pcts span { font-weight: 700; }
+.featured-btn {
+  background: white; color: var(--blue);
+  border: none; border-radius: 8px;
+  padding: 8px 16px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 섹션 제목 */
+.section-head {
+  padding: 18px 20px 10px;
+  font-size: 16px; font-weight: 900;
+  font-family: 'Black Han Sans', sans-serif;
+  letter-spacing: -0.3px;
+}
+
+/* 토론 목록 */
+.debate-list { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+.debate-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex; gap: 14px; align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  border: 1px solid transparent;
+}
+.debate-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--gray-2);
+}
+.debate-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.debate-body { flex: 1; min-width: 0; }
+.debate-tags { display: flex; gap: 5px; margin-bottom: 5px; }
+.debate-tag {
+  font-size: 11px; padding: 2px 8px; border-radius: 20px;
+  font-weight: 600;
+}
+.debate-title {
+  font-size: 14px; font-weight: 700;
+  line-height: 1.45; margin-bottom: 8px;
+  color: var(--dark);
+}
+.debate-bar-wrap {
+  height: 6px; background: var(--gray-1);
+  border-radius: 10px; overflow: hidden; margin-bottom: 5px;
+}
+.debate-bar-fill {
+  height: 100%; border-radius: 10px;
+  background: linear-gradient(90deg, var(--blue), #748FFC);
+}
+.debate-meta {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--gray-3);
+}
+.debate-count { font-weight: 600; color: var(--gray-4); }
+
+/* 하단 네비 */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--gray-2);
+  display: flex; padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  cursor: pointer; padding: 4px;
+}
+.nav-icon { font-size: 20px; line-height: 1; }
+.nav-label { font-size: 10px; color: var(--gray-3); font-weight: 500; }
+.nav-item.active .nav-label { color: var(--blue); }
+.nav-item.active .nav-icon { filter: none; }
+
+/* 콘텐츠 하단 여백 */
+.bottom-spacer { height: 80px; }
+
+/* ═══════════════════════════════
+   DETAIL VIEW (줄다리기)
+═══════════════════════════════ */
+#view-detail {
+  background: var(--gray-bg);
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.detail-header {
+  background: var(--white);
+  padding: 14px 20px 16px;
+  border-bottom: 1px solid var(--gray-2);
+  display: flex; align-items: center; gap: 12px;
+}
+.back-btn {
+  width: 36px; height: 36px;
+  border: none; background: var(--gray-1);
+  border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.detail-header-title {
+  font-size: 15px; font-weight: 700; flex: 1;
+  color: var(--dark);
+}
+
+/* 이슈 카드 */
+.issue-card {
+  margin: 16px 20px;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.issue-tags { display: flex; gap: 5px; margin-bottom: 10px; }
+.issue-tag {
+  font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600;
+}
+.issue-title {
+  font-size: 19px; font-weight: 900;
+  line-height: 1.4; margin-bottom: 12px;
+  font-family: 'Black Han Sans', sans-serif;
+  letter-spacing: -0.5px;
+}
+.issue-desc {
+  font-size: 13px; color: var(--gray-4);
+  line-height: 1.65; margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--gray-1);
+}
+.issue-meta-row {
+  display: flex; gap: 16px;
+}
+.issue-meta-item {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.issue-meta-label { font-size: 10px; color: var(--gray-3); font-weight: 600; }
+.issue-meta-value { font-size: 14px; font-weight: 700; color: var(--dark); }
+
+/* 투표 전 잠금 안내 */
+.vote-lock-hint {
+  margin: 0 20px 12px;
+  background: #FFF9DB;
+  border: 1px solid #FFE066;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #856404;
+  display: flex; gap: 7px; align-items: center;
+  font-weight: 500;
+}
+
+/* ── 줄다리기 투표 영역 ── */
+.rope-vote-section {
+  margin: 0 20px 16px;
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.rope-header {
+  text-align: center;
+  padding: 16px 16px 8px;
+  font-size: 13px; font-weight: 700; color: var(--gray-4);
+}
+
+/* 줄다리기 메인 영역 */
+.rope-arena {
+  position: relative;
+  padding: 12px 16px 20px;
+  display: flex; align-items: center;
+  gap: 0;
+  min-height: 120px;
+}
+
+/* 찬성/반대 버튼 */
+.rope-side {
+  flex: none;
+  width: 80px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  z-index: 2;
+}
+.rope-btn {
+  width: 72px; height: 72px;
+  border: none; border-radius: 50%;
+  cursor: pointer;
+  font-size: 22px; font-weight: 900;
+  font-family: 'Black Han Sans', sans-serif;
+  transition: transform .15s, box-shadow .15s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+.rope-btn:hover { transform: scale(1.06); }
+.rope-btn:active { transform: scale(0.96); }
+.rope-btn.blue {
+  background: linear-gradient(145deg, #4C6EF5, var(--blue-dark));
+  color: white;
+}
+.rope-btn.red {
+  background: linear-gradient(145deg, #FA5252, var(--red-dark));
+  color: white;
+}
+.rope-btn-label {
+  font-size: 11px; font-weight: 700; color: var(--gray-4);
+  text-align: center;
+}
+
+/* 줄 + 인물 */
+.rope-center {
+  flex: 1;
+  position: relative;
+  height: 80px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* SVG 줄다리기 */
+.rope-svg {
+  width: 100%; height: 80px;
+  position: absolute; top: 0; left: 0;
+}
+
+/* 줄다리기 인물들 */
+.puller {
+  position: absolute;
+  font-size: 26px;
+  top: 50%; transform: translateY(-50%);
+  transition: left .5s cubic-bezier(.34,1.56,.64,1), right .5s cubic-bezier(.34,1.56,.64,1);
+  z-index: 3;
+  user-select: none;
+  line-height: 1;
+}
+.puller-blue { left: 8px; }
+.puller-red { right: 8px; transform: translateY(-50%) scaleX(-1); }
+
+/* 줄 */
+.rope-line {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  left: 40px; right: 40px;
+  height: 10px;
+  background: repeating-linear-gradient(
+    90deg,
+    #A0522D 0, #8B4513 6px, #C4874C 6px, #A0522D 12px
+  );
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* 중간 리본 */
+.rope-ribbon {
+  position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -55%);
+  width: 18px; height: 26px;
+  z-index: 4;
+  transition: left .5s cubic-bezier(.34,1.56,.64,1);
+}
+.ribbon-svg { width: 18px; height: 26px; }
+
+/* 스코어 */
+.rope-scores {
+  display: flex; justify-content: space-between;
+  padding: 0 16px 16px;
+}
+.rope-score {
+  text-align: center;
+}
+.rope-pct {
+  font-size: 22px; font-weight: 900;
+  font-family: 'Black Han Sans', sans-serif;
+  letter-spacing: -0.5px;
+}
+.rope-pct.blue { color: var(--blue); }
+.rope-pct.red { color: var(--red); }
+.rope-label { font-size: 11px; color: var(--gray-3); font-weight: 600; }
+.rope-count { font-size: 10px; color: var(--gray-3); margin-top: 1px; }
+
+/* 투표 후 상태 */
+.voted-badge {
+  text-align: center;
+  padding: 6px 16px 14px;
+  font-size: 12px; color: var(--gray-3); font-weight: 600;
+}
+
+/* 결과 공유 배너 (투표 후) */
+.share-result-banner {
+  margin: 0 20px 16px;
+  background: linear-gradient(135deg, #1E3A8A, #3B5BDB);
+  border-radius: 16px;
+  padding: 16px 20px;
+  color: white;
+  display: none;
+}
+.share-result-banner.show { display: block; }
+.srb-title {
+  font-size: 14px; font-weight: 900;
+  font-family: 'Black Han Sans', sans-serif;
+  margin-bottom: 4px;
+}
+.srb-sub { font-size: 12px; opacity: .8; margin-bottom: 12px; }
+.srb-btns { display: flex; gap: 8px; }
+.srb-btn {
+  flex: 1; padding: 9px; border-radius: 10px;
+  font-size: 13px; font-weight: 700;
+  border: none; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.srb-btn.kakao { background: #FEE500; color: #1A1A1A; }
+.srb-btn.link { background: rgba(255,255,255,0.2); color: white; }
+
+/* 통계 섹션 */
+.stats-section {
+  margin: 0 20px 16px;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.stats-title {
+  font-size: 14px; font-weight: 900;
+  font-family: 'Black Han Sans', sans-serif;
+  margin-bottom: 14px;
+}
+
+/* 세대별 */
+.gen-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.gen-label { font-size: 12px; font-weight: 600; color: var(--gray-4); width: 28px; flex-shrink: 0; }
+.gen-bar-wrap { flex: 1; height: 22px; border-radius: 6px; overflow: hidden; display: flex; }
+.gen-bar-blue { background: var(--blue); display: flex; align-items: center; justify-content: flex-start; padding-left: 6px; }
+.gen-bar-red { background: var(--red); display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+.gen-bar-pct { font-size: 10px; font-weight: 700; color: white; }
+.gen-result { font-size: 10px; color: var(--gray-3); width: 40px; flex-shrink: 0; text-align: right; font-weight: 600; }
+
+/* 키워드 태그 */
+.keyword-section { margin-top: 14px; }
+.kw-head { font-size: 12px; font-weight: 700; color: var(--gray-4); margin-bottom: 7px; }
+.kw-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.kw-tag {
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.kw-tag.blue { background: var(--blue-light); color: var(--blue); }
+.kw-tag.red { background: var(--red-light); color: var(--red); }
+
+/* 댓글 섹션 */
+.comment-section {
+  margin: 0 20px 16px;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.comment-title {
+  font-size: 14px; font-weight: 900;
+  font-family: 'Black Han Sans', sans-serif;
+  margin-bottom: 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.comment-total { font-size: 13px; font-weight: 400; color: var(--gray-3); font-family: 'Noto Sans KR'; }
+.comment-item { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-1); }
+.comment-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.comment-top { display: flex; gap: 8px; align-items: center; margin-bottom: 5px; }
+.comment-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0; font-weight: 700; color: white;
+}
+.comment-name { font-size: 12px; font-weight: 700; }
+.comment-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 700;
+}
+.comment-date { font-size: 10px; color: var(--gray-3); margin-left: auto; }
+.comment-text { font-size: 13px; line-height: 1.6; color: var(--gray-4); margin-left: 36px; }
+.comment-likes { font-size: 11px; color: var(--gray-3); margin-left: 36px; margin-top: 5px; }
+
+/* 댓글 입력 */
+.comment-input-row {
+  position: sticky; bottom: 0;
+  background: var(--white);
+  border-top: 1px solid var(--gray-2);
+  padding: 10px 20px;
+  display: flex; gap: 8px; align-items: center;
+}
+.comment-input {
+  flex: 1; border: 1.5px solid var(--gray-2);
+  border-radius: 22px; padding: 9px 16px;
+  font-size: 13px; outline: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--gray-1);
+}
+.comment-input:focus { border-color: var(--blue); background: white; }
+.comment-submit {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--blue); color: white;
+  border: none; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ═══════════════════════════════
+   줄다리기 진동 애니메이션
+═══════════════════════════════ */
+@keyframes ropeShake {
+  0%   { transform: translateX(0) rotate(0); }
+  10%  { transform: translateX(-5px) rotate(-1.5deg); }
+  20%  { transform: translateX(6px) rotate(1.5deg); }
+  30%  { transform: translateX(-4px) rotate(-1deg); }
+  40%  { transform: translateX(5px) rotate(1deg); }
+  50%  { transform: translateX(-3px) rotate(-.5deg); }
+  60%  { transform: translateX(4px) rotate(.5deg); }
+  70%  { transform: translateX(-2px) rotate(0); }
+  80%  { transform: translateX(3px); }
+  90%  { transform: translateX(-1px); }
+  100% { transform: translateX(0); }
+}
+@keyframes pullerShake {
+  0%,100% { transform: translateY(-50%) scale(1); }
+  15% { transform: translateY(-60%) scale(1.15) rotate(-8deg); }
+  30% { transform: translateY(-40%) scale(1.1) rotate(6deg); }
+  45% { transform: translateY(-58%) scale(1.12) rotate(-5deg); }
+  60% { transform: translateY(-44%) scale(1.08) rotate(4deg); }
+  75% { transform: translateY(-52%) scale(1.05) rotate(-2deg); }
+}
+@keyframes pullerShakeR {
+  0%,100% { transform: translateY(-50%) scaleX(-1) scale(1); }
+  15% { transform: translateY(-60%) scaleX(-1) scale(1.15) rotate(8deg); }
+  30% { transform: translateY(-40%) scaleX(-1) scale(1.1) rotate(-6deg); }
+  45% { transform: translateY(-58%) scaleX(-1) scale(1.12) rotate(5deg); }
+  60% { transform: translateY(-44%) scaleX(-1) scale(1.08) rotate(-4deg); }
+  75% { transform: translateY(-52%) scaleX(-1) scale(1.05) rotate(2deg); }
+}
+@keyframes ribbonPop {
+  0% { transform: translate(-50%,-55%) scale(0.5); opacity: 0; }
+  60% { transform: translate(-50%,-55%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%,-55%) scale(1); opacity: 1; }
+}
+
+.rope-shaking .rope-line { animation: ropeShake .08s linear infinite; }
+.rope-shaking .puller-blue { animation: pullerShake .1s ease-in-out 6; }
+.rope-shaking .puller-red { animation: pullerShakeR .1s ease-in-out 6; }
+
+.result-pop .rope-ribbon { animation: ribbonPop 0.5s ease-out forwards; }
+
+/* 결과 오버레이 */
+.result-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.7);
+  display: none; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.result-overlay.show { display: flex; }
+.result-card {
+  background: white; border-radius: 24px;
+  padding: 32px 28px; max-width: 320px; width: 90%;
+  text-align: center;
+  animation: cardPop .4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes cardPop {
+  from { transform: scale(.7); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+.result-emoji { font-size: 56px; margin-bottom: 10px; }
+.result-headline {
+  font-size: 22px; font-weight: 900;
+  font-family: 'Black Han Sans', sans-serif;
+  margin-bottom: 6px;
+}
+.result-sub { font-size: 13px; color: var(--gray-3); margin-bottom: 20px; }
+.result-bar-wrap {
+  height: 28px; border-radius: 14px; overflow: hidden;
+  display: flex; margin-bottom: 8px; position: relative;
+}
+.result-bar-blue {
+  background: linear-gradient(90deg, var(--blue), #748FFC);
+  display: flex; align-items: center; padding-left: 10px;
+  font-size: 13px; font-weight: 900; color: white;
+  transition: width 1s ease;
+}
+.result-bar-red {
+  background: linear-gradient(90deg, #FA5252, var(--red));
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 13px; font-weight: 900; color: white;
+  transition: width 1s ease;
+}
+.result-counts { font-size: 11px; color: var(--gray-3); margin-bottom: 20px; }
+.result-my-badge {
+  display: inline-block;
+  padding: 5px 14px; border-radius: 20px;
+  font-size: 13px; font-weight: 700;
+  margin-bottom: 18px;
+}
+.result-share-btn {
+  width: 100%; padding: 13px; border-radius: 12px;
+  background: #FEE500; color: #1A1A1A;
+  border: none; cursor: pointer;
+  font-size: 14px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  margin-bottom: 8px;
+}
+.result-close-btn {
+  width: 100%; padding: 11px; border-radius: 12px;
+  background: var(--gray-1); color: var(--gray-4);
+  border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 파티클 */
+.confetti-wrap {
+  position: fixed; inset: 0; pointer-events: none; z-index: 210;
+  display: none;
+}
+.confetti-wrap.show { display: block; }
+.confetti-piece {
+  position: absolute;
+  width: 8px; height: 12px;
+  border-radius: 2px;
+  animation: confettiFall 2s ease-in forwards;
+}
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ MAIN VIEW ═══ -->
+<div id="view-main" class="view active">
+  <!-- 상단바 -->
+  <div class="topbar">
+    <div class="logo">팽팽</div>
+    <div class="topbar-right">
+      <span style="font-size:22px;cursor:pointer">🔔</span>
+      <button class="btn-post">나도 질문하기</button>
+    </div>
+  </div>
+
+  <!-- 카테고리 -->
+  <div class="cat-wrap">
+    <div class="cat-chip active" onclick="filterCat(this, '전체')">전체</div>
+    <div class="cat-chip" onclick="filterCat(this, '정치·제도')">정치·제도</div>
+    <div class="cat-chip" onclick="filterCat(this, '경제·노동')">경제·노동</div>
+    <div class="cat-chip" onclick="filterCat(this, '사회·젠더')">사회·젠더</div>
+    <div class="cat-chip" onclick="filterCat(this, '교육')">교육</div>
+    <div class="cat-chip" onclick="filterCat(this, '환경·기술')">환경·기술</div>
+    <div class="cat-chip" onclick="filterCat(this, '법·윤리')">법·윤리</div>
+  </div>
+
+  <!-- 피처 카드 -->
+  <div class="featured-wrap">
+    <div class="featured-card" onclick="openDebate(0)">
+      <div class="live-badge"><div class="live-dot"></div>실시간 팽팽 중</div>
+      <div class="featured-title">주 4일제 도입, 경제 성장에 도움이 될까 독이 될까?</div>
+      <div class="featured-bar"><div class="featured-bar-fill"></div></div>
+      <div class="featured-stats">
+        <div class="featured-pcts"><span>찬성 62%</span> — 반대 38%</div>
+        <button class="featured-btn" onclick="event.stopPropagation();openDebate(0)">참여하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토론 목록 -->
+  <div class="section-head">주요 팽팽 주제</div>
+  <div class="debate-list" id="debateList"></div>
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- 하단 네비 -->
+<div class="bottom-nav">
+  <div class="nav-item active">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">홈</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">🔍</div>
+    <div class="nav-label">탐색</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">💬</div>
+    <div class="nav-label">내 토론</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">통계</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">👤</div>
+    <div class="nav-label">프로필</div>
+  </div>
+</div>
+
+<!-- ═══ DETAIL VIEW ═══ -->
+<div id="view-detail" class="view">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="detail-header-title" id="detail-header-title">팽팽</div>
+  </div>
+
+  <!-- 이슈 카드 -->
+  <div class="issue-card">
+    <div class="issue-tags" id="issue-tags"></div>
+    <div class="issue-title" id="issue-title"></div>
+    <div class="issue-desc" id="issue-desc"></div>
+    <div class="issue-meta-row">
+      <div class="issue-meta-item">
+        <div class="issue-meta-label">총 참여</div>
+        <div class="issue-meta-value" id="issue-total"></div>
+      </div>
+      <div class="issue-meta-item">
+        <div class="issue-meta-label">댓글 수</div>
+        <div class="issue-meta-value" id="issue-comments"></div>
+      </div>
+      <div class="issue-meta-item">
+        <div class="issue-meta-label">마감</div>
+        <div class="issue-meta-value" id="issue-deadline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 투표 잠금 힌트 -->
+  <div class="vote-lock-hint" id="vote-lock-hint">
+    <span>🔒</span>
+    <span>투표 후 결과를 확인할 수 있어요. 줄을 당겨보세요!</span>
+  </div>
+
+  <!-- 줄다리기 투표 -->
+  <div class="rope-vote-section">
+    <div class="rope-header" id="rope-header">🪢 지금 줄다리기 중! 어느 편을 당기시겠어요?</div>
+
+    <div class="rope-arena" id="ropeArena">
+      <!-- 찬성 버튼 -->
+      <div class="rope-side">
+        <button class="rope-btn blue" id="btnBlue" onclick="castVote('blue')">찬</button>
+        <div class="rope-btn-label">찬성</div>
+      </div>
+
+      <!-- 줄 + 인물 -->
+      <div class="rope-center" id="ropeCenter">
+        <div class="rope-line" id="ropeLine"></div>
+        <div class="puller puller-blue" id="pullerBlue">🏃</div>
+        <div class="puller puller-red" id="pullerRed">🏃</div>
+        <!-- 리본 -->
+        <div class="rope-ribbon" id="ropeRibbon">
+          <svg class="ribbon-svg" viewBox="0 0 18 26">
+            <rect x="3" y="0" width="12" height="16" rx="2" fill="#FF6B6B"/>
+            <polygon points="3,16 9,22 15,16" fill="#FF6B6B"/>
+            <rect x="5" y="2" width="8" height="2" rx="1" fill="rgba(255,255,255,0.4)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 반대 버튼 -->
+      <div class="rope-side">
+        <button class="rope-btn red" id="btnRed" onclick="castVote('red')">반</button>
+        <div class="rope-btn-label">반대</div>
+      </div>
+    </div>
+
+    <!-- 스코어 -->
+    <div class="rope-scores" id="ropeScores">
+      <div class="rope-score">
+        <div class="rope-pct blue" id="scoreBluePct">??%</div>
+        <div class="rope-label">찬성</div>
+        <div class="rope-count" id="scoreBlueCount">투표 후 공개</div>
+      </div>
+      <div class="rope-score">
+        <div class="rope-pct red" id="scoreRedPct">??%</div>
+        <div class="rope-label">반대</div>
+        <div class="rope-count" id="scoreRedCount">투표 후 공개</div>
+      </div>
+    </div>
+
+    <div class="voted-badge" id="votedBadge"></div>
+  </div>
+
+  <!-- 공유 배너 (투표 후) -->
+  <div class="share-result-banner" id="shareResultBanner">
+    <div class="srb-title">결과가 공개됐어요! 친구에게도 물어보세요 📢</div>
+    <div class="srb-sub">친구들은 어느 편일까요?</div>
+    <div class="srb-btns">
+      <button class="srb-btn kakao" onclick="shareKakao()">카카오톡 공유</button>
+      <button class="srb-btn link" onclick="copyLink()">링크 복사</button>
+    </div>
+  </div>
+
+  <!-- 통계 -->
+  <div class="stats-section" id="statsSection" style="display:none">
+    <div class="stats-title">세대별 팽팽 현황</div>
+    <div id="genStats"></div>
+
+    <div class="keyword-section">
+      <div class="kw-head">찬성 측 핵심 논거</div>
+      <div class="kw-tags" id="kwBlue"></div>
+    </div>
+    <div class="keyword-section" style="margin-top:10px">
+      <div class="kw-head">반대 측 핵심 논거</div>
+      <div class="kw-tags" id="kwRed"></div>
+    </div>
+  </div>
+
+  <!-- 댓글 -->
+  <div class="comment-section">
+    <div class="comment-title">
+      댓글 <span class="comment-total" id="commentTotal"></span>
+    </div>
+    <div id="commentList"></div>
+  </div>
+
+  <!-- 댓글 입력 -->
+  <div class="comment-input-row">
+    <input class="comment-input" type="text" placeholder="의견을 남겨보세요..." id="commentInput">
+    <button class="comment-submit" onclick="submitComment()">↑</button>
+  </div>
+</div>
+
+<!-- 결과 오버레이 -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-headline" id="resultHeadline"></div>
+    <div class="result-sub" id="resultSub"></div>
+    <div class="result-bar-wrap">
+      <div class="result-bar-blue" id="resultBarBlue">62%</div>
+      <div class="result-bar-red" id="resultBarRed">38%</div>
+    </div>
+    <div class="result-counts" id="resultCounts"></div>
+    <div class="result-my-badge" id="resultMyBadge"></div>
+    <button class="result-share-btn" onclick="shareKakao()">
+      📢 카카오톡으로 공유하기
+    </button>
+    <button class="result-close-btn" onclick="closeResult()">결과 자세히 보기</button>
+  </div>
+</div>
+
+<!-- 컨페티 -->
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<script>
+// ═══ 데이터 ═══
+const DEBATES = [
+  {
+    id: 0,
+    title: "주 4일제 도입, 경제 성장에 도움이 될까 독이 될까?",
+    desc: "유럽과 일본 등 주요국이 주 4일제 시범 도입에 나서고 있습니다. 노동 생산성 향상 vs 경제 경쟁력 약화, 당신의 생각은?",
+    cat: "경제·노동", catColor: "#3B5BDB", catBg: "#EEF2FF",
+    icon: "💼", iconBg: "#EEF2FF",
+    total: 1204, comments: 3847, deadline: "48시간",
+    bluePct: 62, redPct: 38,
+    blueLabel: "찬성", redLabel: "반대",
+    genStats: [
+      {gen:"20대", blue:74, red:26, result:"찬성 우세"},
+      {gen:"30대", blue:68, red:32, result:"찬성 우세"},
+      {gen:"40대", blue:52, red:48, result:"팽팽"},
+      {gen:"50대+", blue:38, red:62, result:"반대 우세"},
+    ],
+    kwBlue: ["생산성 향상", "워라밸", "OECD 사례", "번아웃 감소", "창의성"],
+    kwRed: ["중소기업 부담", "서비스업 타격", "경쟁력 저하", "인건비 상승"],
+    comments: [
+      {name:"RC100", avatar:"#3B5BDB", side:"red", text:"글쎄요. 어릴수록 스펀지처럼 흡수한다고 하죠. 근데 그게 중학교까지 이어지지 않으면 다 잊어버립니다. 처음부터 어렸을 때 영어, 볼어, 히브리어, 헬라어를 부모님을 따라하죠...", likes:"👍 24  💬 7", date:"4일 전"},
+      {name:"직장맘", avatar:"#2E7D32", side:"blue", text:"주 4일제 하면 진짜 워라밸 달라질 것 같아요. 애 학교 픽업도 여유있게 할 수 있고, 개인 시간도 생기고. 무조건 찬성입니다.", likes:"👍 41  💬 12", date:"3일 전"},
+      {name:"사장님들_모임", avatar:"#B71C1C", side:"red", text:"솔직히 중소기업 입장에서는 현실적으로 너무 힘든 이야기예요. 인건비 줄이고 생존하기도 벅찬데 4일제라니...", likes:"👍 18  💬 5", date:"2일 전"},
+    ]
+  },
+  {
+    id: 1,
+    title: "사형제 폐지, 지금이 적기인가?",
+    desc: "국제 인권단체들은 사형제 폐지를 촉구하고 있습니다. 응보적 정의 vs 피해자 인권, 어떻게 보십니까?",
+    cat: "법·윤리", catColor: "#6741D9", catBg: "#F3F0FF",
+    icon: "⚖️", iconBg: "#F3F0FF",
+    total: 1204, comments: 891, deadline: "72시간",
+    bluePct: 44, redPct: 56,
+    blueLabel: "폐지", redLabel: "유지",
+    genStats: [
+      {gen:"20대", blue:58, red:42, result:"폐지 우세"},
+      {gen:"30대", blue:51, red:49, result:"팽팽"},
+      {gen:"40대", blue:40, red:60, result:"유지 우세"},
+      {gen:"50대+", blue:28, red:72, result:"유지 우세"},
+    ],
+    kwBlue: ["인권", "오판 위험", "국제 추세", "교정 가능성"],
+    kwRed: ["응보적 정의", "피해자 인권", "범죄 억제", "국민 정서"],
+    comments: [
+      {name:"인권활동가", avatar:"#6741D9", side:"blue", text:"무고한 사람이 처형되면 되돌릴 방법이 없습니다. 단 한 명의 억울한 죽음이라도 막아야 한다면 폐지가 맞습니다.", likes:"👍 33  💬 9", date:"1일 전"},
+      {name:"피해자가족", avatar:"#C62828", side:"red", text:"제발 피해자 입장도 생각해주세요. 가해자 인권만 이야기하는 게 지쳐요.", likes:"👍 58  💬 22", date:"1일 전"},
+    ]
+  },
+  {
+    id: 2,
+    title: "대통령제 vs 내각제 — 어떤 체제가 한국에 맞나?",
+    desc: "87년 체제의 대통령제를 바꿔야 한다는 목소리가 커지고 있습니다. 강력한 리더십 vs 의회 중심 협치, 당신의 선택은?",
+    cat: "정치·제도", catColor: "#1864AB", catBg: "#E7F5FF",
+    icon: "🏛️", iconBg: "#E7F5FF",
+    total: 892, comments: 1205, deadline: "24시간",
+    bluePct: 51, redPct: 49,
+    blueLabel: "대통령제", redLabel: "내각제",
+    genStats: [
+      {gen:"20대", blue:43, red:57, result:"내각제 우세"},
+      {gen:"30대", blue:48, red:52, result:"팽팽"},
+      {gen:"40대", blue:55, red:45, result:"대통령제"},
+      {gen:"50대+", blue:61, red:39, result:"대통령제"},
+    ],
+    kwBlue: ["강력한 리더십", "안정성", "직선제 전통", "책임 명확"],
+    kwRed: ["협치", "다당제", "권력 분산", "의회 중심"],
+    comments: [
+      {name:"헌법학자_팬", avatar:"#1864AB", side:"blue", text:"대통령제의 문제는 제도 자체가 아니라 운영의 문제입니다. 법치만 잘 되면 대통령제가 훨씬 효율적입니다.", likes:"👍 21  💬 6", date:"5시간 전"},
+    ]
+  },
+  {
+    id: 3,
+    title: "기본소득 도입, 현실적으로 가능한가?",
+    desc: "핀란드, 캐나다 등에서 실험 중인 기본소득. 복지 혁신 vs 재정 파탄, 한국에서 가능한 모델일까요?",
+    cat: "경제·노동", catColor: "#2F9E44", catBg: "#EBFBEE",
+    icon: "💰", iconBg: "#EBFBEE",
+    total: 743, comments: 632, deadline: "36시간",
+    bluePct: 58, redPct: 42,
+    blueLabel: "가능", redLabel: "불가",
+    genStats: [
+      {gen:"20대", blue:72, red:28, result:"가능 우세"},
+      {gen:"30대", blue:64, red:36, result:"가능 우세"},
+      {gen:"40대", blue:51, red:49, result:"팽팽"},
+      {gen:"50대+", blue:38, red:62, result:"불가 우세"},
+    ],
+    kwBlue: ["AI 시대 대비", "소비 진작", "핀란드 사례", "불평등 해소"],
+    kwRed: ["재정 부담", "노동 의욕 저하", "선별 복지", "세금 폭탄"],
+    comments: [
+      {name:"경제학도", avatar:"#2F9E44", side:"blue", text:"AI가 일자리를 대체하는 시대, 기본소득은 선택이 아닌 필수가 될 겁니다.", likes:"👍 45  💬 18", date:"8시간 전"},
+    ]
+  },
+  {
+    id: 4,
+    title: "탈원전 vs 원전 확대 — 에너지 전환의 방향",
+    desc: "기후위기 대응과 에너지 안보 사이의 딜레마. 재생에너지 전환 vs 원전 유지·확대, 한국의 선택은?",
+    cat: "환경·기술", catColor: "#0C8599", catBg: "#E3FAFC",
+    icon: "⚡", iconBg: "#E3FAFC",
+    total: 618, comments: 447, deadline: "60시간",
+    bluePct: 47, redPct: 53,
+    blueLabel: "탈원전", redLabel: "원전확대",
+    genStats: [
+      {gen:"20대", blue:61, red:39, result:"탈원전 우세"},
+      {gen:"30대", blue:52, red:48, result:"팽팽"},
+      {gen:"40대", blue:44, red:56, result:"원전확대"},
+      {gen:"50대+", blue:35, red:65, result:"원전확대"},
+    ],
+    kwBlue: ["기후변화", "재생에너지", "탈탄소", "안전"],
+    kwRed: ["에너지 안보", "전기료", "기저전력", "탄소중립 현실"],
+    comments: [
+      {name:"환경단체", avatar:"#0C8599", side:"blue", text:"후쿠시마를 잊으셨나요? 안전 비용 포함하면 원전이 싸지 않습니다.", likes:"👍 29  💬 11", date:"12시간 전"},
+    ]
+  },
+  {
+    id: 5,
+    title: "수능 vs 수시, 공정한 입시는 무엇인가?",
+    desc: "정시 확대와 수시 축소를 둘러싼 오랜 논쟁. 수능 일괄 선발 vs 다양성 존중 수시 선발, 더 공정한 방식은?",
+    cat: "교육", catColor: "#E67700", catBg: "#FFF9DB",
+    icon: "🎓", iconBg: "#FFF9DB",
+    total: 521, comments: 384, deadline: "48시간",
+    bluePct: 63, redPct: 37,
+    blueLabel: "수능", redLabel: "수시",
+    genStats: [
+      {gen:"20대", blue:68, red:32, result:"수능 우세"},
+      {gen:"30대", blue:62, red:38, result:"수능 우세"},
+      {gen:"40대", blue:58, red:42, result:"수능 우세"},
+      {gen:"50대+", blue:71, red:29, result:"수능 우세"},
+    ],
+    kwBlue: ["공정성", "객관적 기준", "계층 이동", "사교육 억제"],
+    kwRed: ["다양성", "역량 평가", "일회성 시험", "스트레스"],
+    comments: [
+      {name:"고3학부모", avatar:"#E67700", side:"blue", text:"수시는 학교마다 기준이 달라서 뭘 믿어야 할지 모르겠어요. 그냥 수능 하나로 가는 게 마음 편해요.", likes:"👍 37  💬 14", date:"1일 전"},
+    ]
+  },
+];
+
+let currentDebate = null;
+let hasVoted = false;
+let myVote = null;
+
+// ═══ 메인화면 렌더 ═══
+function renderMain() {
+  const list = document.getElementById('debateList');
+  list.innerHTML = '';
+  DEBATES.forEach((d, i) => {
+    if (i === 0) return; // 피처 카드로 이미 표시
+    const card = document.createElement('div');
+    card.className = 'debate-card';
+    card.onclick = () => openDebate(d.id);
+    card.innerHTML = `
+      <div class="debate-icon" style="background:${d.iconBg}">${d.icon}</div>
+      <div class="debate-body">
+        <div class="debate-tags">
+          <span class="debate-tag" style="background:${d.catBg};color:${d.catColor}">${d.cat}</span>
+        </div>
+        <div class="debate-title">${d.title}</div>
+        <div class="debate-bar-wrap">
+          <div class="debate-bar-fill" style="width:${d.bluePct}%"></div>
+        </div>
+        <div class="debate-meta">
+          <span class="debate-count">${d.total.toLocaleString()}명 참여</span>
+          <span>마감 ${d.deadline}</span>
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function filterCat(el, cat) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══ 디테일 뷰 ═══
+function openDebate(id) {
+  currentDebate = DEBATES.find(d => d.id === id);
+  hasVoted = false; myVote = null;
+  const d = currentDebate;
+
+  // 헤더
+  document.getElementById('detail-header-title').textContent = d.cat + ' 팽팽';
+
+  // 이슈 카드
+  document.getElementById('issue-tags').innerHTML =
+    `<span class="issue-tag" style="background:${d.catBg};color:${d.catColor}">${d.cat}</span>`;
+  document.getElementById('issue-title').textContent = d.title;
+  document.getElementById('issue-desc').textContent = d.desc;
+  document.getElementById('issue-total').textContent = d.total.toLocaleString() + '명';
+  document.getElementById('issue-comments').textContent = Array.isArray(d.comments) ? d.comments.length + '개' : '3,847개';
+  document.getElementById('issue-deadline').textContent = d.deadline;
+
+  // 줄다리기 초기화
+  resetRope();
+
+  // 통계 숨김
+  document.getElementById('statsSection').style.display = 'none';
+  document.getElementById('shareResultBanner').classList.remove('show');
+  document.getElementById('vote-lock-hint').style.display = 'flex';
+
+  // 댓글
+  renderComments(d);
+
+  // 화면 전환
+  document.getElementById('view-main').classList.remove('active');
+  document.getElementById('view-detail').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  document.getElementById('view-detail').classList.remove('active');
+  document.getElementById('view-main').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ═══ 줄다리기 ═══
+function resetRope() {
+  const arena = document.getElementById('ropeArena');
+  arena.classList.remove('rope-shaking', 'result-pop');
+
+  document.getElementById('scoreBluePct').textContent = '??%';
+  document.getElementById('scoreRedPct').textContent = '??%';
+  document.getElementById('scoreBlueCount').textContent = '투표 후 공개';
+  document.getElementById('scoreRedCount').textContent = '투표 후 공개';
+  document.getElementById('votedBadge').textContent = '';
+  document.getElementById('rope-header').textContent = '🪢 지금 줄다리기 중! 어느 편을 당기시겠어요?';
+
+  // 인물 위치 초기화
+  document.getElementById('pullerBlue').style.left = '8px';
+  document.getElementById('pullerRed').style.right = '8px';
+
+  // 버튼 활성화
+  document.getElementById('btnBlue').disabled = false;
+  document.getElementById('btnRed').disabled = false;
+  document.getElementById('btnBlue').style.opacity = '1';
+  document.getElementById('btnRed').style.opacity = '1';
+}
+
+function castVote(side) {
+  if (hasVoted) return;
+  myVote = side;
+  hasVoted = true;
+
+  const d = currentDebate;
+  const arena = document.getElementById('ropeArena');
+  const btn = side === 'blue' ? document.getElementById('btnBlue') : document.getElementById('btnRed');
+
+  // 버튼 비활성화
+  document.getElementById('btnBlue').disabled = true;
+  document.getElementById('btnRed').disabled = true;
+
+  // 진동
+  if (navigator.vibrate) {
+    navigator.vibrate([80,40,80,40,160,40,80,40,80]);
+  }
+
+  // 줄다리기 흔들기 시작
+  arena.classList.add('rope-shaking');
+
+  // 헤더 변경
+  document.getElementById('rope-header').textContent =
+    side === 'blue' ? '💪 찬성편을 당기는 중...' : '💪 반대편을 당기는 중...';
+
+  // 1.5초 후 결과 공개
+  setTimeout(() => {
+    arena.classList.remove('rope-shaking');
+    showVoteResult(side);
+  }, 1500);
+}
+
+function showVoteResult(side) {
+  const d = currentDebate;
+  const arena = document.getElementById('ropeArena');
+
+  // 인물 이동 (이긴 쪽으로 리본 이동)
+  const bluePct = d.bluePct;
+  const redPct = d.redPct;
+
+  // 줄 오프셋 계산 (50% 기준 차이 반영)
+  const offset = (bluePct - 50) * 0.6; // 최대 약 ±18px
+
+  const pullerBlue = document.getElementById('pullerBlue');
+  const pullerRed = document.getElementById('pullerRed');
+  const ribbon = document.getElementById('ropeRibbon');
+
+  // 리본 위치
+  const ribbonLeft = 50 + offset;
+  ribbon.style.left = ribbonLeft + '%';
+  ribbon.style.transform = `translate(-50%, -55%)`;
+
+  arena.classList.add('result-pop');
+
+  // 스코어 공개
+  document.getElementById('scoreBluePct').textContent = bluePct + '%';
+  document.getElementById('scoreRedPct').textContent = redPct + '%';
+  document.getElementById('scoreBlueCount').textContent =
+    Math.round(d.total * bluePct / 100).toLocaleString() + '명';
+  document.getElementById('scoreRedCount').textContent =
+    Math.round(d.total * redPct / 100).toLocaleString() + '명';
+
+  // 투표 배지
+  const badge = side === 'blue'
+    ? `<span style="color:${d.catColor}">✓ 찬성에 투표했어요</span>`
+    : `<span style="color:var(--red)">✓ 반대에 투표했어요</span>`;
+  document.getElementById('votedBadge').innerHTML = badge;
+
+  // 통계 & 공유 배너 표시
+  document.getElementById('vote-lock-hint').style.display = 'none';
+  document.getElementById('statsSection').style.display = 'block';
+  document.getElementById('shareResultBanner').classList.add('show');
+  renderStats(d);
+
+  // 결과 오버레이
+  setTimeout(() => showResultOverlay(side), 400);
+}
+
+function renderStats(d) {
+  // 세대별
+  const genEl = document.getElementById('genStats');
+  genEl.innerHTML = d.genStats.map(g => `
+    <div class="gen-row">
+      <div class="gen-label">${g.gen}</div>
+      <div class="gen-bar-wrap">
+        <div class="gen-bar-blue" style="width:${g.blue}%">
+          <span class="gen-bar-pct">${g.blue}%</span>
+        </div>
+        <div class="gen-bar-red" style="width:${g.red}%">
+          <span class="gen-bar-pct">${g.red}%</span>
+        </div>
+      </div>
+      <div class="gen-result">${g.result}</div>
+    </div>
+  `).join('');
+
+  // 키워드
+  document.getElementById('kwBlue').innerHTML =
+    d.kwBlue.map(k => `<span class="kw-tag blue">${k}</span>`).join('');
+  document.getElementById('kwRed').innerHTML =
+    d.kwRed.map(k => `<span class="kw-tag red">${k}</span>`).join('');
+}
+
+function showResultOverlay(side) {
+  const d = currentDebate;
+  const won = (side === 'blue' && d.bluePct > d.redPct) ||
+              (side === 'red' && d.redPct > d.bluePct);
+
+  document.getElementById('resultEmoji').textContent = won ? '🎉' : '😤';
+  document.getElementById('resultHeadline').textContent =
+    won ? '내 편이 이기고 있어요!' : '지고 있어요... 친구 불러오세요!';
+  document.getElementById('resultSub').textContent =
+    `${d.total.toLocaleString()}명이 투표한 결과예요`;
+
+  document.getElementById('resultBarBlue').style.width = d.bluePct + '%';
+  document.getElementById('resultBarBlue').textContent = d.bluePct + '%';
+  document.getElementById('resultBarRed').style.width = d.redPct + '%';
+  document.getElementById('resultBarRed').textContent = d.redPct + '%';
+
+  document.getElementById('resultCounts').textContent =
+    `찬성 ${Math.round(d.total*d.bluePct/100).toLocaleString()}명  ·  반대 ${Math.round(d.total*d.redPct/100).toLocaleString()}명`;
+
+  const myBadge = document.getElementById('resultMyBadge');
+  if (side === 'blue') {
+    myBadge.textContent = '나는 찬성 배심원';
+    myBadge.style.cssText = 'background:var(--blue-light);color:var(--blue)';
+  } else {
+    myBadge.textContent = '나는 반대 배심원';
+    myBadge.style.cssText = 'background:var(--red-light);color:var(--red)';
+  }
+
+  document.getElementById('resultOverlay').classList.add('show');
+
+  // 컨페티 (이긴 경우)
+  if (won) spawnConfetti();
+
+  // 진동
+  if (navigator.vibrate) {
+    navigator.vibrate(won ? [100, 50, 100, 50, 200] : [50, 30, 50]);
+  }
+}
+
+function closeResult() {
+  document.getElementById('resultOverlay').classList.remove('show');
+  document.getElementById('confettiWrap').classList.remove('show');
+  document.getElementById('confettiWrap').innerHTML = '';
+}
+
+// ═══ 컨페티 ═══
+function spawnConfetti() {
+  const wrap = document.getElementById('confettiWrap');
+  wrap.innerHTML = '';
+  wrap.classList.add('show');
+  const colors = ['#3B5BDB','#E03131','#F59F00','#2F9E44','#7B4FD4','#F06595'];
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${-10-Math.random()*20}px;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width: ${6+Math.random()*6}px;
+      height: ${10+Math.random()*8}px;
+      border-radius: ${Math.random()>0.5?'50%':'2px'};
+      animation-delay: ${Math.random()*0.8}s;
+      animation-duration: ${1.5+Math.random()*1}s;
+    `;
+    wrap.appendChild(piece);
+  }
+  setTimeout(() => {
+    wrap.classList.remove('show');
+    wrap.innerHTML = '';
+  }, 3000);
+}
+
+// ═══ 댓글 ═══
+function renderComments(d) {
+  const cmts = Array.isArray(d.comments) ? d.comments : [];
+  document.getElementById('commentTotal').textContent = cmts.length + '개';
+  const list = document.getElementById('commentList');
+  list.innerHTML = cmts.map(c => `
+    <div class="comment-item">
+      <div class="comment-top">
+        <div class="comment-avatar" style="background:${c.avatar}">${c.name[0]}</div>
+        <div class="comment-name">${c.name}</div>
+        <span class="comment-tag" style="background:${c.side==='blue'?'#EEF2FF':'#FFF5F5'};color:${c.side==='blue'?'#3B5BDB':'#E03131'}">${c.side==='blue'?currentDebate.blueLabel:currentDebate.redLabel}</span>
+        <div class="comment-date">${c.date}</div>
+      </div>
+      <div class="comment-text">${c.text}</div>
+      <div class="comment-likes">${c.likes}</div>
+    </div>
+  `).join('');
+}
+
+function submitComment() {
+  const input = document.getElementById('commentInput');
+  const text = input.value.trim();
+  if (!text) return;
+  if (!hasVoted) {
+    alert('투표 후 댓글을 남길 수 있어요!');
+    return;
+  }
+  const newCmt = {
+    name: '나',
+    avatar: myVote === 'blue' ? '#3B5BDB' : '#E03131',
+    side: myVote,
+    text,
+    likes: '👍 0  💬 0',
+    date: '방금'
+  };
+  currentDebate.comments = [newCmt, ...(Array.isArray(currentDebate.comments) ? currentDebate.comments : [])];
+  renderComments(currentDebate);
+  input.value = '';
+}
+
+// ═══ 공유 ═══
+function shareKakao() {
+  const d = currentDebate;
+  const url = `https://rickywona.github.io/vrsus1/paengpaeng.html`;
+  const text = `팽팽 🪢\n"${d.title}"\n찬성 ${d.bluePct}% vs 반대 ${d.redPct}%\n당신의 생각은?`;
+  window.open(`https://story.kakao.com/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,'_blank','width=560,height=600');
+}
+
+function copyLink() {
+  navigator.clipboard && navigator.clipboard.writeText(window.location.href)
+    .then(() => alert('링크가 복사됐어요!'));
+}
+
+// ═══ 초기화 ═══
+renderMain();
+</script>
+</body>
+</html>
