@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>팽팽 — 남들 생각 궁금할 땐</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#3B5BDB;--blue-lt:#EEF2FF;--blue-dk:#1E3A8A;
+  --red:#E03131;--red-lt:#FFF5F5;--red-dk:#7F1D1D;
+  --green:#2F9E44;--gold:#E67700;--gold-lt:#FFF9DB;
+  --purple:#6741D9;
+  --bg:#F8F9FA;--card:#fff;
+  --g1:#F1F3F5;--g2:#DEE2E6;--g3:#ADB5BD;--g4:#495057;
+  --dark:#111111;
+  --sh:0 1px 4px rgba(0,0,0,.08);
+  --sh-md:0 4px 16px rgba(0,0,0,.10);
+  --sh-lg:0 8px 32px rgba(0,0,0,.16);
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:"Noto Sans KR",sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+.view{display:none;min-height:100vh;}.view.active{display:block;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px;}
+@media(max-width:640px){.wrap{padding:0 14px;}}
+
+/* ── 상단바 ── */
+.topbar{position:sticky;top:0;z-index:300;background:var(--card);border-bottom:1px solid var(--g2);height:58px;}
+.topbar-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:100%;gap:0;}
+@media(max-width:640px){.topbar-inner{padding:0 14px;}}
+
+/* 로고: 검정 텍스트만 */
+.logo{cursor:pointer;user-select:none;font-family:"Noto Sans KR",sans-serif;font-size:22px;font-weight:400;color:#111;letter-spacing:-0.5px;margin-right:32px;white-space:nowrap;}
+.logo:hover{opacity:.75;}
+
+/* 상단 내비 메뉴 */
+.top-nav{display:flex;align-items:center;gap:2px;flex:1;}
+.nav-item{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:600;color:var(--g4);cursor:pointer;white-space:nowrap;transition:all .15s;border:none;background:none;font-family:"Noto Sans KR",sans-serif;}
+.nav-item:hover{color:var(--dark);background:var(--g1);}
+.nav-item.active{color:var(--blue);font-weight:700;}
+@media(max-width:760px){.nav-item{padding:6px 9px;font-size:12px;}}
+@media(max-width:480px){.nav-label{display:none;}.nav-icon-only{display:inline;}
+  .nav-item{padding:6px;}}
+
+.topbar-right{display:flex;gap:7px;align-items:center;margin-left:auto;}
+.tb-btn{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:"Noto Sans KR",sans-serif;white-space:nowrap;}
+.tb-primary{background:var(--blue);color:#fff;}
+.tb-ghost{background:var(--g1);color:var(--dark);border:1px solid var(--g2);}
+.tb-gold{background:linear-gradient(135deg,#F59F00,var(--gold));color:#fff;display:none;}
+.tb-gold.show{display:flex;align-items:center;gap:3px;}
+
+/* ── 카테고리 바 ── */
+.cat-bar{background:var(--card);border-bottom:1px solid var(--g2);position:sticky;top:58px;z-index:290;}
+.cat-inner{max-width:1100px;margin:0 auto;padding:0 24px;overflow-x:auto;white-space:nowrap;display:flex;gap:4px;align-items:center;height:44px;scrollbar-width:none;}
+.cat-inner::-webkit-scrollbar{display:none;}
+@media(max-width:640px){.cat-inner{padding:0 12px;}}
+.cat-chip{display:inline-flex;align-items:center;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--g2);background:var(--card);color:var(--g4);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.cat-chip.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* 2컬럼 */
+.two-col{display:grid;grid-template-columns:1fr 300px;gap:20px;padding-top:16px;padding-bottom:40px;}
+.two-col .side{display:flex;flex-direction:column;gap:14px;position:sticky;top:112px;}
+@media(max-width:760px){.two-col{grid-template-columns:1fr;}.two-col .side{display:none;}}
+.section-head{font-size:15px;font-weight:500;font-family:"Noto Sans KR",sans-serif;margin-bottom:10px;letter-spacing:-.3px;}
+
+/* 피처 카드 */
+.featured{background:linear-gradient(135deg,#1E3A8A,#3B5BDB 60%,#7B4FD4);border-radius:18px;padding:18px;color:#fff;position:relative;overflow:hidden;cursor:pointer;box-shadow:var(--sh-lg);margin-bottom:14px;}
+.featured::before{content:"";position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.07);}
+.live-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.2);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;margin-bottom:8px;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:#69DB7C;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.4);}}
+.featured-title{font-size:17px;font-weight:400;font-family:"Noto Sans KR",sans-serif;line-height:1.4;margin-bottom:12px;letter-spacing:-.3px;}
+.featured-meta{display:flex;justify-content:space-between;align-items:center;}
+.featured-ppl{font-size:12px;opacity:.85;font-weight:600;}
+.featured-join-btn{background:#fff;color:var(--blue);border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:"Noto Sans KR",sans-serif;}
+.q-tabs{display:flex;gap:4px;margin-bottom:12px;}
+.q-tab{flex:1;padding:9px;border-radius:10px;border:1.5px solid var(--g2);background:var(--card);font-size:13px;font-weight:700;cursor:pointer;font-family:"Noto Sans KR",sans-serif;color:var(--g4);transition:all .15s;}
+.q-tab.active{background:var(--dark);color:#fff;border-color:var(--dark);}
+.qa-card{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:var(--sh);border:1px solid var(--g2);margin-bottom:9px;cursor:pointer;transition:box-shadow .15s;}
+.qa-card:hover{box-shadow:var(--sh-md);}
+.qa-top{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;}
+.qa-ava{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.qa-name{font-size:12px;font-weight:700;}
+.qa-sub{font-size:10px;color:var(--g3);}
+.qa-q{font-size:14px;font-weight:700;line-height:1.45;margin-bottom:6px;color:var(--dark);}
+.qa-a-preview{font-size:12px;color:var(--g4);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.qa-meta{display:flex;gap:10px;margin-top:8px;font-size:11px;color:var(--g3);}
+.side-card{background:var(--card);border-radius:var(--r);padding:13px;box-shadow:var(--sh);border:1px solid var(--g2);}
+.side-title{font-size:13px;font-weight:900;font-family:"Black Han Sans",sans-serif;margin-bottom:10px;}
+.side-item{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--g1);cursor:pointer;}
+.side-item:last-child{border-bottom:none;}
+.side-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.side-text{font-size:12px;font-weight:600;line-height:1.4;}
+.side-meta{font-size:10px;color:var(--g3);margin-top:1px;}
+
+/* 줄다리기 카드 */
+.debate-card{background:var(--card);border-radius:var(--r);padding:14px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--sh);cursor:pointer;transition:box-shadow .15s;border:1px solid var(--g2);margin-bottom:9px;}
+.debate-card:hover{box-shadow:var(--sh-md);}
+.d-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.d-body{flex:1;min-width:0;}
+.d-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:12px;font-weight:700;margin-bottom:4px;}
+.d-title{font-size:14px;font-weight:400;line-height:1.4;margin-bottom:6px;}
+.d-bar-wrap{height:5px;background:var(--g1);border-radius:3px;overflow:hidden;margin-bottom:5px;}
+.d-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),#748FFC);border-radius:3px;}
+.d-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--g3);}
+
+/* ── HOME 히어로 (매니펄슨 스타일) ── */
+.hero-section{
+  min-height:calc(100vh - 58px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:60px 24px 80px;
+  background:#FAFBFF;
+  position:relative;
+  overflow:hidden;
+}
+/* 배경 플로팅 말풍선들 */
+.hero-section::before,.hero-section::after{
+  content:"";position:absolute;border-radius:50%;
+  pointer-events:none;
+}
+.hero-bubble{
+  position:absolute;background:rgba(59,91,219,.06);
+  border-radius:50%;pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#EEF2FF;border:1px solid #C5D3FF;
+  border-radius:20px;padding:6px 16px;
+  font-size:13px;font-weight:700;color:var(--blue);
+  margin-bottom:28px;
+}
+.hero-title{
+  font-family:"Noto Sans KR",sans-serif;
+  font-size:clamp(38px,7vw,72px);
+  line-height:1.15;
+  color:#111;
+  font-weight:400;
+  margin-bottom:12px;
+  letter-spacing:-1.5px;
+}
+.hero-title .accent{color:var(--blue);}
+.hero-sub{
+  font-size:clamp(15px,2vw,20px);
+  color:#555;line-height:1.75;
+  margin-bottom:36px;
+  max-width:540px;
+}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue);color:#fff;
+  border:none;border-radius:14px;
+  padding:16px 40px;font-size:17px;font-weight:700;
+  cursor:pointer;font-family:"Noto Sans KR",sans-serif;
+  box-shadow:0 6px 24px rgba(59,91,219,.35);
+  transition:transform .15s,box-shadow .15s;
+  margin-bottom:10px;
+}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(59,91,219,.4);}
+.hero-cta-hint{font-size:13px;color:var(--g3);}
+
+/* 플로팅 메시지 카드들 */
+.float-messages{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+@media(max-width:760px){ .float-messages{ display:none; } }
+.float-msg{
+  position:absolute;background:#fff;
+  border-radius:12px;padding:10px 14px;
+  font-size:12px;color:var(--g4);
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  display:flex;align-items:center;gap:8px;
+  animation:floatMsg 6s ease-in-out infinite;
+  white-space:nowrap;
+}
+.float-msg .f-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+@keyframes floatMsg{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+
+/* 묘수 카테고리 버튼 */
+.myosu-cat-btn{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--g2);background:var(--card);color:var(--g4);cursor:pointer;font-family:"Noto Sans KR",sans-serif;transition:all .15s;white-space:nowrap;}
+.myosu-cat-btn:hover{background:var(--g1);}
+.myosu-cat-btn.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+/* 추천질문 버튼 */
+.suggest-q-btn{width:100%;text-align:left;padding:9px 13px;border:1.5px solid var(--g2);border-radius:10px;background:var(--g1);font-size:12px;color:var(--g4);cursor:pointer;font-family:"Noto Sans KR",sans-serif;transition:all .15s;}
+.suggest-q-btn:hover{background:var(--blue-lt);border-color:var(--blue);color:var(--blue);}
+/* 팽팽몰 카테고리 */
+.mall-cat{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--g2);background:var(--card);color:var(--g4);cursor:pointer;font-family:"Noto Sans KR",sans-serif;transition:all .15s;white-space:nowrap;}
+.mall-cat.active{background:var(--gold);color:#fff;border-color:var(--gold);}
+
+/* ── 모바일 최적화 ── */
+/* 햄버거 버튼 */
+.hamburger{
+  display:none; flex-direction:column; gap:5px;
+  background:none; border:none; cursor:pointer; padding:4px; margin-left:auto;
+}
+.hamburger span{
+  display:block; width:22px; height:2px;
+  background:var(--dark); border-radius:2px;
+  transition:all .25s;
+}
+/* 모바일 드롭다운 메뉴 */
+.mobile-menu{
+  display:none; position:fixed; top:58px; left:0; right:0; z-index:280;
+  background:var(--card); border-bottom:1px solid var(--g2);
+  flex-direction:column; padding:8px 0;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.mobile-menu.open{ display:flex; }
+.mobile-menu-item{
+  padding:12px 24px; font-size:14px; font-weight:500;
+  color:var(--g4); cursor:pointer; border:none; background:none;
+  font-family:"Noto Sans KR",sans-serif; text-align:left;
+  transition:background .1s;
+}
+.mobile-menu-item:hover{ background:var(--g1); }
+.mobile-menu-item.active{ color:var(--blue); font-weight:700; }
+.mobile-menu-divider{ height:1px; background:var(--g1); margin:4px 0; }
+
+@media(max-width:760px){
+  .top-nav{ display:none; }
+  .hamburger{ display:flex; }
+  .topbar-right .tb-btn.tb-primary{ display:none; }
+  .topbar-inner{ gap:0; }
+  .logo{ margin-right:auto; }
+}
+@media(max-width:640px){
+  .hero-section{ padding:40px 20px 60px; min-height:auto; }
+  .hero-title{ font-size:clamp(30px,8vw,48px); letter-spacing:-0.5px; }
+  .hero-sub{ font-size:13px; }
+  .hero-cta{ padding:13px 26px; font-size:14px; }
+  .hero-badge{ font-size:11px; padding:5px 12px; }
+  /* 말풍선 모바일 최적화 */
+  .float-msg{ font-size:11px; padding:8px 10px; max-width:200px; white-space:normal; }
+}
+
+/* ── 투표 팝업 ── */
+.overlay{position:fixed;inset:0;z-index:400;background:rgba(10,10,30,.82);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.overlay.show{display:flex;}
+.popup{background:#fff;border-radius:24px;width:min(400px,93vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:popIn .35s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes popIn{from{transform:scale(.75);opacity:0;}to{transform:scale(1);opacity:1;}}
+.popup-head{padding:14px 18px 8px;display:flex;align-items:center;justify-content:space-between;}
+.popup-title{font-size:14px;font-weight:900;font-family:"Black Han Sans",sans-serif;}
+.popup-close{width:27px;height:27px;border:none;background:var(--g1);border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.popup-issue{margin:0 18px 10px;background:var(--g1);border-radius:9px;padding:9px 11px;font-size:12px;font-weight:600;color:var(--g4);line-height:1.5;}
+.vp-reasons{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 18px 12px;}
+.vp-reason{border-radius:10px;padding:9px 11px;}
+.vp-reason.b{background:var(--blue-lt);}
+.vp-reason.r{background:var(--red-lt);}
+.vp-r-title{font-size:10px;font-weight:900;margin-bottom:4px;}
+.vp-reason.b .vp-r-title{color:var(--blue);}
+.vp-reason.r .vp-r-title{color:var(--red);}
+.vp-r-pts{font-size:10px;color:var(--g4);line-height:1.65;white-space:pre-line;}
+.vp-arena{position:relative;margin:0 18px 8px;background:linear-gradient(180deg,#F8F9FA,#F1F3F5);border-radius:14px;padding:12px 14px 8px;}
+.vp-arena-lbl{text-align:center;font-size:11px;font-weight:700;color:var(--g3);margin-bottom:8px;}
+.rope-row{display:flex;align-items:center;height:72px;}
+.rope-side{flex:none;width:68px;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:2;}
+.rope-btn{width:60px;height:60px;border:none;border-radius:50%;cursor:pointer;font-size:19px;font-weight:900;font-family:"Black Han Sans",sans-serif;transition:transform .15s;box-shadow:0 4px 12px rgba(0,0,0,.2);}
+.rope-btn:hover{transform:scale(1.08);}
+.rope-btn:active{transform:scale(.95);}
+.rope-btn.b{background:linear-gradient(145deg,#4C6EF5,var(--blue-dk));color:#fff;}
+.rope-btn.r{background:linear-gradient(145deg,#FA5252,var(--red-dk));color:#fff;}
+.rope-btn-lbl{font-size:10px;font-weight:700;color:var(--g4);}
+.rope-center{flex:1;position:relative;height:72px;display:flex;align-items:center;}
+.rope-line{position:absolute;top:50%;transform:translateY(-50%);left:28px;right:28px;height:9px;background:repeating-linear-gradient(90deg,#A0522D 0,#8B4513 6px,#C4874C 6px,#A0522D 12px);border-radius:5px;box-shadow:0 2px 6px rgba(0,0,0,.18);z-index:1;}
+.puller{position:absolute;font-size:22px;top:50%;transform:translateY(-50%);z-index:3;user-select:none;line-height:1;transition:left .5s cubic-bezier(.34,1.56,.64,1),right .5s cubic-bezier(.34,1.56,.64,1);}
+.puller-b{left:4px;}.puller-r{right:4px;transform:translateY(-50%) scaleX(-1);}
+.rope-ribbon{position:absolute;top:50%;left:50%;transform:translate(-50%,-65%);z-index:4;transition:left .5s cubic-bezier(.34,1.56,.64,1);}
+.vp-scores{display:flex;justify-content:space-between;margin:0 18px 4px;padding:8px 0 2px;border-top:1px solid var(--g1);}
+.vp-ss{text-align:center;}
+.vp-pct{font-size:22px;font-weight:900;font-family:"Black Han Sans",sans-serif;letter-spacing:-.5px;}
+.vp-pct.b{color:var(--blue);}.vp-pct.r{color:var(--red);}
+.vp-slbl{font-size:10px;color:var(--g3);font-weight:600;}
+.vp-voted{text-align:center;font-size:11px;font-weight:600;color:var(--g3);padding:3px 18px 8px;}
+.vp-share{margin:0 18px 18px;background:linear-gradient(135deg,#1E3A8A,#3B5BDB);border-radius:12px;padding:12px 14px;display:none;}
+.vp-share.show{display:block;}
+.vp-sh-title{font-size:12px;font-weight:900;font-family:"Black Han Sans",sans-serif;color:#fff;margin-bottom:2px;}
+.vp-sh-sub{font-size:10px;color:rgba(255,255,255,.7);margin-bottom:7px;}
+.vp-sh-how{background:rgba(255,255,255,.15);border-radius:7px;padding:6px 9px;font-size:10px;color:rgba(255,255,255,.9);margin-bottom:8px;line-height:1.5;}
+.vp-sh-btns{display:flex;gap:6px;}
+.vp-sh-btn{flex:1;padding:8px;border-radius:9px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:"Noto Sans KR",sans-serif;}
+.vp-sh-btn.link{background:#fff;color:var(--blue);}.vp-sh-btn.detail{background:rgba(255,255,255,.2);color:#fff;}
+@keyframes arenaShake{0%,100%{transform:translateX(0);}10%{transform:translateX(-5px) rotate(-.8deg);}20%{transform:translateX(5px) rotate(.8deg);}30%{transform:translateX(-4px);}40%{transform:translateX(4px);}50%{transform:translateX(-3px);}60%{transform:translateX(3px);}70%{transform:translateX(-2px);}80%{transform:translateX(2px);}90%{transform:translateX(-1px);}}
+@keyframes pullerPump{0%,100%{transform:translateY(-50%) scale(1);}20%{transform:translateY(-60%) scale(1.2) rotate(-10deg);}40%{transform:translateY(-40%) scale(1.15) rotate(7deg);}60%{transform:translateY(-56%) scale(1.1) rotate(-5deg);}80%{transform:translateY(-44%) scale(1.05) rotate(3deg);}}
+@keyframes pullerPumpR{0%,100%{transform:translateY(-50%) scaleX(-1) scale(1);}20%{transform:translateY(-60%) scaleX(-1) scale(1.2) rotate(10deg);}40%{transform:translateY(-40%) scaleX(-1) scale(1.15) rotate(-7deg);}60%{transform:translateY(-56%) scaleX(-1) scale(1.1) rotate(5deg);}80%{transform:translateY(-44%) scaleX(-1) scale(1.05) rotate(-3deg);}}
+.arena-shaking{animation:arenaShake .1s linear infinite;}
+.arena-shaking .puller-b{animation:pullerPump .12s ease-in-out 8;}
+.arena-shaking .puller-r{animation:pullerPumpR .12s ease-in-out 8;}
+@keyframes ribbonPop{0%{transform:translate(-50%,-65%) scale(.4);opacity:0;}70%{transform:translate(-50%,-65%) scale(1.2);opacity:1;}100%{transform:translate(-50%,-65%) scale(1);opacity:1;}}
+.ribbon-pop{animation:ribbonPop .5s ease-out forwards;}
+
+/* 묘수 */
+.myosu-hero{background:linear-gradient(135deg,#1a1a2e 0%,#16213E 60%,#0F3460 100%);padding:36px 20px;text-align:center;position:relative;overflow:hidden;}
+.myosu-hero::before{content:"";position:absolute;top:-40px;left:-40px;width:200px;height:200px;border-radius:50%;background:rgba(107,65,217,.18);}
+.myosu-badge-lbl{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:700;color:#A5B4FC;margin-bottom:14px;letter-spacing:.06em;}
+.myosu-title{font-family:"Black Han Sans",sans-serif;font-size:26px;color:#fff;line-height:1.3;margin-bottom:8px;letter-spacing:-.5px;position:relative;z-index:1;}
+.myosu-title span{color:#FFD43B;}
+.myosu-sub{font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:20px;max-width:400px;margin-left:auto;margin-right:auto;position:relative;z-index:1;}
+.myosu-start-btn{display:inline-block;background:linear-gradient(135deg,#6741D9,#4C6EF5);color:#fff;border:none;border-radius:12px;padding:13px 32px;font-size:15px;font-weight:700;cursor:pointer;font-family:"Noto Sans KR",sans-serif;box-shadow:0 4px 20px rgba(107,65,217,.4);position:relative;z-index:1;}
+.myosu-start-hint{font-size:11px;color:rgba(255,255,255,.45);margin-top:8px;position:relative;z-index:1;}
+.myosu-input-wrap{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:var(--sh);border:1px solid var(--g2);margin-bottom:14px;}
+.myosu-input{width:100%;border:1.5px solid var(--g2);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:"Noto Sans KR",sans-serif;color:var(--dark);resize:none;min-height:80px;transition:border-color .2s;}
+.myosu-input:focus{border-color:var(--purple);}
+.myosu-input-row{display:flex;gap:8px;margin-top:10px;align-items:center;}
+.myosu-cat-sel{flex:1;border:1.5px solid var(--g2);border-radius:8px;padding:8px 12px;font-size:13px;font-family:"Noto Sans KR",sans-serif;color:var(--g4);outline:none;}
+.myosu-ask-btn{background:var(--purple);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:"Noto Sans KR",sans-serif;white-space:nowrap;}
+.expert-ans{background:var(--card);border-radius:var(--r);padding:15px;box-shadow:var(--sh);border:1px solid var(--g2);margin-bottom:9px;}
+.ea-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:9px;}
+.ea-ava{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;}
+.ea-name{font-size:13px;font-weight:900;}
+.ea-role{font-size:10px;color:var(--g3);margin-top:1px;line-height:1.4;}
+.ea-stance{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;margin-top:3px;}
+.ea-body{font-size:13px;color:var(--g4);line-height:1.7;}
+.ea-src{font-size:10px;color:var(--g3);margin-top:8px;}
+.ea-meta{display:flex;gap:10px;margin-top:8px;font-size:11px;color:var(--g3);border-top:1px solid var(--g1);padding-top:8px;}
+.agenda-card{background:var(--card);border-radius:var(--r);padding:13px;border:1px solid var(--g2);cursor:pointer;box-shadow:var(--sh);margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;transition:box-shadow .15s;}
+.agenda-card:hover{box-shadow:var(--sh-md);}
+.agenda-num{font-family:"Black Han Sans",sans-serif;font-size:20px;color:var(--g2);flex-shrink:0;width:28px;}
+.agenda-title{font-size:14px;font-weight:700;line-height:1.4;margin-bottom:4px;}
+.agenda-meta{font-size:11px;color:var(--g3);}
+
+/* 미션 */
+.mission-hero{background:linear-gradient(135deg,#2F9E44,#20C997);padding:24px 20px;text-align:center;color:#fff;}
+.mission-hero h2{font-family:"Black Han Sans",sans-serif;font-size:20px;margin-bottom:5px;}
+.mission-hero p{font-size:13px;opacity:.85;line-height:1.6;}
+.mission-card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:var(--sh);border:1px solid var(--g2);margin-bottom:9px;}
+.mc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.mc-title{font-size:14px;font-weight:700;}
+.mc-reward{font-size:12px;font-weight:700;color:var(--gold);}
+.mc-desc{font-size:12px;color:var(--g4);line-height:1.55;margin-bottom:10px;}
+.mc-prog{height:7px;background:var(--g1);border-radius:4px;overflow:hidden;}
+.mc-fill{height:100%;background:linear-gradient(90deg,var(--green),#20C997);border-radius:4px;}
+.mc-sub{font-size:10px;color:var(--g3);margin-top:4px;}
+
+/* 팽팽몰 */
+.mall-hero{background:linear-gradient(135deg,#E67700,#F59F00);padding:20px;text-align:center;color:#fff;}
+.mall-hero h2{font-family:"Noto Sans KR",sans-serif;font-size:30px;font-weight:400;margin-bottom:4px;}
+.mall-hero p{font-size:12px;opacity:.85;}
+.mall-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 0;}
+@media(min-width:600px){.mall-grid{grid-template-columns:repeat(3,1fr);}}
+.mall-item{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);border:1px solid var(--g2);cursor:pointer;transition:box-shadow .15s;}
+.mall-item:hover{box-shadow:var(--sh-md);}
+.mall-thumb{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:48px;background:var(--g1);}
+.mall-info{padding:10px;}
+.mall-name{font-size:13px;font-weight:700;margin-bottom:4px;}
+.mall-price{font-size:12px;color:var(--gold);font-weight:700;}
+.mall-desc{font-size:11px;color:var(--g3);margin-top:2px;}
+
+/* 모달 */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal-box{background:#fff;border-radius:22px;padding:26px 22px;width:min(360px,92vw);text-align:center;animation:popIn .3s cubic-bezier(.34,1.56,.64,1) forwards;}
+.m-emoji{font-size:36px;margin-bottom:10px;}
+.m-title{font-size:17px;font-weight:900;font-family:"Black Han Sans",sans-serif;margin-bottom:5px;}
+.m-sub{font-size:12px;color:var(--g4);line-height:1.65;margin-bottom:14px;}
+.m-pt-box{background:var(--gold-lt);border:1px solid #FFE066;border-radius:10px;padding:11px 13px;margin-bottom:14px;text-align:left;}
+.m-pt-title{font-size:11px;font-weight:700;color:#856404;margin-bottom:5px;}
+.m-pt-list{font-size:11px;color:#664D03;line-height:1.9;}
+.m-kakao{width:100%;padding:12px;border-radius:10px;background:#FEE500;color:#1A1A1A;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:"Noto Sans KR",sans-serif;margin-bottom:7px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.m-skip{font-size:11px;color:var(--g3);cursor:pointer;background:none;border:none;font-family:"Noto Sans KR",sans-serif;text-decoration:underline;}
+.cf-layer{position:fixed;inset:0;pointer-events:none;z-index:600;display:none;}
+.cf-layer.show{display:block;}
+.cf{position:absolute;border-radius:2px;animation:cfFall 2.5s ease-in forwards;}
+@keyframes cfFall{0%{opacity:1;transform:translateY(-30px) rotate(0);}100%{opacity:0;transform:translateY(110vh) rotate(720deg);}}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ── 상단바 ── -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <!-- 로고: 검정 텍스트 -->
+    <div class="logo" onclick="switchView('home')">팽팽</div>
+
+    <!-- 상단 내비 -->
+    <nav class="top-nav">
+      <button class="nav-item active" id="nav-home" onclick="switchView('home')">홈</button>
+      <button class="nav-item" id="nav-main" onclick="switchView('main')">메인화면</button>
+      <button class="nav-item" id="nav-debate" onclick="switchView('debate')">줄다리기</button>
+      <button class="nav-item" id="nav-myosu" onclick="switchView('myosu')">전문가 묘수</button>
+      <button class="nav-item" id="nav-mission" onclick="switchView('mission')">미션</button>
+      <button class="nav-item" id="nav-mall" onclick="switchView('mall')">팽팽몰</button>
+      <button class="nav-item" id="nav-enroll" onclick="switchView('enroll')">전문가 등록</button>
+    </nav>
+
+    <div class="topbar-right">
+      <button class="tb-btn tb-gold" id="ptBadge" onclick="openPtModal()">🪙 <span id="ptDisplay">0</span>팽</button>
+      <button class="tb-btn tb-ghost" id="loginBtn" onclick="openLoginModal()">로그인</button>
+      <button class="tb-btn tb-primary" onclick="showToast('🚧 준비 중인 기능이에요!')">질문하기</button>
+    </div>
+    <!-- 햄버거 버튼 (모바일) -->
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="메뉴">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<!-- 모바일 드롭다운 메뉴 -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-item active" id="mnav-home" onclick="mobileNav('home')">🏠 홈</button>
+  <button class="mobile-menu-item" id="mnav-main" onclick="mobileNav('main')">📋 메인화면</button>
+  <button class="mobile-menu-item" id="mnav-debate" onclick="mobileNav('debate')">🪢 줄다리기</button>
+  <button class="mobile-menu-item" id="mnav-myosu" onclick="mobileNav('myosu')">🧠 전문가 묘수</button>
+  <div class="mobile-menu-divider"></div>
+  <button class="mobile-menu-item" id="mnav-mission" onclick="mobileNav('mission')">🎯 미션</button>
+  <button class="mobile-menu-item" id="mnav-mall" onclick="mobileNav('mall')">🛍️ 팽팽몰</button>
+  <button class="mobile-menu-item" id="mnav-enroll" onclick="mobileNav('enroll')">🧑‍💼 전문가 등록</button>
+</div>
+
+<!-- ══ HOME 뷰 (매니펄슨 스타일 히어로) ══ -->
+<div id="view-home" class="view active">
+  <div class="hero-section">
+    <!-- 배경 버블들 -->
+    <div class="hero-bubble" style="width:400px;height:400px;top:-100px;left:-100px;"></div>
+    <div class="hero-bubble" style="width:300px;height:300px;bottom:-80px;right:-60px;background:rgba(224,49,49,.04);"></div>
+
+    <!-- 플로팅 말풍선 메시지 (데스크탑만 표시) -->
+    <div class="float-messages" id="floatMessages">
+      <div class="float-msg" style="top:8%;left:2%;animation-delay:0s;animation-duration:5s;">
+        <div class="f-av">🧑‍💼</div>주 4일제 도입하면 생산성이 올라갈 것 같아요
+      </div>
+      <div class="float-msg" style="top:14%;right:2%;animation-delay:1s;animation-duration:6s;">
+        <div class="f-av">👩</div>2시간마다 음료 하나는 추가 주문하는 게 예의죠
+      </div>
+      <div class="float-msg" style="top:52%;left:1%;animation-delay:2s;animation-duration:5.5s;">
+        <div class="f-av">👨‍🔬</div>AI 서비스 월 구독료, 얼마까지 낼 수 있나요?
+      </div>
+      <div class="float-msg" style="bottom:22%;right:2%;animation-delay:.5s;animation-duration:7s;">
+        <div class="f-av">🧑‍🏫</div>카페마다 이용 규칙을 정하는 게 맞다고 봐요
+      </div>
+      <div class="float-msg" style="bottom:12%;left:3%;animation-delay:1.5s;animation-duration:6s;">
+        <div class="f-av">👩‍💻</div>도서관은 늘 자리가 없어요. 그래서 카페를 가게 되는 거예요
+      </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div style="position:relative;z-index:2;">
+      <div class="hero-badge">✦ 팽팽 : AI페르소나 기반 지식플랫폼</div>
+      <h1 class="hero-title">
+        남들 생각 궁금할 땐,<br>
+        <span class="accent">물어보세요!</span>
+      </h1>
+      <p class="hero-sub">
+        질문 하나에, 100명의 전문가 AI 페르소나와<br>
+        수천 명의 시민들이 각자 입장에서 솔직하게 답합니다.
+      </p>
+      <button class="hero-cta" onclick="switchView('main')">
+        📋 지금 시작하기
+      </button>
+      <div class="hero-cta-hint">무료로 전문가 100명에게 먼저 물어볼 수 있어요</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 메인화면 뷰 (기존 HOME 질문/답변 목록) ══ -->
+<div id="view-main" class="view">
+  
+  <div class="wrap"><div class="two-col">
+    <div>
+      <div class="featured" onclick="switchView('debate')">
+        <div class="live-badge"><div class="live-dot"></div>지금 팽팽 중</div>
+        <div class="featured-title">주 4일제 도입, 경제 성장에 도움이 될까 독이 될까?</div>
+        <div class="featured-meta"><div class="featured-ppl">👥 1,204명 팽팽 중</div><button class="featured-join-btn" onclick="event.stopPropagation();switchView('debate')">지금 참여</button></div>
+      </div>
+      <div class="q-tabs">
+        <button class="q-tab active" onclick="qTabClick(this,'daily')">💬 일상 질문</button>
+        <button class="q-tab" onclick="qTabClick(this,'expert')">🧑‍💼 전문 질문</button>
+      </div>
+      <div id="qa-daily"></div>
+      <div id="qa-expert" style="display:none"></div>
+    </div>
+    <div class="side">
+      <div class="side-card"><div class="side-title">🔥 지금 팽팽 주제</div><div id="home-side-debates"></div></div>
+      <div class="side-card"><div class="side-title">🧠 묘수 인기 질문</div><div id="home-side-myosu"></div></div>
+      <div class="side-card"><div class="side-title">🪙 팽 적립 안내</div>
+        <div style="font-size:12px;color:var(--g4);line-height:1.9;">투표 <strong style="color:var(--gold)">+10팽</strong><br>질문 답변 <strong style="color:var(--gold)">+5팽</strong><br>하루 최대 <strong>100팽</strong><br><span style="font-size:10px;color:var(--g3)">팽팽몰에서 교환 가능</span></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ══ 줄다리기 뷰 ══ -->
+<div id="view-debate" class="view">
+  <div class="cat-bar"><div class="cat-inner">
+    <div class="cat-chip active" onclick="debateCatClick(this,'전체')">전체</div>
+    <div class="cat-chip" onclick="debateCatClick(this,'정치·제도')">정치·제도</div>
+    <div class="cat-chip" onclick="debateCatClick(this,'경제·노동')">경제·노동</div>
+    <div class="cat-chip" onclick="debateCatClick(this,'사회·젠더')">사회·젠더</div>
+    <div class="cat-chip" onclick="debateCatClick(this,'교육')">교육</div>
+    <div class="cat-chip" onclick="debateCatClick(this,'환경·기술')">환경·기술</div>
+    <div class="cat-chip" onclick="debateCatClick(this,'법·윤리')">법·윤리</div>
+  </div></div>
+  <div class="wrap"><div class="two-col">
+    <div>
+      <div class="featured" id="debateFeatured" onclick="openVotePopup(0)" style="cursor:pointer">
+        <div class="live-badge"><div class="live-dot"></div>실시간 팽팽 중</div>
+        <div class="featured-title">주 4일제 도입, 경제 성장에 도움이 될까 독이 될까?</div>
+        <div class="featured-meta"><div class="featured-ppl">👥 1,204명 참여 중</div><button class="featured-join-btn" onclick="openVotePopup(0)">줄 당기기</button></div>
+      </div>
+      <div class="section-head">주요 팽팽 어젠다</div>
+      <div id="debateList"></div>
+    </div>
+    <div class="side">
+      <div class="side-card"><div class="side-title">📋 전체 어젠다</div><div id="debate-side"></div></div>
+      <div class="side-card"><div class="side-title">🪙 투표하면 팽 적립!</div>
+        <div style="font-size:12px;color:var(--g4);line-height:1.9;">투표 1건 <strong style="color:var(--gold)">+10팽</strong><br>하루 최대 <strong>50팽</strong><br><span style="font-size:10px;color:var(--g3)">로그인 후 적립</span></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ══ 묘수 뷰 ══ -->
+<div id="view-myosu" class="view">
+  <div class="myosu-hero">
+    <div class="myosu-badge-lbl">AI 전문가 페르소나 기반 여론 플랫폼</div>
+    <div class="myosu-title">세상살이 헷갈릴 땐<br><span>전문가의 묘수</span>를 받아보세요!</div>
+    <div class="myosu-sub">질문 하나에, 100명의 전문가와 수천 명의 시민들이<br>각자 입장에서 솔직하게 답해드립니다.</div>
+    <button class="myosu-start-btn" onclick="document.getElementById('myosu-input-area').scrollIntoView({behavior:'smooth'})">시작하기</button>
+    <div class="myosu-start-hint">무료로 100명의 전문가에게 먼저 물어볼 수 있어요</div>
+  </div>
+  <div class="wrap" style="padding-top:16px;padding-bottom:40px;"><div class="two-col">
+    <div>
+      <div class="myosu-input-wrap" id="myosu-input-area">
+        <div class="section-head" style="margin-bottom:12px;">🤔 전문가에게 물어보세요</div>
+
+        <!-- 카테고리 선택 버튼 -->
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">
+          <button class="myosu-cat-btn active" onclick="myosuCatBtnClick(this,'전체')">전체</button>
+          <button class="myosu-cat-btn" onclick="myosuCatBtnClick(this,'정치·제도')">정치·제도</button>
+          <button class="myosu-cat-btn" onclick="myosuCatBtnClick(this,'경제·노동')">경제·노동</button>
+          <button class="myosu-cat-btn" onclick="myosuCatBtnClick(this,'사회·젠더')">사회·젠더</button>
+          <button class="myosu-cat-btn" onclick="myosuCatBtnClick(this,'교육')">교육</button>
+          <button class="myosu-cat-btn" onclick="myosuCatBtnClick(this,'환경·기술')">환경·기술</button>
+          <button class="myosu-cat-btn" onclick="myosuCatBtnClick(this,'법·윤리')">법·윤리</button>
+        </div>
+
+        <!-- 추천 질문 -->
+        <div id="myosu-suggest-wrap" style="display:none;margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:600;color:var(--g3);margin-bottom:6px;">💡 추천 질문</div>
+          <div id="myosu-suggest-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+
+        <textarea class="myosu-input" id="myosuQ" placeholder="예) 금리 인상이 서민 경제에 미치는 영향은?&#10;저출산 해결을 위해 가장 시급한 정책은?"></textarea>
+        <div class="myosu-input-row">
+          <button class="myosu-ask-btn" onclick="askMyosu()">전문가에게 묻기 →</button>
+        </div>
+      </div>
+      <div class="section-head">🔥 지금 인기 어젠다</div>
+      <div id="myosu-agendas"></div>
+    </div>
+    <div class="side">
+      <div class="side-card"><div class="side-title">🧑‍💼 분야별 전문가</div><div id="expert-side-list"></div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ══ 미션 뷰 ══ -->
+<div id="view-mission" class="view">
+  <div class="mission-hero"><h2>🎯 팽팽 미션</h2><p>미션을 완료하고 팽을 모아 팽팽몰에서 교환하세요!</p></div>
+  <div class="wrap" style="padding-top:16px;padding-bottom:40px;">
+    <div class="section-head">오늘의 미션</div>
+    <div id="missionList"></div>
+    <div class="section-head" style="margin-top:16px;">💰 팽 사용 안내</div>
+    <div class="mission-card">
+      <div style="font-size:13px;color:var(--g4);line-height:2.0;">
+        <strong style="color:var(--gold)">🪙 팽 (Paeng)</strong>이란?<br>
+        • 팽팽 활동으로 모은 포인트예요<br>
+        • <strong>팽팽몰</strong>에서 기프티콘·상품으로 교환 가능<br>
+        • 1,000팽부터 사용 가능<br>
+        <div style="margin-top:10px;padding:10px;background:var(--gold-lt);border-radius:8px;border:1px solid #FFE066;font-size:11px;color:#856404;">⚠️ 팽은 현금으로 환급되지 않으며, 서비스 내 혜택 교환 전용입니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 전문가 등록 뷰 ══ -->
+<div id="view-enroll" class="view">
+  <div style="background:linear-gradient(135deg,#1E3A8A,#3B5BDB);padding:36px 20px;text-align:center;color:#fff;">
+    <div style="display:inline-block;background:rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:11px;font-weight:400;color:#A5B4FC;margin-bottom:14px;letter-spacing:.08em;">전문가 등록 프로그램</div>
+    <h2 style="font-family:'Noto Sans KR',sans-serif;font-size:28px;font-weight:400;color:#fff;line-height:1.3;margin-bottom:10px;letter-spacing:-.5px;">팽팽 전문가로 등록하고<br>지식을 나눠보세요</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.7;max-width:400px;margin:0 auto 20px;">정치·경제·사회·교육·환경·법 분야 전문가를 모집합니다.<br>AI 페르소나 기반 답변으로 더 많은 사람에게 당신의 인사이트를 전달하세요.</p>
+  </div>
+  <div class="wrap" style="padding-top:20px;padding-bottom:40px;max-width:700px;">
+    <!-- 혜택 카드들 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div style="background:#fff;border-radius:14px;padding:18px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid var(--g2);">
+        <div style="font-size:28px;margin-bottom:8px;">📣</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">영향력 확대</div>
+        <div style="font-size:11px;color:var(--g3);line-height:1.5;">수천 명의 시민에게 당신의 전문 견해를 전달</div>
+      </div>
+      <div style="background:#fff;border-radius:14px;padding:18px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid var(--g2);">
+        <div style="font-size:28px;margin-bottom:8px;">🪙</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">수익 창출</div>
+        <div style="font-size:11px;color:var(--g3);line-height:1.5;">답변 채택 시 포인트·실적 인센티브 지급</div>
+      </div>
+      <div style="background:#fff;border-radius:14px;padding:18px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid var(--g2);">
+        <div style="font-size:28px;margin-bottom:8px;">🏷️</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">전문가 배지</div>
+        <div style="font-size:11px;color:var(--g3);line-height:1.5;">검증된 전문가 프로필 배지 부여</div>
+      </div>
+    </div>
+
+    <!-- 등록 폼 -->
+    <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid var(--g2);">
+      <div style="font-size:16px;font-weight:600;margin-bottom:18px;">전문가 등록 신청</div>
+
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px;font-weight:600;color:var(--g4);display:block;margin-bottom:5px;">이름 (실명)</label>
+        <input type="text" placeholder="홍길동" style="width:100%;border:1.5px solid var(--g2);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;font-family:'Noto Sans KR',sans-serif;">
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px;font-weight:600;color:var(--g4);display:block;margin-bottom:5px;">전문 분야</label>
+        <select style="width:100%;border:1.5px solid var(--g2);border-radius:8px;padding:9px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;background:#fff;">
+          <option>선택해주세요</option>
+          <option>정치·제도</option><option>경제·노동</option><option>사회·젠더</option>
+          <option>교육</option><option>환경·기술</option><option>법·윤리</option>
+        </select>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px;font-weight:600;color:var(--g4);display:block;margin-bottom:5px;">소속 / 직함</label>
+        <input type="text" placeholder="예) OO대학교 경제학과 교수" style="width:100%;border:1.5px solid var(--g2);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;font-family:'Noto Sans KR',sans-serif;">
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px;font-weight:600;color:var(--g4);display:block;margin-bottom:5px;">자기소개 및 전문 경력</label>
+        <textarea style="width:100%;border:1.5px solid var(--g2);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;font-family:'Noto Sans KR',sans-serif;min-height:100px;resize:vertical;" placeholder="전문 분야와 경력을 간략히 소개해주세요."></textarea>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px;font-weight:600;color:var(--g4);display:block;margin-bottom:5px;">이메일</label>
+        <input type="email" placeholder="example@email.com" style="width:100%;border:1.5px solid var(--g2);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;font-family:'Noto Sans KR',sans-serif;">
+      </div>
+      <button onclick="showToast('✅ 신청이 완료됐습니다! 검토 후 연락드릴게요.')" style="width:100%;padding:13px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">신청하기</button>
+      <p style="font-size:11px;color:var(--g3);margin-top:10px;text-align:center;">검토 후 영업일 3일 이내 이메일로 안내드립니다</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 팽팽몰 뷰 ══ -->
+<div id="view-mall" class="view">
+  <div class="mall-hero">
+    <h2>🛍️ 팽팽몰</h2>
+    <p>모은 팽으로 다양한 상품을 교환하세요 · 1,000팽부터</p>
+    <div style="display:flex;gap:16px;justify-content:center;margin-top:14px;flex-wrap:wrap;">
+      <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:400;">🪙 내 팽: <strong id="mallMyPt">로그인 후 확인</strong></div>
+      <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:400;">📦 최소 1,000팽부터 교환 가능</div>
+    </div>
+  </div>
+  <div class="wrap" style="padding-top:16px;padding-bottom:40px;">
+    <!-- 카테고리 필터 -->
+    <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
+      <button class="mall-cat active" onclick="mallCatClick(this,'전체')">전체</button>
+      <button class="mall-cat" onclick="mallCatClick(this,'카페·음료')">☕ 카페·음료</button>
+      <button class="mall-cat" onclick="mallCatClick(this,'편의점')">🏪 편의점</button>
+      <button class="mall-cat" onclick="mallCatClick(this,'배달·외식')">🍔 배달·외식</button>
+      <button class="mall-cat" onclick="mallCatClick(this,'문화·여가')">🎬 문화·여가</button>
+      <button class="mall-cat" onclick="mallCatClick(this,'쇼핑')">🛒 쇼핑</button>
+      <button class="mall-cat" onclick="mallCatClick(this,'디지털')">📱 디지털</button>
+    </div>
+    <div class="mall-grid" id="mallGrid"></div>
+  </div>
+</div>
+
+<!-- 투표 팝업 -->
+<div class="overlay" id="voteOverlay">
+  <div class="popup">
+    <div class="popup-head"><div class="popup-title">🪢 팽팽 줄다리기</div><button class="popup-close" onclick="closeVotePopup()">✕</button></div>
+    <div class="popup-issue" id="vpIssue"></div>
+    <div class="vp-reasons">
+      <div class="vp-reason b"><div class="vp-r-title">👍 찬성 이유</div><div class="vp-r-pts" id="vpRB"></div></div>
+      <div class="vp-reason r"><div class="vp-r-title">👎 반대 이유</div><div class="vp-r-pts" id="vpRR"></div></div>
+    </div>
+    <div class="vp-arena" id="vpArena">
+      <div class="vp-arena-lbl" id="vpLbl">어느 편을 당기시겠어요?</div>
+      <div class="rope-row">
+        <div class="rope-side"><button class="rope-btn b" id="vpBtnB" onclick="castVote('b')">찬</button><div class="rope-btn-lbl" id="vpLblB">찬성</div></div>
+        <div class="rope-center">
+          <div class="rope-line"></div>
+          <div class="puller puller-b" id="vpPB">🏃</div>
+          <div class="puller puller-r" id="vpPR">🏃</div>
+          <div class="rope-ribbon" id="vpRibbon"><svg width="14" height="22" viewBox="0 0 14 22"><rect x="1" y="0" width="12" height="13" rx="2" fill="#FF6B6B"/><polygon points="1,13 7,19 13,13" fill="#FF6B6B"/><rect x="3" y="2" width="8" height="2" rx="1" fill="rgba(255,255,255,.4)"/></svg></div>
+        </div>
+        <div class="rope-side"><button class="rope-btn r" id="vpBtnR" onclick="castVote('r')">반</button><div class="rope-btn-lbl" id="vpLblR">반대</div></div>
+      </div>
+    </div>
+    <div class="vp-scores">
+      <div class="vp-ss"><div class="vp-pct b" id="vpPctB">??%</div><div class="vp-slbl">찬성</div><div style="font-size:10px;color:var(--g3)" id="vpCntB">투표 후 공개</div></div>
+      <div class="vp-ss"><div class="vp-pct r" id="vpPctR">??%</div><div class="vp-slbl">반대</div><div style="font-size:10px;color:var(--g3)" id="vpCntR">투표 후 공개</div></div>
+    </div>
+    <div class="vp-voted" id="vpVoted"></div>
+    <div class="vp-share" id="vpShare">
+      <div class="vp-sh-title">📢 친구에게 물어보세요!</div>
+      <div class="vp-sh-sub">링크를 복사해서 카카오톡에 붙여넣기 하세요</div>
+      <div class="vp-sh-how">💡 링크 복사 후 카카오톡에 붙여넣기 → 친구들도 바로 참여!</div>
+      <div class="vp-sh-btns"><button class="vp-sh-btn link" onclick="copyLink()">🔗 링크 복사</button><button class="vp-sh-btn detail" onclick="closeVotePopup()">자세히 보기</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 묘수 답변 팝업 -->
+<div class="overlay" id="myosuOverlay">
+  <div class="popup" style="padding-bottom:20px;">
+    <div class="popup-head"><div class="popup-title">🧠 전문가 묘수 답변</div><button class="popup-close" onclick="document.getElementById('myosuOverlay').classList.remove('show')">✕</button></div>
+    <div style="margin:0 18px 12px;background:var(--g1);border-radius:9px;padding:9px 11px;font-size:12px;color:var(--g4);" id="myosuQDisp"></div>
+    <div id="myosuAnsList" style="padding:0 18px;"></div>
+  </div>
+</div>
+
+<!-- 로그인 모달 -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <div class="m-emoji">🪙</div>
+    <div class="m-title">로그인하고 팽 받기</div>
+    <div class="m-sub">팽팽에서 활동하면 팽이 쌓여요<br>팽팽몰에서 기프티콘으로 교환 가능!</div>
+    <div class="m-pt-box">
+      <div class="m-pt-title">🎁 팽팽 포인트 혜택</div>
+      <div class="m-pt-list">• 투표 1건당 <strong>+10팽</strong><br>• 질문 답변 <strong>+5팽</strong><br>• 첫 로그인 <strong>+30팽</strong> 보너스<br>• 하루 최대 <strong>100팽</strong></div>
+    </div>
+    <button class="m-kakao" onclick="fakeLogin()"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.82 5.47 4.58 6.96L5.5 21l4.13-2.16A11.6 11.6 0 0012 19.5c5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>카카오로 1초 로그인</button>
+    <button class="m-skip" onclick="document.getElementById('loginModal').classList.remove('show')">나중에 하기</button>
+  </div>
+</div>
+
+<!-- 포인트 모달 -->
+<div class="modal-overlay" id="ptModal">
+  <div class="modal-box">
+    <div style="font-size:12px;color:var(--g3);margin-bottom:3px;">내 팽팽 포인트</div>
+    <div style="font-size:38px;font-weight:900;font-family:'Black Han Sans';color:var(--gold);margin-bottom:3px;" id="ptModalTotal">0</div>
+    <div style="font-size:12px;color:var(--g4);margin-bottom:14px;">팽 (Paeng)</div>
+    <div style="background:var(--g1);border-radius:10px;padding:11px 13px;text-align:left;margin-bottom:12px;max-height:140px;overflow-y:auto;" id="ptModalLog"></div>
+    <div style="font-size:10px;color:var(--g3);margin-bottom:12px;">향후 팽팽몰에서 기프티콘으로 교환 가능합니다</div>
+    <button style="width:100%;padding:10px;border-radius:10px;background:var(--g1);border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;" onclick="document.getElementById('ptModal').classList.remove('show')">닫기</button>
+  </div>
+</div>
+
+<div class="cf-layer" id="cfLayer"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DEBATES=[
+  {id:0,cat:"경제·노동",catColor:"#3B5BDB",catBg:"#EEF2FF",icon:"💼",iconBg:"#EEF2FF",title:"주 4일제 도입, 경제 성장에 도움이 될까 독이 될까?",total:1204,deadline:"48시간",bluePct:62,redPct:38,blueLabel:"찬성",redLabel:"반대",reasonBlue:"• 워라밸 개선·번아웃 감소\n• OECD 주요국 도입 사례\n• 생산성 향상 연구 결과",reasonRed:"• 중소기업·서비스업 부담\n• 국제 경쟁력 약화 우려\n• 인건비 상승→고용 감소"},
+  {id:1,cat:"법·윤리",catColor:"#6741D9",catBg:"#F3F0FF",icon:"⚖️",iconBg:"#F3F0FF",title:"사형제 폐지, 지금이 적기인가?",total:1204,deadline:"72시간",bluePct:44,redPct:56,blueLabel:"폐지",redLabel:"유지",reasonBlue:"• 오판 시 회복 불가\n• 국제 인권 기준\n• 억제 효과 미미",reasonRed:"• 피해자 응보 감정\n• 극악 범죄 처벌\n• 재범 방지"},
+  {id:2,cat:"정치·제도",catColor:"#1864AB",catBg:"#E7F5FF",icon:"🏛️",iconBg:"#E7F5FF",title:"대통령제 vs 내각제 — 어떤 체제가 한국에 맞나?",total:892,deadline:"24시간",bluePct:51,redPct:49,blueLabel:"대통령제",redLabel:"내각제",reasonBlue:"• 강력한 리더십\n• 직선제 전통\n• 책임 명확",reasonRed:"• 권력 분산\n• 협치 정치\n• 제왕적 대통령제 극복"},
+  {id:3,cat:"경제·노동",catColor:"#2F9E44",catBg:"#EBFBEE",icon:"💰",iconBg:"#EBFBEE",title:"기본소득 도입, 현실적으로 가능한가?",total:743,deadline:"36시간",bluePct:58,redPct:42,blueLabel:"가능",redLabel:"불가",reasonBlue:"• AI 시대 대비\n• 소비 진작\n• 핀란드 실험 긍정",reasonRed:"• 막대한 재정\n• 노동 의욕 저하\n• 선별 복지 효율"},
+  {id:4,cat:"환경·기술",catColor:"#0C8599",catBg:"#E3FAFC",icon:"⚡",iconBg:"#E3FAFC",title:"탈원전 vs 원전 확대 — 에너지 전환의 방향",total:618,deadline:"60시간",bluePct:47,redPct:53,blueLabel:"탈원전",redLabel:"원전확대",reasonBlue:"• 기후변화 대응\n• 후쿠시마 교훈\n• 재생에너지 가격↓",reasonRed:"• 에너지 안보\n• 전기료 급등\n• 탄소중립 현실"},
+  {id:5,cat:"교육",catColor:"#E67700",catBg:"#FFF9DB",icon:"🎓",iconBg:"#FFF9DB",title:"수능 vs 수시, 공정한 입시는 무엇인가?",total:521,deadline:"48시간",bluePct:63,redPct:37,blueLabel:"수능",redLabel:"수시",reasonBlue:"• 객관적 공정성\n• 계층 이동 사다리\n• 사교육 억제",reasonRed:"• 다양한 역량 평가\n• 일회성 탈피\n• 입체적 평가"},
+  {id:6,cat:"사회·젠더",catColor:"#C2255C",catBg:"#FFDEEB",icon:"👫",iconBg:"#FFDEEB",title:"저출산 해결책 — 현금 지원 vs 구조적 개혁",total:487,deadline:"48시간",bluePct:35,redPct:65,blueLabel:"현금지원",redLabel:"구조개혁",reasonBlue:"• 즉각적 비용 경감\n• 경제적 장벽 제거\n• 빠른 효과 검증",reasonRed:"• 주거·일자리 선행\n• 돈으로 해결 한계\n• 장기 사회 변화"},
+];
+const QA_DAILY=[
+  {q:"요즘 직장인 점심값 얼마 쓰세요?",a:"저는 요즘 편의점 도시락으로 8천원 선에서 해결해요. 근처 식당은 이미 만원 넘어서...",asker:"서울 직장인",answers:87,likes:142,color:"#2F9E44"},
+  {q:"30대 초반 결혼 타이밍, 언제가 적당할까요?",a:"개인차가 너무 크지만, 경제적 안정이 어느 정도 됐을 때가 맞는 것 같아요. 근데 그 기준도 사람마다 달라서...",asker:"고민중인30대",answers:198,likes:234,color:"#6741D9"},
+  {q:"재테크 초보 첫 시작은 뭐가 좋을까요?",a:"무조건 비상금 통장 먼저요. 그다음 IRP 세액공제 받고, 인덱스 ETF 적립식으로 시작하시면 무난해요.",asker:"사회초년생",answers:145,likes:312,color:"#F59F00"},
+  {q:"아파트 vs 빌라 vs 오피스텔, 지금 뭐가 나을까요?",a:"지역마다 다르지만 지금 같은 시기엔 무리하게 아파트 갈 필요는 없고 교통 좋은 빌라가 실거주엔 낫더라고요.",asker:"전세살이3년",answers:93,likes:187,color:"#0C8599"},
+  {q:"넷플릭스 vs 유튜브 요즘 어떻게 쓰세요?",a:"넷플릭스는 주말 영화용, 유튜브는 출퇴근 때요. 사실 유튜브만 있어도 될 것 같은...",asker:"미디어소비자",answers:54,likes:98,color:"#E03131"},
+];
+const QA_EXPERT=[
+  {q:"2025년 기준금리 인하 가능성, 어떻게 전망하시나요?",a:"인플레이션이 목표치에 근접하고 있어 하반기 1~2회 인하 가능성이 높습니다.",answerer:"이강국 경제학 교수",answers:34,likes:89,color:"#3B5BDB"},
+  {q:"헌법재판소 선고 후 정치 지형 변화는?",a:"어떤 결과가 나오든 대선 정국이 앞당겨질 가능성이 높습니다.",answerer:"박성민 정치 분석가",answers:78,likes:156,color:"#C2255C"},
+  {q:"AI로 대체될 직업, 5년 내 가장 위험한 분야는?",a:"단순 반복 사무직, 콜센터, 기초 법률 서비스 등이 가장 빠르게 영향받을 겁니다.",answerer:"최재붕 과학기술 교수",answers:112,likes:234,color:"#2F9E44"},
+];
+const EXPERTS=[
+  {name:"이재묵",role:"정치학 교수",org:"한국외대",field:"정치·제도",avatar:"#1864AB",stance:"중립"},
+  {name:"박상훈",role:"정치발전소 소장",org:"정치발전소",field:"정치·제도",avatar:"#1864AB",stance:"개혁"},
+  {name:"최장집",role:"정치학 명예교수",org:"고려대",field:"정치·제도",avatar:"#1864AB",stance:"진보"},
+  {name:"이강국",role:"경제학 교수",org:"리쓰메이칸대",field:"경제·노동",avatar:"#2F9E44",stance:"진보"},
+  {name:"성태윤",role:"경제학 교수",org:"연세대",field:"경제·노동",avatar:"#2F9E44",stance:"보수"},
+  {name:"이원재",role:"LAB2050 대표",org:"LAB2050",field:"경제·노동",avatar:"#2F9E44",stance:"개혁"},
+  {name:"구정우",role:"사회학 교수",org:"성균관대",field:"사회·젠더",avatar:"#C2255C",stance:"중립"},
+  {name:"이나영",role:"사회학 교수",org:"중앙대",field:"사회·젠더",avatar:"#C2255C",stance:"진보"},
+  {name:"최재붕",role:"기계공학 교수",org:"성균관대",field:"교육",avatar:"#E67700",stance:"혁신"},
+  {name:"이범",role:"교육평론가",org:"독립",field:"교육",avatar:"#E67700",stance:"개혁"},
+  {name:"윤순진",role:"환경에너지 교수",org:"서울대",field:"환경·기술",avatar:"#0C8599",stance:"탈원전"},
+  {name:"이덕환",role:"화학 교수",org:"서강대",field:"환경·기술",avatar:"#0C8599",stance:"원전찬성"},
+  {name:"장영수",role:"헌법학 교수",org:"고려대",field:"법·윤리",avatar:"#6741D9",stance:"중립"},
+  {name:"박경신",role:"법학 교수",org:"고려대",field:"법·윤리",avatar:"#6741D9",stance:"진보"},
+];
+const MYOSU_AGENDAS=[
+  {num:"01",cat:"경제·노동",title:"한국은행 기준금리 추가 인하, 가계부채 위험은 없나?",count:"2,341건"},
+  {num:"02",cat:"정치·제도",title:"한국 정치 양극화, 구조적 문제인가 미디어의 문제인가?",count:"1,892건"},
+  {num:"03",cat:"환경·기술",title:"AI 저작권법 제정, 어디까지 보호해야 하나?",count:"1,654건"},
+  {num:"04",cat:"사회·젠더",title:"의대 정원 확대 이후, 의료 시스템 개혁 방향은?",count:"1,234건"},
+  {num:"05",cat:"교육",title:"수능 절대평가 전환, 공정성 확보가 가능한가?",count:"1,087건"},
+  {num:"06",cat:"법·윤리",title:"딥페이크 처벌 강화, 어디까지가 표현의 자유인가?",count:"987건"},
+];
+const SUGGEST_QS={
+  "정치·제도":["이번 정치 갈등, 구조적 문제인가요 아니면 인물의 문제인가요?","대통령제와 내각제, 한국엔 어떤 체제가 더 맞을까요?","정치 양극화를 줄이기 위해 가장 효과적인 방법은 무엇인가요?"],
+  "경제·노동":["한국은행 기준금리 추가 인하, 가계부채에 어떤 영향을 미칠까요?","AI 자동화로 사라질 직업 TOP 5는 무엇인가요?","물가 상승이 계속될 때 서민 경제를 지킬 수 있는 방법은?"],
+  "사회·젠더":["저출산 문제, 현금 지원 말고 진짜 효과 있는 정책이 있을까요?","학교 폭력 근절을 위해 가장 시급한 대책은 무엇인가요?","의대 정원 확대 이후 지역 의료 불균형은 해소될까요?"],
+  "교육":["수능과 수시, 학생 입장에서 어떤 제도가 더 공정한가요?","AI 시대에 초등학생이 반드시 배워야 할 역량은 무엇인가요?","사교육비를 줄이기 위한 현실적인 대안은 무엇인가요?"],
+  "환경·기술":["탈원전 vs 원전 확대, 에너지 안보와 기후변화 중 무엇이 우선인가요?","AI 규제, 어디까지 해야 혁신을 막지 않을까요?","딥페이크 기술 처벌, 표현의 자유와 어떻게 균형을 맞춰야 하나요?"],
+  "법·윤리":["사형제, 지금 폐지하는 것이 옳은가요?","AI가 만든 콘텐츠의 저작권은 누가 가져야 하나요?","개인정보 보호와 서비스 편의성, 어떤 가치가 우선인가요?"],
+};
+const MALL_ITEMS=[
+  {cat:"카페·음료",bg:"#FFF8E1",emoji:"☕",name:"스타벅스 아메리카노 T",price:"2,000팽",desc:"Tall 사이즈 · 전국 매장"},
+  {cat:"카페·음료",bg:"#FFF8E1",emoji:"🧋",name:"스타벅스 라떼 T",price:"2,500팽",desc:"Tall 사이즈 · 전국 매장"},
+  {cat:"카페·음료",bg:"#FFF8E1",emoji:"🫖",name:"투썸 아메리카노 R",price:"1,800팽",desc:"Regular · 전국 매장"},
+  {cat:"카페·음료",bg:"#FFF8E1",emoji:"🍵",name:"메가커피 아메리카노 M",price:"1,200팽",desc:"Medium · 전국 매장"},
+  {cat:"편의점",bg:"#F3E5F5",emoji:"🏪",name:"CU 상품권 1,000원",price:"1,000팽",desc:"전국 CU 편의점"},
+  {cat:"편의점",bg:"#F3E5F5",emoji:"🏪",name:"GS25 상품권 2,000원",price:"2,000팽",desc:"전국 GS25 편의점"},
+  {cat:"편의점",bg:"#F3E5F5",emoji:"🏪",name:"세븐일레븐 2,000원권",price:"2,000팽",desc:"전국 세븐일레븐"},
+  {cat:"배달·외식",bg:"#FFEBEE",emoji:"🛵",name:"배달의민족 5,000원 쿠폰",price:"3,000팽",desc:"최소 주문금액 없음"},
+  {cat:"배달·외식",bg:"#FFEBEE",emoji:"🍕",name:"도미노피자 50% 할인",price:"4,500팽",desc:"라지 피자 1판"},
+  {cat:"배달·외식",bg:"#FFEBEE",emoji:"🍔",name:"맥도날드 빅맥 세트",price:"3,200팽",desc:"빅맥 단품 → 세트 업그레이드"},
+  {cat:"배달·외식",bg:"#FFEBEE",emoji:"🐔",name:"BBQ 황금올리브 치킨",price:"8,000팽",desc:"반마리 교환권"},
+  {cat:"문화·여가",bg:"#E3F2FD",emoji:"🎬",name:"CGV 일반관 1매",price:"5,000팽",desc:"주중 · 전국 CGV"},
+  {cat:"문화·여가",bg:"#E3F2FD",emoji:"🎵",name:"멜론 이용권 1개월",price:"4,000팽",desc:"스트리밍 무제한"},
+  {cat:"문화·여가",bg:"#E3F2FD",emoji:"🎮",name:"구글플레이 3,000원권",price:"3,000팽",desc:"앱·콘텐츠 구매"},
+  {cat:"문화·여가",bg:"#E3F2FD",emoji:"📚",name:"yes24 도서 2,000원권",price:"2,000팽",desc:"도서·eBook"},
+  {cat:"쇼핑",bg:"#E8F5E9",emoji:"💄",name:"올리브영 3,000원 쿠폰",price:"2,500팽",desc:"온·오프라인 사용"},
+  {cat:"쇼핑",bg:"#E8F5E9",emoji:"👟",name:"나이키 10% 할인쿠폰",price:"6,000팽",desc:"나이키 공식 앱"},
+  {cat:"쇼핑",bg:"#E8F5E9",emoji:"🛒",name:"쿠팡 5,000원 할인",price:"4,000팽",desc:"3만원 이상 주문"},
+  {cat:"쇼핑",bg:"#E8F5E9",emoji:"👗",name:"무신사 3,000원 쿠폰",price:"2,500팽",desc:"1만원 이상 구매"},
+  {cat:"디지털",bg:"#EDE7F6",emoji:"☁️",name:"네이버 클라우드 1개월",price:"1,500팽",desc:"30GB · N드라이브"},
+  {cat:"디지털",bg:"#EDE7F6",emoji:"📱",name:"Apple 앱스토어 3,000원",price:"3,000팽",desc:"아이폰·아이패드"},
+  {cat:"디지털",bg:"#EDE7F6",emoji:"🎵",name:"유튜브 프리미엄 1개월",price:"6,000팽",desc:"광고없이 시청"},
+];
+const MISSIONS=[
+  {title:"오늘의 팽팽 투표",desc:"줄다리기 투표 1건에 참여하세요",reward:10,max:5,done:2,unit:"건"},
+  {title:"질문 답변하기",desc:"다른 사람의 질문에 답변을 달아보세요",reward:5,max:3,done:1,unit:"건"},
+  {title:"묘수 질문하기",desc:"전문가에게 질문을 던져보세요",reward:15,max:1,done:0,unit:"건"},
+  {title:"연속 출석 보너스",desc:"7일 연속 접속하면 보너스 팽 획득",reward:50,max:7,done:3,unit:"일"},
+];
+
+let isLoggedIn=false, userPts=0, ptLog=[], todayVotes=0;
+let curVote=null, hasVoted=false, myVote=null;
+
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  var n = document.getElementById('nav-' + v);
+  if (n) n.classList.add('active');
+  window.scrollTo(0, 0);
+  if (v === 'mall') {
+    var pt = document.getElementById('mallMyPt');
+    if (pt) pt.textContent = isLoggedIn ? userPts + '팽' : '로그인 후 확인';
+  }
+}
+
+function catClick(el) {
+  document.querySelectorAll('#view-main .cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+function debateCatClick(el, cat) {
+  document.querySelectorAll('#view-debate .cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderDebateList(cat);
+}
+
+function renderMain() {
+  var dailyHTML = QA_DAILY.map(function(q) {
+    return '<div class="qa-card">'
+      + '<div class="qa-top">'
+      + '<div class="qa-ava" style="background:' + q.color + '">' + q.asker[0] + '</div>'
+      + '<div><div class="qa-name">' + q.asker + '</div><div class="qa-sub">' + q.answers + '명 답변</div></div>'
+      + '</div>'
+      + '<div class="qa-q">' + q.q + '</div>'
+      + '<div class="qa-a-preview">' + q.a + '</div>'
+      + '<div class="qa-meta"><span>👍 ' + q.likes + '</span><span>💬 ' + q.answers + '개 답변</span></div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('qa-daily').innerHTML = dailyHTML;
+
+  var expertHTML = QA_EXPERT.map(function(q) {
+    return '<div class="qa-card">'
+      + '<div class="qa-top">'
+      + '<div class="qa-ava" style="background:' + q.color + '">' + q.answerer[0] + '</div>'
+      + '<div><div class="qa-name">' + q.answerer + '</div><div class="qa-sub">전문가 답변</div></div>'
+      + '</div>'
+      + '<div class="qa-q">' + q.q + '</div>'
+      + '<div class="qa-a-preview">' + q.a + '</div>'
+      + '<div class="qa-meta"><span>👍 ' + q.likes + '</span><span>💬 ' + q.answers + '개 답변</span></div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('qa-expert').innerHTML = expertHTML;
+
+  document.getElementById('home-side-debates').innerHTML = DEBATES.slice(0,4).map(function(d) {
+    return '<div class="side-item" onclick="switchView(\'debate\')">'
+      + '<div class="side-icon">' + d.icon + '</div>'
+      + '<div><div class="side-text">' + d.title + '</div><div class="side-meta">👥 ' + d.total.toLocaleString() + '명 · ' + d.deadline + '</div></div>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('home-side-myosu').innerHTML = MYOSU_AGENDAS.slice(0,3).map(function(a) {
+    return '<div class="side-item" onclick="switchView(\'myosu\')">'
+      + '<div class="side-icon">🧠</div>'
+      + '<div><div class="side-text">' + a.title + '</div><div class="side-meta">' + a.cat + ' · ' + a.count + '</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+function qTabClick(el, type) {
+  document.querySelectorAll('.q-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('qa-daily').style.display = type === 'daily' ? 'block' : 'none';
+  document.getElementById('qa-expert').style.display = type === 'expert' ? 'block' : 'none';
+}
+
+function renderDebateList(filter) {
+  filter = filter || '전체';
+  var items = filter === '전체' ? DEBATES.slice(1) : DEBATES.filter(function(d) { return d.cat === filter; });
+  // 피처 카드 업데이트
+  var featD = filter === '전체' ? DEBATES[0] : (DEBATES.find(function(d){ return d.cat===filter; }) || DEBATES[0]);
+  var fc = document.getElementById('debateFeatured');
+  if(fc){
+    fc.onclick = function(){ openVotePopup(featD.id); };
+    fc.querySelector('.featured-title').textContent = featD.title;
+    fc.querySelector('.featured-ppl').textContent = '👥 ' + featD.total.toLocaleString() + '명 참여 중';
+    fc.querySelector('.featured-join-btn').onclick = function(e){ e.stopPropagation(); openVotePopup(featD.id); };
+  }
+  document.getElementById('debateList').innerHTML = items.map(function(d) {
+    return '<div class="debate-card" onclick="openVotePopup(' + d.id + ')">'
+      + '<div class="d-icon" style="background:' + d.iconBg + '">' + d.icon + '</div>'
+      + '<div class="d-body">'
+      + '<span class="d-tag" style="background:' + d.catBg + ';color:' + d.catColor + '">' + d.cat + '</span>'
+      + '<div class="d-title">' + d.title + '</div>'
+      + '<div class="d-bar-wrap"><div class="d-bar-fill" style="width:' + d.bluePct + '%"></div></div>'
+      + '<div class="d-meta"><span>👥 ' + d.total.toLocaleString() + '명</span><span>마감 ' + d.deadline + '</span></div>'
+      + '</div></div>';
+  }).join('');
+
+  document.getElementById('debate-side').innerHTML = DEBATES.slice(0,5).map(function(d) {
+    return '<div class="side-item" onclick="openVotePopup(' + d.id + ')">'
+      + '<div class="side-icon">' + d.icon + '</div>'
+      + '<div><div class="side-text">' + d.title + '</div><div class="side-meta">👥 ' + d.total.toLocaleString() + '명</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+function openVotePopup(id) {
+  var d = DEBATES.find(function(x) { return x.id === id; });
+  if (!d) return;
+  curVote = d; hasVoted = false; myVote = null;
+  document.getElementById('vpIssue').textContent = d.title;
+  document.getElementById('vpRB').textContent = d.reasonBlue;
+  document.getElementById('vpRR').textContent = d.reasonRed;
+  document.getElementById('vpLblB').textContent = d.blueLabel;
+  document.getElementById('vpLblR').textContent = d.redLabel;
+  document.getElementById('vpPctB').textContent = '??%';
+  document.getElementById('vpPctR').textContent = '??%';
+  document.getElementById('vpCntB').textContent = '투표 후 공개';
+  document.getElementById('vpCntR').textContent = '투표 후 공개';
+  document.getElementById('vpVoted').textContent = '';
+  document.getElementById('vpLbl').textContent = '어느 편을 당기시겠어요?';
+  document.getElementById('vpShare').classList.remove('show');
+  document.getElementById('vpBtnB').disabled = false;
+  document.getElementById('vpBtnR').disabled = false;
+  document.getElementById('vpBtnB').style.opacity = '1';
+  document.getElementById('vpBtnR').style.opacity = '1';
+  document.getElementById('vpArena').classList.remove('arena-shaking');
+  document.getElementById('vpRibbon').classList.remove('ribbon-pop');
+  document.getElementById('vpRibbon').style.left = '50%';
+  document.getElementById('voteOverlay').classList.add('show');
+}
+function closeVotePopup() { document.getElementById('voteOverlay').classList.remove('show'); }
+
+function castVote(side) {
+  if (hasVoted) return;
+  hasVoted = true; myVote = side;
+  document.getElementById('vpBtnB').disabled = true;
+  document.getElementById('vpBtnR').disabled = true;
+  document.getElementById('vpBtnB').style.opacity = side === 'b' ? '1' : '0.4';
+  document.getElementById('vpBtnR').style.opacity = side === 'r' ? '1' : '0.4';
+  if (navigator.vibrate) navigator.vibrate([80,40,80,40,160,40,80]);
+  var arena = document.getElementById('vpArena');
+  arena.classList.add('arena-shaking');
+  document.getElementById('vpLbl').textContent = side === 'b'
+    ? '💪 ' + curVote.blueLabel + ' 편 당기는 중...'
+    : '💪 ' + curVote.redLabel + ' 편 당기는 중...';
+  setTimeout(function() { arena.classList.remove('arena-shaking'); revealVoteResult(side); }, 1600);
+}
+
+function revealVoteResult(side) {
+  var d = curVote;
+  var offset = (d.bluePct - 50) * 0.5;
+  var rb = document.getElementById('vpRibbon');
+  rb.style.left = 'calc(50% + ' + offset + 'px)';
+  rb.classList.add('ribbon-pop');
+  document.getElementById('vpPctB').textContent = d.bluePct + '%';
+  document.getElementById('vpPctR').textContent = d.redPct + '%';
+  document.getElementById('vpCntB').textContent = Math.round(d.total * d.bluePct / 100).toLocaleString() + '명';
+  document.getElementById('vpCntR').textContent = Math.round(d.total * d.redPct / 100).toLocaleString() + '명';
+  var won = (side === 'b' && d.bluePct > d.redPct) || (side === 'r' && d.redPct > d.bluePct);
+  document.getElementById('vpLbl').textContent = won ? '🎉 내 편이 이기고 있어요!' : '😤 지고 있어요... 친구 불러오세요!';
+  document.getElementById('vpVoted').innerHTML = side === 'b'
+    ? '<span style="color:var(--blue)">✓ ' + d.blueLabel + '에 투표했어요</span>'
+    : '<span style="color:var(--red)">✓ ' + d.redLabel + '에 투표했어요</span>';
+  document.getElementById('vpShare').classList.add('show');
+  if (won) { spawnConfetti(); if (navigator.vibrate) navigator.vibrate([100,50,200]); }
+  if (isLoggedIn && todayVotes < 5) {
+    todayVotes++;
+    userPts += 10;
+    ptLog.unshift({t: d.title.slice(0,14) + '…', p: 10, when: '방금'});
+    document.getElementById('ptDisplay').textContent = userPts;
+    showToast('🪙 +10팽 적립! (오늘 ' + todayVotes * 10 + '/50팽)');
+  }
+}
+
+// ── 묘수 ──
+function renderMyosu() {
+  document.getElementById('myosu-agendas').innerHTML = MYOSU_AGENDAS.map(function(a) {
+    return '<div class="agenda-card" onclick="fillMyosuQ(this)"  data-q="' + a.title + '">'
+      + '<div class="agenda-num">' + a.num + '</div>'
+      + '<div class="agenda-body">'
+      + '<div style="font-size:10px;font-weight:700;color:var(--g3);margin-bottom:3px;">' + a.cat + '</div>'
+      + '<div class="agenda-title">' + a.title + '</div>'
+      + '<div class="agenda-meta">🧑‍💼 전문가 ' + a.count + ' 답변</div>'
+      + '</div></div>';
+  }).join('');
+
+  var grouped = {};
+  EXPERTS.forEach(function(e) { if (!grouped[e.field]) grouped[e.field] = []; grouped[e.field].push(e); });
+  document.getElementById('expert-side-list').innerHTML = Object.entries(grouped).slice(0,4).map(function(entry) {
+    var field = entry[0], experts = entry[1];
+    return '<div style="margin-bottom:10px;">'
+      + '<div style="font-size:10px;font-weight:700;color:var(--g3);margin-bottom:5px;">' + field + '</div>'
+      + experts.slice(0,3).map(function(e) {
+        return '<div style="display:flex;gap:7px;align-items:center;padding:4px 0;border-bottom:1px solid var(--g1);">'
+          + '<div style="width:24px;height:24px;border-radius:50%;background:' + e.avatar + ';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;">' + e.name[0] + '</div>'
+          + '<div><div style="font-size:11px;font-weight:700;">' + e.name + '</div><div style="font-size:10px;color:var(--g3);">' + e.role + '</div></div>'
+          + '</div>';
+      }).join('')
+      + '</div>';
+  }).join('');
+}
+
+function fillMyosuQ(el) {
+  var q = el.getAttribute('data-q');
+  document.getElementById('myosuQ').value = q;
+  document.getElementById('myosu-input-area').scrollIntoView({behavior:'smooth'});
+}
+
+function myosuCatBtnClick(el, cat) {
+  document.querySelectorAll('.myosu-cat-btn').forEach(function(b) { b.classList.remove('active'); });
+  el.classList.add('active');
+  var wrap = document.getElementById('myosu-suggest-wrap');
+  var list = document.getElementById('myosu-suggest-list');
+  if (cat === '전체' || !SUGGEST_QS[cat]) {
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'block';
+  list.innerHTML = SUGGEST_QS[cat].map(function(q) {
+    var btn = document.createElement('button');
+    btn.className = 'suggest-q-btn';
+    btn.textContent = '💬 ' + q;
+    btn.onclick = function() { document.getElementById('myosuQ').value = q; };
+    return btn.outerHTML;
+  }).join('');
+}
+
+function askMyosu() {
+  var q = document.getElementById('myosuQ').value.trim();
+  if (!q) { showToast('질문을 입력해주세요!'); return; }
+  var cat = document.querySelector('.myosu-cat-btn.active') ? document.querySelector('.myosu-cat-btn.active').textContent : '경제·노동';
+  var field = (cat === '전체' || cat === '') ? '경제·노동' : cat;
+  var fieldExperts = EXPERTS.filter(function(e) { return e.field === field; });
+  if (fieldExperts.length === 0) fieldExperts = EXPERTS.filter(function(e) { return e.field === '경제·노동'; });
+  var picked = fieldExperts.sort(function() { return Math.random() - 0.5; }).slice(0, 3);
+  var stances = {진보:'진보',보수:'보수',중립:'중립',개혁:'개혁',혁신:'혁신',탈원전:'탈원전',원전찬성:'원전확대'};
+  var answers = [
+    '현 시점에서 가장 중요한 점은 정책의 지속 가능성입니다. 단기적 성과보다 장기적 구조 개선이 필요하며, 사회적 합의 과정이 선행돼야 합니다.',
+    '이 문제의 핵심은 기존 이해관계자들 간의 갈등을 어떻게 조율하느냐에 달려 있습니다. 실증적 데이터를 바탕으로 한 정책 설계가 중요합니다.',
+    '해외 선진국의 사례를 보면 공통적으로 점진적 접근을 택했습니다. 급격한 변화보다 단계적 전환이 사회적 비용을 최소화하는 방법입니다.'
+  ];
+  document.getElementById('myosuQDisp').textContent = 'Q: ' + q;
+  document.getElementById('myosuAnsList').innerHTML = picked.map(function(e, i) {
+    return '<div class="expert-ans">'
+      + '<div class="ea-top">'
+      + '<div class="ea-ava" style="background:' + e.avatar + '">' + e.name[0] + '</div>'
+      + '<div><div class="ea-name">' + e.name + '</div>'
+      + '<div class="ea-role">' + e.role + ' · ' + e.org + '</div>'
+      + '<span class="ea-stance" style="background:' + e.avatar + '22;color:' + e.avatar + '">' + (stances[e.stance] || e.stance) + ' 성향</span>'
+      + '</div></div>'
+      + '<div class="ea-body">' + answers[i] + '</div>'
+      + '<div class="ea-src">📰 최근 발언·논문·인터뷰 기반 AI 페르소나 분석</div>'
+      + '<div class="ea-meta"><span>👍 0</span><span>💬 0개 댓글</span></div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('myosuOverlay').classList.add('show');
+}
+
+// ── 미션 ──
+function renderMissions() {
+  document.getElementById('missionList').innerHTML = MISSIONS.map(function(m) {
+    return '<div class="mission-card">'
+      + '<div class="mc-top"><div class="mc-title">' + m.title + '</div><div class="mc-reward">+' + m.reward + '팽</div></div>'
+      + '<div class="mc-desc">' + m.desc + '</div>'
+      + '<div class="mc-prog"><div class="mc-fill" style="width:' + Math.round(m.done/m.max*100) + '%"></div></div>'
+      + '<div class="mc-sub">' + m.done + '/' + m.max + ' ' + m.unit + ' 완료</div>'
+      + '</div>';
+  }).join('');
+}
+
+// ── 팽팽몰 ──
+function mallCatClick(el, cat) {
+  document.querySelectorAll('.mall-cat').forEach(function(b) { b.classList.remove('active'); });
+  el.classList.add('active');
+  var items = cat === '전체' ? MALL_ITEMS : MALL_ITEMS.filter(function(i) { return i.cat === cat; });
+  renderMallItems(items);
+}
+
+function renderMallItems(items) {
+  document.getElementById('mallGrid').innerHTML = items.map(function(item) {
+    return '<div class="mall-item" onclick="showMallItem(\'' + item.name + '\',\'' + item.price + '\')">'
+      + '<div class="mall-thumb" style="background:' + item.bg + '">' + item.emoji + '</div>'
+      + '<div class="mall-info">'
+      + '<div class="mall-name">' + item.name + '</div>'
+      + '<div class="mall-price">' + item.price + '</div>'
+      + '<div class="mall-desc">' + item.desc + '</div>'
+      + '</div></div>';
+  }).join('');
+}
+
+function showMallItem(name, price) {
+  if (!isLoggedIn) { showToast('🔐 로그인 후 교환 가능해요!'); return; }
+  showToast('🛒 ' + name + ' (' + price + ') — 준비 중인 기능이에요!');
+}
+
+function renderMall() {
+  renderMallItems(MALL_ITEMS);
+  var pt = document.getElementById('mallMyPt');
+  if (pt) pt.textContent = isLoggedIn ? userPts + '팽' : '로그인 후 확인';
+}
+
+// ── 공유 ──
+function copyLink() {
+  var url = 'https://rickywona.github.io/vrsus1/paengpaeng.html';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() { showToast('링크 복사됐어요! 카카오톡에 붙여넣기 하세요 📋'); });
+  } else {
+    showToast('주소창 URL을 복사해서 공유해보세요!');
+  }
+}
+
+// ── 로그인·포인트 ──
+function openLoginModal() { document.getElementById('loginModal').classList.add('show'); }
+function fakeLogin() {
+  isLoggedIn = true; userPts = 30;
+  ptLog = [{t:'첫 로그인 보너스', p:30, when:'방금'}];
+  document.getElementById('loginModal').classList.remove('show');
+  document.getElementById('loginBtn').style.display = 'none';
+  document.getElementById('ptBadge').classList.add('show');
+  document.getElementById('ptDisplay').textContent = userPts;
+  showToast('🎉 로그인 완료! 첫 로그인 +30팽 보너스 지급!');
+}
+function openPtModal() {
+  document.getElementById('ptModalTotal').textContent = userPts;
+  document.getElementById('ptModalLog').innerHTML = ptLog.length
+    ? ptLog.map(function(l) {
+        return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:1px solid var(--g2);color:var(--g4);">'
+          + '<span>' + l.t + '</span>'
+          + '<span style="color:var(--green);font-weight:700;">+' + l.p + '팽 · ' + l.when + '</span>'
+          + '</div>';
+      }).join('')
+    : '<div style="color:var(--g3);font-size:12px;">아직 적립 내역이 없어요</div>';
+  document.getElementById('ptModal').classList.add('show');
+}
+
+// ── 컨페티 ──
+function spawnConfetti() {
+  var layer = document.getElementById('cfLayer');
+  layer.innerHTML = ''; layer.classList.add('show');
+  var colors = ['#3B5BDB','#E03131','#F59F00','#2F9E44','#6741D9','#F06595'];
+  for (var i = 0; i < 60; i++) {
+    var p = document.createElement('div'); p.className = 'cf';
+    p.style.cssText = 'left:' + Math.random()*100 + '%;top:' + (-(20+Math.random()*30)) + 'px;background:' + colors[Math.floor(Math.random()*colors.length)] + ';width:' + (5+Math.random()*6) + 'px;height:' + (9+Math.random()*8) + 'px;border-radius:' + (Math.random()>.5?'50%':'2px') + ';animation-delay:' + Math.random()*.8 + 's;animation-duration:' + (2+Math.random()*.8) + 's;';
+    layer.appendChild(p);
+  }
+  setTimeout(function() { layer.classList.remove('show'); layer.innerHTML = ''; }, 3500);
+}
+
+function toggleMobileMenu() {
+  var menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
+}
+function mobileNav(v) {
+  switchView(v);
+  document.getElementById('mobileMenu').classList.remove('open');
+  // 모바일 메뉴 active 표시
+  document.querySelectorAll('.mobile-menu-item').forEach(function(el) { el.classList.remove('active'); });
+  var mn = document.getElementById('mnav-' + v);
+  if (mn) mn.classList.add('active');
+}
+// 메뉴 외 클릭 시 닫기
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('mobileMenu');
+  var btn = document.getElementById('hamburgerBtn');
+  if (menu && menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
+
+// ── 초기화 ──
+renderMain();
+renderDebateList();
+renderMyosu();
+renderMissions();
+renderMall();
+</script>
+</body>
+</html>
