@@ -1,0 +1,2654 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>할말 — 두뇌건강을 위한 1일 1투표</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#2D7A3E;
+  --green-dk:#1F5A2C;
+  --green-md:#3E8F50;
+  --green-lt:#5BA871;
+  --green-bg:#EDF7EF;
+  --green-mint:#F3F9F4;
+  --orange:#E8893F;
+  --orange-lt:#F4B070;
+  --orange-bg:#FFF5EA;
+  --blue:#3B7FB7;
+  --red:#C84747;
+  --white:#FFFFFF;
+  --cream:#FBFAF6;
+  --bg:#F6F8F6;
+  --text:#1A2E1F;
+  --text-md:#4A5C50;
+  --text-lt:#8A9890;
+  --line:#E4E9E5;
+  --line-dk:#C9D3CB;
+  --sh:0 2px 8px rgba(26,46,31,0.06);
+  --sh-md:0 6px 20px rgba(26,46,31,0.10);
+  --sh-lg:0 12px 40px rgba(26,46,31,0.16);
+  --display:'Black Han Sans',serif;
+  --sans:'Noto Sans KR',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:var(--sans);
+  background:linear-gradient(135deg, #1F4D2A 0%, #0F2818 100%);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px 0;
+}
+
+/* ─── 모바일 프레임 ─── */
+.frame{
+  width:100%;
+  max-width:412px;
+  height:892px;
+  max-height:calc(100vh - 40px);
+  background:var(--white);
+  border-radius:42px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:var(--sh-lg);
+  border:8px solid #0A1A12;
+  display:flex;
+  flex-direction:column;
+}
+@media(max-width:430px){
+  body{padding:0;background:var(--white);}
+  .frame{max-width:100%;height:100vh;max-height:100vh;border-radius:0;border:none;}
+}
+
+/* ─── 상단 상태바 ─── */
+.statusbar{
+  height:30px;
+  background:var(--white);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+  flex-shrink:0;
+}
+.statusbar .dots{letter-spacing:1px;}
+
+/* ─── 상단 헤더 ─── */
+.header{
+  background:var(--white);
+  padding:10px 18px 12px;
+  border-bottom:1px solid var(--line);
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+/* HOME 버튼 = 로고 */
+.logo-mini{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  user-select:none;
+}
+.logo-mini-mark{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:linear-gradient(135deg, var(--green) 0%, var(--green-dk) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-family:var(--display);
+  font-size:16px;
+  letter-spacing:-1px;
+  box-shadow:0 2px 4px rgba(31,90,44,0.30);
+}
+.logo-mini-text{
+  font-family:var(--display);
+  font-size:22px;
+  color:var(--green-dk);
+  letter-spacing:-1px;
+}
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.point-badge{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:7px 12px;
+  background:var(--orange-bg);
+  border:1px solid var(--orange-lt);
+  border-radius:20px;
+  color:var(--orange);
+  cursor:pointer;
+}
+.point-icon{font-size:12px;}
+.point-num{
+  font-family:var(--display);
+  font-size:15px;
+  letter-spacing:0.3px;
+  color:var(--orange);
+}
+.point-unit{font-size:11px;font-weight:700;color:var(--orange);}
+.hamburger{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--green-bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  flex-direction:column;
+  gap:3px;
+}
+.hamburger span{
+  width:16px;
+  height:2px;
+  background:var(--green-dk);
+  border-radius:1px;
+}
+
+/* ─── 본문 ─── */
+.body{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  position:relative;
+  background:var(--white);
+}
+.body::-webkit-scrollbar{width:0;}
+.view{display:none;animation:fadeIn .35s ease;}
+.view.active{display:block;}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ═══════════════════════════════════════
+   VIEW 1: 스플래시 / 가입
+   ═══════════════════════════════════════ */
+#view-splash{
+  height:100%;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  padding:60px 28px 36px;
+  background:linear-gradient(165deg, var(--white) 0%, var(--green-mint) 50%, var(--green-bg) 100%);
+  text-align:center;
+}
+#view-splash.active{display:flex;}
+.splash-top{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:32px;
+  margin-top:40px;
+}
+.logo-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+}
+.logo-big{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, var(--green-md), var(--green-dk));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 10px 30px rgba(31,90,44,0.35), inset 0 -6px 14px rgba(0,0,0,0.18);
+  position:relative;
+}
+.logo-big::before{
+  content:'';
+  position:absolute;
+  inset:8px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.35);
+}
+.logo-big-text{
+  font-family:var(--display);
+  font-size:46px;
+  color:#fff;
+  letter-spacing:-2px;
+  text-shadow:0 2px 4px rgba(0,0,0,0.25);
+}
+.brand{
+  font-family:var(--display);
+  font-size:54px;
+  color:var(--green-dk);
+  letter-spacing:-2px;
+  line-height:1;
+}
+.brand-slogan{
+  font-size:17px;
+  color:var(--text-md);
+  font-weight:700;
+  letter-spacing:-0.3px;
+  line-height:1.5;
+  margin-top:8px;
+}
+.brand-slogan em{
+  font-style:normal;
+  color:var(--green);
+  font-weight:900;
+}
+
+.eligible-badge{
+  margin-top:8px;
+  padding:10px 18px;
+  background:#fff;
+  border:1.5px solid var(--green-lt);
+  border-radius:30px;
+  font-size:14px;
+  color:var(--green-dk);
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:var(--sh);
+}
+.eligible-badge::before{
+  content:'';
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+}
+
+.splash-bottom{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.btn-kakao{
+  width:100%;
+  padding:18px;
+  background:#FEE500;
+  border:none;
+  border-radius:14px;
+  font-family:var(--sans);
+  font-size:18px;
+  font-weight:700;
+  color:#191600;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:var(--sh);
+}
+.btn-secondary{
+  width:100%;
+  padding:16px;
+  background:transparent;
+  border:1.5px solid var(--line-dk);
+  border-radius:14px;
+  font-family:var(--sans);
+  font-size:16px;
+  font-weight:500;
+  color:var(--text-md);
+  cursor:pointer;
+}
+.splash-meta{
+  font-size:11px;
+  color:var(--text-lt);
+  line-height:1.6;
+  margin-top:4px;
+}
+
+/* ═══════════════════════════════════════
+   VIEW 2: 슬로건 인트로 (자동 진행)
+   ═══════════════════════════════════════ */
+#view-intro{
+  height:100%;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:60px 32px;
+  background:linear-gradient(165deg, var(--green-dk) 0%, var(--green) 100%);
+  text-align:center;
+}
+#view-intro.active{display:flex;}
+.intro-logo{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  border:2px solid rgba(255,255,255,0.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:28px;
+  animation:scaleIn .8s ease;
+}
+@keyframes scaleIn{
+  from{transform:scale(0.5);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+.intro-logo-text{
+  font-family:var(--display);
+  font-size:36px;
+  color:#fff;
+  letter-spacing:-1px;
+}
+.intro-brand{
+  font-family:var(--display);
+  font-size:64px;
+  color:#fff;
+  letter-spacing:-2.5px;
+  line-height:1;
+  margin-bottom:20px;
+  animation:slideUp .8s ease 0.2s both;
+}
+.intro-slogan{
+  font-size:21px;
+  color:#fff;
+  font-weight:700;
+  letter-spacing:-0.5px;
+  line-height:1.5;
+  opacity:0.95;
+  animation:slideUp .8s ease 0.4s both;
+}
+.intro-slogan em{
+  font-style:normal;
+  color:#FFEAB0;
+  font-weight:900;
+}
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ═══════════════════════════════════════
+   VIEW 3: 홈 (단순화)
+   ═══════════════════════════════════════ */
+#view-home{padding:0 0 90px;background:var(--white);}
+
+.welcome-bar{
+  padding:18px 20px 10px;
+}
+.welcome-greet{
+  font-size:14px;
+  color:var(--text-lt);
+  font-weight:500;
+  margin-bottom:2px;
+}
+.welcome-name{
+  font-family:var(--display);
+  font-size:22px;
+  color:var(--text);
+  letter-spacing:-0.6px;
+}
+.welcome-name em{
+  font-style:normal;
+  color:var(--green);
+}
+
+/* 오늘의 1투표 — 메인 카드 */
+.today-wrap{padding:8px 16px;}
+.today-card{
+  background:linear-gradient(165deg, var(--green-mint) 0%, var(--green-bg) 100%);
+  border:1.5px solid var(--green-lt);
+  border-radius:24px;
+  padding:24px 22px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--sh-md);
+}
+.today-card::before{
+  content:'';
+  position:absolute;
+  top:-30px;
+  right:-30px;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(45,122,62,0.10), transparent 70%);
+}
+.today-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 12px;
+  background:var(--white);
+  border-radius:14px;
+  font-size:11px;
+  color:var(--green-dk);
+  font-weight:700;
+  letter-spacing:1.5px;
+  margin-bottom:14px;
+}
+.today-eyebrow::before{
+  content:'';
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--green);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;}
+  50%{opacity:0.4;}
+}
+.today-cat{
+  display:inline-block;
+  font-size:12px;
+  color:var(--green-dk);
+  font-weight:700;
+  margin-bottom:10px;
+}
+.today-title{
+  font-family:var(--display);
+  font-size:26px;
+  color:var(--text);
+  line-height:1.35;
+  letter-spacing:-0.8px;
+  margin-bottom:14px;
+}
+.today-desc{
+  font-size:14px;
+  color:var(--text-md);
+  line-height:1.6;
+  margin-bottom:20px;
+}
+.today-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+  font-size:12px;
+  color:var(--text-md);
+}
+.today-participants{
+  font-weight:600;
+}
+.today-participants strong{color:var(--green-dk);}
+.today-reward{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 11px;
+  background:var(--orange);
+  color:#fff;
+  border-radius:14px;
+  font-size:12px;
+  font-weight:700;
+}
+.vote-btns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.vote-btn{
+  padding:18px 12px;
+  border:none;
+  border-radius:14px;
+  font-family:var(--sans);
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:all .2s ease;
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+.vote-btn.for{
+  background:var(--white);
+  color:var(--green-dk);
+  border:2px solid var(--green);
+}
+.vote-btn.for:hover{
+  background:var(--green);
+  color:#fff;
+}
+.vote-btn.against{
+  background:var(--white);
+  color:var(--text);
+  border:2px solid var(--text-md);
+}
+.vote-btn.against:hover{
+  background:var(--text);
+  color:#fff;
+}
+.vote-icon{font-size:18px;}
+
+/* 홈 하단 보조 영역 */
+.home-secondary{
+  padding:24px 20px 0;
+}
+.home-sec-title{
+  font-family:var(--display);
+  font-size:18px;
+  color:var(--text);
+  margin-bottom:12px;
+  letter-spacing:-0.5px;
+}
+.streak-card{
+  padding:16px 18px;
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.streak-info{display:flex;flex-direction:column;gap:2px;}
+.streak-label{font-size:12px;color:var(--text-lt);font-weight:500;}
+.streak-val{
+  font-family:var(--display);
+  font-size:18px;
+  color:var(--green-dk);
+}
+.streak-dots{
+  display:flex;
+  gap:3px;
+}
+.streak-dot{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--green-bg);
+}
+.streak-dot.done{background:var(--green);}
+
+/* ═══════════════════════════════════════
+   VIEW 4: 투표 & 한 마디
+   ═══════════════════════════════════════ */
+#view-vote{padding:0 0 90px;}
+.vote-back{
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:var(--text-md);
+  font-size:15px;
+  font-weight:500;
+  cursor:pointer;
+}
+.vote-head{
+  padding:0 20px 20px;
+}
+.vote-head-cat{
+  display:inline-block;
+  padding:5px 12px;
+  background:var(--green-bg);
+  color:var(--green-dk);
+  border-radius:14px;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+.vote-head-title{
+  font-family:var(--display);
+  font-size:24px;
+  color:var(--text);
+  line-height:1.4;
+  letter-spacing:-0.7px;
+}
+.vote-stance-display{
+  margin:0 20px 22px;
+  padding:18px 20px;
+  background:var(--green-mint);
+  border-radius:14px;
+  border:1px solid var(--line);
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stance-info{display:flex;flex-direction:column;gap:4px;}
+.stance-label{
+  font-size:12px;
+  color:var(--text-md);
+  font-weight:600;
+}
+.stance-value{
+  font-family:var(--display);
+  font-size:22px;
+  letter-spacing:-0.5px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.stance-value.for-color{color:var(--green);}
+.stance-value.against-color{color:var(--text);}
+.stance-change-btn{
+  padding:8px 14px;
+  background:#fff;
+  border:1px solid var(--line-dk);
+  border-radius:18px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-md);
+  cursor:pointer;
+}
+
+.comment-section{padding:0 20px;}
+.comment-head{margin-bottom:6px;}
+.comment-title{
+  font-family:var(--display);
+  font-size:20px;
+  color:var(--text);
+  letter-spacing:-0.5px;
+  margin-bottom:4px;
+}
+.comment-sub{
+  font-size:13px;
+  color:var(--text-lt);
+  font-weight:500;
+}
+
+.suggest-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:18px 0 10px;
+}
+.suggest-label-text{
+  font-size:14px;
+  font-weight:700;
+  color:var(--green-dk);
+}
+.suggest-label-line{
+  flex:1;
+  height:1px;
+  background:var(--line);
+}
+.suggest-reward{
+  font-size:11px;
+  color:var(--orange);
+  font-weight:700;
+  padding:2px 8px;
+  background:var(--orange-bg);
+  border-radius:10px;
+}
+.suggestions{display:flex;flex-direction:column;gap:8px;}
+.suggest-chip{
+  padding:14px 16px;
+  background:#fff;
+  border:1.5px solid var(--line);
+  border-radius:12px;
+  font-size:15px;
+  color:var(--text);
+  font-weight:500;
+  text-align:left;
+  cursor:pointer;
+  line-height:1.5;
+  transition:all .2s ease;
+  font-family:var(--sans);
+}
+.suggest-chip:hover{border-color:var(--green-lt);background:var(--green-mint);}
+.suggest-chip.selected{
+  background:var(--green);
+  color:#fff;
+  border-color:var(--green);
+  font-weight:700;
+}
+.suggest-chip-pick-count{
+  display:inline-block;
+  margin-left:6px;
+  font-size:11px;
+  color:var(--text-lt);
+  font-weight:600;
+}
+.suggest-chip.selected .suggest-chip-pick-count{color:rgba(255,255,255,0.7);}
+
+.divider-or{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:22px 0 14px;
+}
+.divider-or-line{flex:1;height:1px;background:var(--line);}
+.divider-or-text{
+  font-size:13px;
+  color:var(--text-md);
+  font-weight:700;
+}
+.input-label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.input-label-text{
+  font-size:14px;
+  font-weight:700;
+  color:var(--green-dk);
+}
+.input-reward-box{
+  font-size:11px;
+  font-weight:700;
+  color:var(--orange);
+}
+.input-wrap{
+  position:relative;
+  background:#fff;
+  border:2px solid var(--line-dk);
+  border-radius:14px;
+  padding:14px;
+  transition:border .2s ease;
+}
+.input-wrap:focus-within{border-color:var(--green);}
+.input-area{
+  width:100%;
+  border:none;
+  background:transparent;
+  font-family:var(--sans);
+  font-size:16px;
+  color:var(--text);
+  font-weight:500;
+  resize:none;
+  min-height:84px;
+  line-height:1.6;
+  outline:none;
+}
+.input-area::placeholder{color:var(--text-lt);font-weight:400;}
+.input-counter-wrap{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px dashed var(--line);
+}
+.input-counter{
+  font-size:12px;
+  color:var(--text-lt);
+  font-weight:600;
+}
+.input-counter strong{color:var(--green-dk);}
+.input-bonus{
+  font-size:12px;
+  font-weight:700;
+  transition:opacity .3s ease;
+}
+
+.reward-preview{
+  margin:22px 0 14px;
+  padding:16px 18px;
+  background:var(--orange-bg);
+  border:1px dashed var(--orange);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.reward-preview-label{
+  font-size:13px;
+  color:var(--text-md);
+  font-weight:700;
+}
+.reward-preview-amount{
+  font-family:var(--display);
+  font-size:26px;
+  color:var(--orange);
+  letter-spacing:-0.5px;
+}
+.reward-preview-amount span{font-size:14px;font-family:var(--sans);font-weight:700;margin-left:2px;}
+
+.submit-btn{
+  width:calc(100% - 40px);
+  margin:8px 20px 20px;
+  padding:20px;
+  background:linear-gradient(135deg, var(--green) 0%, var(--green-dk) 100%);
+  color:#fff;
+  border:none;
+  border-radius:16px;
+  font-family:var(--sans);
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(31,90,44,0.30);
+  transition:all .2s ease;
+}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(31,90,44,0.40);}
+
+/* ═══════════════════════════════════════
+   VIEW 5: 적립 완료
+   ═══════════════════════════════════════ */
+#view-success{
+  height:100%;
+  display:none;
+  flex-direction:column;
+  padding:40px 28px;
+  background:linear-gradient(165deg, var(--white) 0%, var(--green-mint) 100%);
+  text-align:center;
+}
+#view-success.active{display:flex;}
+.success-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;}
+.success-medal{
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, var(--orange-lt), var(--orange));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 32px rgba(232,137,63,0.35), inset 0 -8px 16px rgba(0,0,0,0.18);
+  position:relative;
+  animation:popIn .6s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{
+  0%{transform:scale(0);opacity:0;}
+  60%{transform:scale(1.1);opacity:1;}
+  100%{transform:scale(1);}
+}
+.success-medal::before{
+  content:'';
+  position:absolute;
+  inset:10px;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,0.45);
+}
+.medal-num{
+  font-family:var(--display);
+  font-size:40px;
+  color:#fff;
+  letter-spacing:-1px;
+  text-shadow:0 2px 4px rgba(0,0,0,0.20);
+}
+.medal-unit{
+  font-size:13px;
+  color:#fff;
+  font-weight:700;
+  margin-top:-4px;
+}
+.success-msg{
+  font-family:var(--display);
+  font-size:28px;
+  color:var(--text);
+  letter-spacing:-0.8px;
+  line-height:1.3;
+}
+.success-msg em{font-style:normal;color:var(--green);}
+.success-sub{
+  font-size:15px;
+  color:var(--text-md);
+  line-height:1.6;
+  font-weight:500;
+}
+.success-stat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px 22px;
+  display:flex;
+  justify-content:space-around;
+  width:100%;
+  box-shadow:var(--sh);
+}
+.success-stat-item{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  align-items:center;
+}
+.success-stat-label{font-size:11px;color:var(--text-lt);font-weight:600;}
+.success-stat-value{
+  font-family:var(--display);
+  font-size:20px;
+  color:var(--green-dk);
+  letter-spacing:-0.5px;
+}
+.success-bottom{display:flex;flex-direction:column;gap:10px;}
+.btn-primary{
+  padding:18px;
+  background:linear-gradient(135deg, var(--green), var(--green-dk));
+  color:#fff;
+  border:none;
+  border-radius:14px;
+  font-family:var(--sans);
+  font-size:17px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(31,90,44,0.25);
+}
+.btn-outline{
+  padding:16px;
+  background:transparent;
+  border:1.5px solid var(--green);
+  border-radius:14px;
+  font-family:var(--sans);
+  font-size:16px;
+  font-weight:500;
+  color:var(--green-dk);
+  cursor:pointer;
+}
+
+/* ═══════════════════════════════════════
+   VIEW 6: 투표 결과 자세히보기
+   ═══════════════════════════════════════ */
+#view-result{padding:0 0 90px;}
+.result-head{
+  padding:14px 20px 20px;
+}
+.result-head-cat{
+  display:inline-block;
+  padding:5px 12px;
+  background:var(--green-bg);
+  color:var(--green-dk);
+  border-radius:14px;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+.result-head-title{
+  font-family:var(--display);
+  font-size:22px;
+  color:var(--text);
+  line-height:1.4;
+  letter-spacing:-0.6px;
+  margin-bottom:18px;
+}
+.result-bar-card{
+  background:var(--green-mint);
+  border:1px solid var(--green-lt);
+  border-radius:18px;
+  padding:18px 20px;
+}
+.result-bar-head{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-size:13px;
+  font-weight:700;
+}
+.result-bar-for{color:var(--green-dk);}
+.result-bar-against{color:var(--text-md);}
+.result-bar{
+  display:flex;
+  height:14px;
+  border-radius:7px;
+  overflow:hidden;
+  background:#fff;
+}
+.bar-for{background:var(--green);}
+.bar-against{background:var(--text-md);}
+.result-bar-meta{
+  margin-top:8px;
+  text-align:center;
+  font-size:12px;
+  color:var(--text-md);
+  font-weight:500;
+}
+
+.result-tabs{
+  display:flex;
+  padding:0 20px;
+  gap:8px;
+  margin:18px 0 12px;
+}
+.result-tab{
+  flex:1;
+  padding:11px;
+  background:#fff;
+  border:1.5px solid var(--line);
+  border-radius:12px;
+  font-size:14px;
+  font-weight:700;
+  color:var(--text-md);
+  cursor:pointer;
+  text-align:center;
+}
+.result-tab.active{
+  background:var(--green-dk);
+  color:#fff;
+  border-color:var(--green-dk);
+}
+
+.opinion-list{padding:0 20px;display:flex;flex-direction:column;gap:10px;}
+.opinion{
+  padding:16px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.opinion-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.opinion-author{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  color:var(--text-md);
+  font-weight:600;
+}
+.opinion-avatar{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:var(--green);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:700;
+}
+.opinion-avatar.against{background:var(--text-md);}
+.opinion-stance{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:10px;
+  font-weight:700;
+}
+.opinion-stance.for{background:var(--green-bg);color:var(--green-dk);}
+.opinion-stance.against{background:#F0F0F0;color:var(--text-md);}
+.opinion-text{
+  font-size:14px;
+  color:var(--text);
+  line-height:1.55;
+  font-weight:500;
+  margin-bottom:10px;
+}
+.opinion-foot{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-size:12px;
+  color:var(--text-lt);
+}
+.opinion-like{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* ═══════════════════════════════════════
+   VIEW 7: 커뮤니티
+   ═══════════════════════════════════════ */
+#view-community{padding:0 0 90px;}
+.com-head{padding:16px 20px 8px;}
+.com-title{
+  font-family:var(--display);
+  font-size:24px;
+  color:var(--text);
+  letter-spacing:-0.6px;
+}
+.com-subtitle{
+  font-size:13px;
+  color:var(--text-lt);
+  margin-top:2px;
+}
+.cat-bar{
+  display:flex;
+  gap:8px;
+  padding:14px 20px 4px;
+  overflow-x:auto;
+}
+.cat-bar::-webkit-scrollbar{display:none;}
+.cat-chip{
+  padding:8px 14px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-md);
+  cursor:pointer;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.cat-chip.active{
+  background:var(--green-dk);
+  color:#fff;
+  border-color:var(--green-dk);
+  font-weight:700;
+}
+.list-section{padding:14px 20px;}
+.list-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.list-card:hover{border-color:var(--green-lt);box-shadow:var(--sh);}
+.list-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.list-card-cat{
+  font-size:11px;
+  color:var(--green-dk);
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+.list-card-reward{
+  font-size:11px;
+  color:var(--orange);
+  font-weight:700;
+}
+.list-card-title{
+  font-size:16px;
+  color:var(--text);
+  font-weight:700;
+  line-height:1.45;
+  margin-bottom:12px;
+}
+.list-card-bar{
+  display:flex;
+  height:6px;
+  border-radius:3px;
+  overflow:hidden;
+  background:var(--line);
+  margin-bottom:6px;
+}
+.list-card-meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:var(--text-lt);
+  font-weight:500;
+}
+
+/* ═══════════════════════════════════════
+   VIEW 8: 팽팽몰 (상점)
+   ═══════════════════════════════════════ */
+#view-shop{padding:0 0 90px;}
+.shop-hero{
+  margin:14px 20px 14px;
+  padding:20px 22px;
+  background:linear-gradient(135deg, var(--green) 0%, var(--green-dk) 100%);
+  border-radius:18px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+.shop-hero::before{
+  content:'';
+  position:absolute;
+  top:-40px;
+  right:-40px;
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+}
+.shop-hero-label{font-size:12px;opacity:0.85;margin-bottom:4px;}
+.shop-hero-amount{
+  font-family:var(--display);
+  font-size:32px;
+  letter-spacing:-1px;
+}
+.shop-hero-amount span{font-size:15px;font-family:var(--sans);font-weight:700;margin-left:4px;opacity:0.85;}
+.shop-hero-convert{font-size:12px;opacity:0.85;margin-top:4px;}
+
+.shop-cats{
+  display:flex;
+  gap:8px;
+  padding:0 20px 12px;
+  overflow-x:auto;
+}
+.shop-cats::-webkit-scrollbar{display:none;}
+.shop-cat{
+  padding:8px 14px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-md);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.shop-cat.active{
+  background:var(--green-dk);
+  color:#fff;
+  border-color:var(--green-dk);
+  font-weight:700;
+}
+
+.shop-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:6px 20px 20px;
+}
+.shop-item{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.shop-item:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
+.shop-thumb{
+  width:100%;
+  aspect-ratio:1;
+  background:var(--green-mint);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+  position:relative;
+}
+.shop-info{padding:10px 12px 14px;}
+.shop-brand{
+  font-size:11px;
+  color:var(--text-lt);
+  font-weight:600;
+  margin-bottom:2px;
+}
+.shop-name{
+  font-size:13px;
+  color:var(--text);
+  font-weight:600;
+  line-height:1.4;
+  margin-bottom:8px;
+  min-height:36px;
+}
+.shop-price{
+  font-family:var(--display);
+  font-size:18px;
+  color:var(--green-dk);
+  letter-spacing:-0.3px;
+}
+.shop-price span{font-size:11px;font-family:var(--sans);font-weight:700;margin-left:2px;color:var(--text-md);}
+
+.shop-section{padding:0 20px;margin-top:8px;}
+.shop-sec-title{
+  font-family:var(--display);
+  font-size:18px;
+  color:var(--text);
+  margin-bottom:10px;
+  letter-spacing:-0.5px;
+}
+
+/* ═══════════════════════════════════════
+   VIEW 9: 소개
+   ═══════════════════════════════════════ */
+#view-about{padding:0 0 90px;}
+.about-hero{
+  margin:14px 20px 18px;
+  padding:28px 24px;
+  background:linear-gradient(165deg, var(--green-mint) 0%, var(--green-bg) 100%);
+  border:1px solid var(--green-lt);
+  border-radius:20px;
+  text-align:center;
+}
+.about-hero-brand{
+  font-family:var(--display);
+  font-size:46px;
+  color:var(--green-dk);
+  letter-spacing:-1.5px;
+  margin-bottom:6px;
+}
+.about-hero-slogan{
+  font-size:16px;
+  color:var(--text);
+  font-weight:700;
+  line-height:1.5;
+  margin-bottom:16px;
+}
+.about-hero-slogan em{
+  font-style:normal;
+  color:var(--green);
+  font-weight:900;
+}
+.about-hero-eligible{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 16px;
+  background:#fff;
+  border:1.5px solid var(--green);
+  border-radius:24px;
+  font-size:13px;
+  color:var(--green-dk);
+  font-weight:700;
+}
+.about-hero-eligible::before{
+  content:'';
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+}
+
+.section-h{
+  font-family:var(--display);
+  font-size:20px;
+  color:var(--text);
+  margin:24px 20px 12px;
+  letter-spacing:-0.5px;
+}
+
+.benefit-card{
+  margin:0 20px 10px;
+  padding:18px 20px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+.benefit-icon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:var(--green-bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  flex-shrink:0;
+}
+.benefit-body{flex:1;}
+.benefit-title{
+  font-size:15px;
+  color:var(--text);
+  font-weight:700;
+  margin-bottom:4px;
+}
+.benefit-desc{
+  font-size:13px;
+  color:var(--text-md);
+  line-height:1.55;
+}
+
+.lv-list{margin:0 20px;display:flex;flex-direction:column;gap:10px;}
+.lv-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px 18px;
+  position:relative;
+}
+.lv-card.current{
+  border-color:var(--green);
+  background:var(--green-mint);
+}
+.lv-card-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.lv-medal{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--display);
+  font-size:16px;
+  color:#fff;
+}
+.lv-medal.lv1{background:linear-gradient(135deg, var(--text-md), var(--text));}
+.lv-medal.lv2{background:linear-gradient(135deg, var(--green-lt), var(--green));}
+.lv-medal.lv3{background:linear-gradient(135deg, var(--orange-lt), var(--orange));}
+.lv-medal.lv4{background:linear-gradient(135deg, var(--green), var(--green-dk));}
+.lv-info{flex:1;}
+.lv-name{
+  font-family:var(--display);
+  font-size:17px;
+  color:var(--text);
+  letter-spacing:-0.3px;
+}
+.lv-req{
+  font-size:11px;
+  color:var(--text-lt);
+  font-weight:500;
+}
+.lv-current-badge{
+  padding:4px 10px;
+  background:var(--green);
+  color:#fff;
+  border-radius:10px;
+  font-size:10px;
+  font-weight:700;
+}
+.lv-desc{
+  font-size:12px;
+  color:var(--text-md);
+  line-height:1.55;
+  font-weight:500;
+}
+
+/* ═══════════════════════════════════════
+   햄버거 사이드 메뉴 (더보기)
+   ═══════════════════════════════════════ */
+.side-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  z-index:100;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+.side-overlay.open{opacity:1;pointer-events:auto;}
+.side-menu{
+  position:absolute;
+  top:0;right:0;
+  height:100%;
+  width:80%;
+  max-width:340px;
+  background:var(--white);
+  z-index:101;
+  transform:translateX(100%);
+  transition:transform .3s ease;
+  display:flex;
+  flex-direction:column;
+}
+.side-menu.open{transform:translateX(0);}
+.side-head{
+  padding:30px 22px 20px;
+  background:linear-gradient(135deg, var(--green) 0%, var(--green-dk) 100%);
+  color:#fff;
+  position:relative;
+}
+.side-close{
+  position:absolute;
+  top:16px;
+  right:16px;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color:#fff;
+  font-size:18px;
+}
+.side-user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+.side-avatar{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--display);
+  font-size:20px;
+}
+.side-user-info{display:flex;flex-direction:column;gap:2px;}
+.side-user-name{
+  font-family:var(--display);
+  font-size:18px;
+  letter-spacing:-0.4px;
+}
+.side-user-honor{font-size:12px;opacity:0.85;font-weight:500;}
+.side-points{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 14px;
+  background:rgba(255,255,255,0.13);
+  border-radius:12px;
+}
+.side-points-item{display:flex;flex-direction:column;gap:2px;}
+.side-points-label{font-size:11px;opacity:0.85;}
+.side-points-val{
+  font-family:var(--display);
+  font-size:18px;
+}
+
+.side-list{flex:1;overflow-y:auto;padding:8px 0;}
+.side-group{padding:8px 0;border-bottom:1px solid var(--line);}
+.side-group-title{
+  font-size:11px;
+  color:var(--text-lt);
+  font-weight:700;
+  letter-spacing:1px;
+  padding:8px 22px 4px;
+}
+.side-row{
+  padding:13px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  font-size:15px;
+  color:var(--text);
+  font-weight:500;
+}
+.side-row:hover{background:var(--green-mint);}
+.side-row::after{content:'›';color:var(--text-lt);font-size:18px;}
+
+/* ═══════════════════════════════════════
+   하단 탭바
+   ═══════════════════════════════════════ */
+.tabbar{
+  flex-shrink:0;
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  background:#fff;
+  border-top:1px solid var(--line);
+  padding:6px 0 calc(6px + env(safe-area-inset-bottom));
+}
+.tab{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  padding:6px 0;
+  cursor:pointer;
+  color:var(--text-lt);
+}
+.tab.active{color:var(--green-dk);}
+.tab-icon{
+  font-size:20px;
+  line-height:1;
+}
+.tab-label{
+  font-size:11px;
+  font-weight:700;
+}
+
+/* ═══════════════════════════════════════
+   위젯 설정 팝업
+   ═══════════════════════════════════════ */
+.modal-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  z-index:200;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  width:100%;
+  max-width:340px;
+  background:#fff;
+  border-radius:22px;
+  padding:28px 24px 22px;
+  text-align:center;
+  animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes modalIn{
+  from{transform:scale(0.8);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+.modal-icon{
+  width:64px;
+  height:64px;
+  margin:0 auto 14px;
+  border-radius:18px;
+  background:linear-gradient(135deg, var(--green), var(--green-dk));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:30px;
+}
+.modal-title{
+  font-family:var(--display);
+  font-size:22px;
+  color:var(--text);
+  letter-spacing:-0.5px;
+  margin-bottom:8px;
+}
+.modal-desc{
+  font-size:14px;
+  color:var(--text-md);
+  line-height:1.55;
+  margin-bottom:18px;
+}
+.widget-preview{
+  margin:12px 0 18px;
+  padding:16px;
+  background:var(--green-mint);
+  border:1.5px dashed var(--green);
+  border-radius:14px;
+}
+.widget-preview-label{
+  font-size:11px;
+  color:var(--green-dk);
+  font-weight:700;
+  letter-spacing:0.5px;
+  margin-bottom:6px;
+}
+.widget-preview-content{
+  font-size:14px;
+  color:var(--text);
+  font-weight:700;
+  line-height:1.4;
+}
+.modal-btns{display:flex;flex-direction:column;gap:8px;}
+.modal-btn-primary{
+  padding:14px;
+  background:linear-gradient(135deg, var(--green), var(--green-dk));
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  font-family:var(--sans);
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+}
+.modal-btn-secondary{
+  padding:12px;
+  background:transparent;
+  border:none;
+  color:var(--text-lt);
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+}
+
+/* Toast */
+.toast{
+  position:absolute;
+  left:50%;
+  bottom:110px;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--text);
+  color:#fff;
+  padding:13px 20px;
+  border-radius:24px;
+  font-size:13px;
+  font-weight:700;
+  box-shadow:var(--sh-md);
+  opacity:0;
+  pointer-events:none;
+  transition:all .3s ease;
+  z-index:1000;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="dots">●●●</span>
+  </div>
+
+  <!-- 상단 헤더 -->
+  <div class="header" id="header" style="display:none;">
+    <div class="logo-mini" onclick="goHome()">
+      <div class="logo-mini-mark">말</div>
+      <div class="logo-mini-text">할말</div>
+    </div>
+    <div class="header-right">
+      <div class="point-badge" onclick="openSide()">
+        <span class="point-icon">●</span>
+        <span class="point-num" id="topPoint">2,450</span>
+        <span class="point-unit">팽</span>
+      </div>
+      <div class="hamburger" onclick="openSide()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="body">
+
+    <!-- VIEW 1: 스플래시 -->
+    <div class="view active" id="view-splash">
+      <div class="splash-top">
+        <div class="logo-wrap">
+          <div class="logo-big"><div class="logo-big-text">말</div></div>
+          <div>
+            <div class="brand">할말</div>
+            <div class="brand-slogan">
+              두뇌건강을 위한 <em>1일 1투표</em>
+            </div>
+          </div>
+        </div>
+        <div class="eligible-badge">만 60세 이상만 누릴 수 있어요</div>
+      </div>
+      <div class="splash-bottom">
+        <button class="btn-kakao" onclick="startApp()">
+          <span>💬</span> 카카오로 1초 시작
+        </button>
+        <button class="btn-secondary" onclick="startApp()">전화번호로 시작</button>
+        <div class="splash-meta">
+          가입하시면 이용약관과 개인정보 처리방침에<br>
+          동의하시는 것으로 간주됩니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: 슬로건 인트로 (자동 진행) -->
+    <div class="view" id="view-intro">
+      <div class="intro-logo"><div class="intro-logo-text">말</div></div>
+      <div class="intro-brand">할말</div>
+      <div class="intro-slogan">
+        두뇌건강을 위한<br><em>1일 1투표</em>
+      </div>
+    </div>
+
+    <!-- VIEW 3: 홈 (단순) -->
+    <div class="view" id="view-home">
+      <div class="welcome-bar">
+        <div class="welcome-greet">2026년 5월 19일 화요일</div>
+        <div class="welcome-name">오늘의 <em>한 마디</em> 어떠세요?</div>
+      </div>
+
+      <div class="today-wrap">
+        <div class="today-card">
+          <div class="today-eyebrow">오늘의 한 마디</div>
+          <div class="today-cat">정치 · 시사</div>
+          <h2 class="today-title">65세 정년 연장,<br>동의하시나요?</h2>
+          <p class="today-desc">정부와 노동계가 법정 정년을 65세로 연장하는 방안을 논의 중입니다.</p>
+          <div class="today-meta">
+            <span class="today-participants">현재 <strong>1,247명</strong> 참여 중</span>
+            <span class="today-reward">최대 +130팽</span>
+          </div>
+          <div class="vote-btns">
+            <button class="vote-btn for" onclick="goVote(true)">
+              <span class="vote-icon">○</span> 찬성
+            </button>
+            <button class="vote-btn against" onclick="goVote(false)">
+              <span class="vote-icon">✕</span> 반대
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-secondary">
+        <h3 class="home-sec-title">이번 주 출석</h3>
+        <div class="streak-card">
+          <div class="streak-info">
+            <span class="streak-label">연속 출석</span>
+            <span class="streak-val">7일째</span>
+          </div>
+          <div class="streak-dots">
+            <div class="streak-dot done"></div>
+            <div class="streak-dot done"></div>
+            <div class="streak-dot done"></div>
+            <div class="streak-dot done"></div>
+            <div class="streak-dot done"></div>
+            <div class="streak-dot done"></div>
+            <div class="streak-dot done"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: 투표 & 한 마디 -->
+    <div class="view" id="view-vote">
+      <div class="vote-back" onclick="showView('home')">← 돌아가기</div>
+      <div class="vote-head">
+        <span class="vote-head-cat" id="voteCat">정치 · 시사</span>
+        <h2 class="vote-head-title" id="voteTitle">65세 정년 연장,<br>동의하시나요?</h2>
+      </div>
+
+      <div class="vote-stance-display">
+        <div class="stance-info">
+          <div class="stance-label">나의 한 표</div>
+          <div class="stance-value" id="stanceDisplay">
+            <span id="stanceIcon">○</span>
+            <span id="stanceText">찬성</span>
+          </div>
+        </div>
+        <button class="stance-change-btn" onclick="toggleStance()">바꾸기</button>
+      </div>
+
+      <div class="comment-section">
+        <div class="comment-head">
+          <h3 class="comment-title">한 마디 더해주세요</h3>
+          <p class="comment-sub">어렵다면 아래 문장 중에 골라도 좋아요.</p>
+        </div>
+
+        <div class="suggest-label">
+          <span class="suggest-label-text">추천 문장</span>
+          <span class="suggest-label-line"></span>
+          <span class="suggest-reward">+20팽</span>
+        </div>
+        <div class="suggestions" id="suggestList"></div>
+
+        <div class="divider-or">
+          <span class="divider-or-line"></span>
+          <span class="divider-or-text">또는 직접 쓰시려면</span>
+          <span class="divider-or-line"></span>
+        </div>
+
+        <div class="input-label">
+          <span class="input-label-text">내 말로 한 마디</span>
+          <span class="input-reward-box">10자 +30팽 · 30자 +80팽</span>
+        </div>
+        <div class="input-wrap">
+          <textarea class="input-area" id="commentInput" placeholder="예: 수명이 늘어난 만큼 사회 참여 시간도 늘려야 한다고 봅니다." oninput="onInput()"></textarea>
+          <div class="input-counter-wrap">
+            <span class="input-counter"><strong id="charCount">0</strong>자 / 직접 작성</span>
+            <span class="input-bonus" id="bonusMsg" style="opacity:0;">+30팽 보너스!</span>
+          </div>
+        </div>
+
+        <div class="reward-preview">
+          <div class="reward-preview-label">받으실 팽</div>
+          <div class="reward-preview-amount" id="rewardPreview">50<span>팽</span></div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitVote()">한 마디 남기고 적립받기</button>
+    </div>
+
+    <!-- VIEW 5: 적립 완료 -->
+    <div class="view" id="view-success">
+      <div class="success-top">
+        <div class="success-medal">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div class="medal-num" id="medalNum">+100</div>
+            <div class="medal-unit">팽 적립</div>
+          </div>
+        </div>
+        <h2 class="success-msg">
+          오늘의 <em>한 마디</em> 감사합니다
+        </h2>
+        <p class="success-sub">
+          김영자 님의 의견이<br>
+          오늘의 여론에 더해졌습니다.
+        </p>
+        <div class="success-stat">
+          <div class="success-stat-item">
+            <span class="success-stat-label">이번 적립</span>
+            <span class="success-stat-value" id="thisReward">+100팽</span>
+          </div>
+          <div class="success-stat-item">
+            <span class="success-stat-label">누적 적립</span>
+            <span class="success-stat-value" id="totalReward">2,550팽</span>
+          </div>
+          <div class="success-stat-item">
+            <span class="success-stat-label">참여</span>
+            <span class="success-stat-value">28건</span>
+          </div>
+        </div>
+      </div>
+      <div class="success-bottom">
+        <button class="btn-primary" onclick="goResult()">투표 결과 자세히보기</button>
+        <button class="btn-outline" onclick="goHome()">홈으로</button>
+      </div>
+    </div>
+
+    <!-- VIEW 6: 투표 결과 자세히보기 -->
+    <div class="view" id="view-result">
+      <div class="vote-back" onclick="showView('home')">← 돌아가기</div>
+      <div class="result-head">
+        <span class="result-head-cat">정치 · 시사</span>
+        <h2 class="result-head-title">65세 정년 연장, 동의하시나요?</h2>
+        <div class="result-bar-card">
+          <div class="result-bar-head">
+            <span class="result-bar-for">찬성 64%</span>
+            <span class="result-bar-against">반대 36%</span>
+          </div>
+          <div class="result-bar">
+            <div class="bar-for" style="width:64%;"></div>
+            <div class="bar-against" style="width:36%;"></div>
+          </div>
+          <div class="result-bar-meta">총 1,247명 참여</div>
+        </div>
+      </div>
+
+      <div class="result-tabs">
+        <div class="result-tab active" data-tab="all" onclick="switchOpinionTab('all')">전체 의견</div>
+        <div class="result-tab" data-tab="for" onclick="switchOpinionTab('for')">찬성 의견</div>
+        <div class="result-tab" data-tab="against" onclick="switchOpinionTab('against')">반대 의견</div>
+      </div>
+
+      <div class="opinion-list" id="opinionList">
+        <!-- 동적 -->
+      </div>
+    </div>
+
+    <!-- VIEW 7: 커뮤니티 -->
+    <div class="view" id="view-community">
+      <div class="com-head">
+        <h2 class="com-title">커뮤니티</h2>
+        <div class="com-subtitle">다른 어른들의 한 마디</div>
+      </div>
+      <div class="cat-bar">
+        <div class="cat-chip active">전체</div>
+        <div class="cat-chip">정치·시사</div>
+        <div class="cat-chip">경제·노동</div>
+        <div class="cat-chip">사회·가족</div>
+        <div class="cat-chip">건강·노후</div>
+        <div class="cat-chip">일상·문화</div>
+      </div>
+      <div class="list-section">
+        <div class="list-card" onclick="goVoteWithItem(1)">
+          <div class="list-card-head">
+            <span class="list-card-cat">경제 · 노동</span>
+            <span class="list-card-reward">최대 +130팽</span>
+          </div>
+          <h4 class="list-card-title">주 4일제 전면 도입, 어떻게 보세요?</h4>
+          <div class="list-card-bar">
+            <div class="bar-for" style="width:58%;"></div>
+            <div class="bar-against" style="width:42%;"></div>
+          </div>
+          <div class="list-card-meta">
+            <span>찬성 58% · 반대 42%</span>
+            <span>892명 참여</span>
+          </div>
+        </div>
+
+        <div class="list-card" onclick="goVoteWithItem(2)">
+          <div class="list-card-head">
+            <span class="list-card-cat">사회 · 가족</span>
+            <span class="list-card-reward">최대 +130팽</span>
+          </div>
+          <h4 class="list-card-title">자녀들 결혼 안 하는 풍조, 걱정되시나요?</h4>
+          <div class="list-card-bar">
+            <div class="bar-for" style="width:73%;"></div>
+            <div class="bar-against" style="width:27%;"></div>
+          </div>
+          <div class="list-card-meta">
+            <span>네 73% · 아니오 27%</span>
+            <span>2,104명 참여</span>
+          </div>
+        </div>
+
+        <div class="list-card" onclick="goVoteWithItem(3)">
+          <div class="list-card-head">
+            <span class="list-card-cat">건강 · 노후</span>
+            <span class="list-card-reward">최대 +130팽</span>
+          </div>
+          <h4 class="list-card-title">건강검진, 매년 꼬박꼬박 받으세요?</h4>
+          <div class="list-card-bar">
+            <div class="bar-for" style="width:81%;"></div>
+            <div class="bar-against" style="width:19%;"></div>
+          </div>
+          <div class="list-card-meta">
+            <span>네 81% · 아니오 19%</span>
+            <span>1,560명 참여</span>
+          </div>
+        </div>
+
+        <div class="list-card" onclick="goVoteWithItem(4)">
+          <div class="list-card-head">
+            <span class="list-card-cat">일상 · 문화</span>
+            <span class="list-card-reward">최대 +130팽</span>
+          </div>
+          <h4 class="list-card-title">자녀와 정치 얘기, 하시는 편인가요?</h4>
+          <div class="list-card-bar">
+            <div class="bar-for" style="width:34%;"></div>
+            <div class="bar-against" style="width:66%;"></div>
+          </div>
+          <div class="list-card-meta">
+            <span>네 34% · 아니오 66%</span>
+            <span>1,832명 참여</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 8: 팽팽몰 -->
+    <div class="view" id="view-shop">
+      <div class="shop-hero">
+        <div class="shop-hero-label">사용 가능한 적립금</div>
+        <div class="shop-hero-amount" id="shopAmount">2,450<span>팽</span></div>
+        <div class="shop-hero-convert">1팽 = 1원으로 상품 구매</div>
+      </div>
+
+      <div class="shop-cats">
+        <div class="shop-cat active">전체</div>
+        <div class="shop-cat">커피·베이커리</div>
+        <div class="shop-cat">생활·식품</div>
+        <div class="shop-cat">건강·영양</div>
+        <div class="shop-cat">상품권</div>
+        <div class="shop-cat">손주 선물</div>
+      </div>
+
+      <div class="shop-section">
+        <h3 class="shop-sec-title">인기 상품</h3>
+      </div>
+      <div class="shop-grid">
+        <div class="shop-item">
+          <div class="shop-thumb">☕</div>
+          <div class="shop-info">
+            <div class="shop-brand">스타벅스</div>
+            <div class="shop-name">아메리카노 Tall</div>
+            <div class="shop-price">4,500<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🍞</div>
+          <div class="shop-info">
+            <div class="shop-brand">파리바게뜨</div>
+            <div class="shop-name">우유식빵 한 봉</div>
+            <div class="shop-price">4,200<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">💊</div>
+          <div class="shop-info">
+            <div class="shop-brand">센트룸</div>
+            <div class="shop-name">실버 종합비타민 30정</div>
+            <div class="shop-price">18,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🥤</div>
+          <div class="shop-info">
+            <div class="shop-brand">동아제약</div>
+            <div class="shop-name">박카스D 1박스(10병)</div>
+            <div class="shop-price">8,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🍜</div>
+          <div class="shop-info">
+            <div class="shop-brand">농심</div>
+            <div class="shop-name">신라면 1박스(40개)</div>
+            <div class="shop-price">18,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🍚</div>
+          <div class="shop-info">
+            <div class="shop-brand">CJ</div>
+            <div class="shop-name">햇반 12개입</div>
+            <div class="shop-price">16,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">☕</div>
+          <div class="shop-info">
+            <div class="shop-brand">동서</div>
+            <div class="shop-name">카누 미니 100T</div>
+            <div class="shop-price">28,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🐟</div>
+          <div class="shop-info">
+            <div class="shop-brand">동원</div>
+            <div class="shop-name">살코기참치 10캔</div>
+            <div class="shop-price">15,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">💊</div>
+          <div class="shop-info">
+            <div class="shop-brand">종근당</div>
+            <div class="shop-name">관절연골 30정</div>
+            <div class="shop-price">22,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🎁</div>
+          <div class="shop-info">
+            <div class="shop-brand">CU</div>
+            <div class="shop-name">CU 상품권 5,000원</div>
+            <div class="shop-price">5,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🧴</div>
+          <div class="shop-info">
+            <div class="shop-brand">아토팜</div>
+            <div class="shop-name">바디로션 300ml</div>
+            <div class="shop-price">12,000<span>팽</span></div>
+          </div>
+        </div>
+        <div class="shop-item">
+          <div class="shop-thumb">🥛</div>
+          <div class="shop-info">
+            <div class="shop-brand">매일유업</div>
+            <div class="shop-name">우유 1L 2팩</div>
+            <div class="shop-price">5,800<span>팽</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 9: 소개 -->
+    <div class="view" id="view-about">
+      <div class="about-hero">
+        <div class="about-hero-brand">할말</div>
+        <div class="about-hero-slogan">
+          두뇌건강을 위한 <em>1일 1투표</em>
+        </div>
+        <div class="about-hero-eligible">만 60세 이상만 누리는 특별한 공간</div>
+      </div>
+
+      <h3 class="section-h">할말에서만 누리는 혜택</h3>
+      <div class="benefit-card">
+        <div class="benefit-icon">🧠</div>
+        <div class="benefit-body">
+          <div class="benefit-title">매일 두뇌 자극</div>
+          <div class="benefit-desc">하루 한 가지 시사·일상 주제에 의견을 남기며 자연스럽게 두뇌를 활성화합니다.</div>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">💰</div>
+        <div class="benefit-body">
+          <div class="benefit-title">시사투표 할 때마다, 돈 버는 앱</div>
+          <div class="benefit-desc">한 마디 남길 때마다 최대 130팽이 적립되고, 모이면 현금이나 상품으로 받습니다.</div>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🗣️</div>
+        <div class="benefit-body">
+          <div class="benefit-title">내 의견이 사회로 전달</div>
+          <div class="benefit-desc">모인 의견은 정부·기업의 더 나은 결정을 위한 자료로 익명 처리되어 활용됩니다.</div>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🎁</div>
+        <div class="benefit-body">
+          <div class="benefit-title">팽팽몰에서 자유롭게</div>
+          <div class="benefit-desc">커피·식품·영양제·상품권 등 다양한 상품을 팽으로 직접 구매하실 수 있습니다.</div>
+        </div>
+      </div>
+
+      <h3 class="section-h">회원 등급</h3>
+      <div class="lv-list">
+        <div class="lv-card current">
+          <div class="lv-card-head">
+            <div class="lv-medal lv1">市</div>
+            <div class="lv-info">
+              <div class="lv-name">시민</div>
+              <div class="lv-req">가입 즉시</div>
+            </div>
+            <span class="lv-current-badge">현재</span>
+          </div>
+          <p class="lv-desc">매일 시사·일상 어젠다에 의견을 남기고 팽을 적립합니다.</p>
+        </div>
+        <div class="lv-card">
+          <div class="lv-card-head">
+            <div class="lv-medal lv2">員</div>
+            <div class="lv-info">
+              <div class="lv-name">정회원</div>
+              <div class="lv-req">30일 활동 + 답변 50개 이상</div>
+            </div>
+          </div>
+          <p class="lv-desc">회고형 질문에 답변하고 본인 기록을 자녀에게 전할 수 있는 기능이 열립니다.</p>
+        </div>
+        <div class="lv-card">
+          <div class="lv-card-head">
+            <div class="lv-medal lv3">委</div>
+            <div class="lv-info">
+              <div class="lv-name">자문위원</div>
+              <div class="lv-req">정회원 6개월 + 운영팀 추천</div>
+            </div>
+          </div>
+          <p class="lv-desc">기업·정부 발주 자문에 답변하실 수 있으며 명예 인증서를 받습니다.</p>
+        </div>
+        <div class="lv-card">
+          <div class="lv-card-head">
+            <div class="lv-medal lv4">首</div>
+            <div class="lv-info">
+              <div class="lv-name">수석자문위원</div>
+              <div class="lv-req">자문위원 1년 + 활동 평가</div>
+            </div>
+          </div>
+          <p class="lv-desc">발주 자문 우선권과 오프라인 위원회로 활동 영역이 넓어집니다.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 하단 탭바 -->
+  <div class="tabbar" id="tabbar" style="display:none;">
+    <div class="tab active" data-view="home" onclick="showView('home')">
+      <div class="tab-icon">⌂</div>
+      <div class="tab-label">홈</div>
+    </div>
+    <div class="tab" data-view="community" onclick="showView('community')">
+      <div class="tab-icon">◐</div>
+      <div class="tab-label">커뮤니티</div>
+    </div>
+    <div class="tab" data-view="shop" onclick="showView('shop')">
+      <div class="tab-icon">◇</div>
+      <div class="tab-label">상점</div>
+    </div>
+    <div class="tab" data-view="about" onclick="showView('about')">
+      <div class="tab-icon">ⓘ</div>
+      <div class="tab-label">소개</div>
+    </div>
+  </div>
+
+  <!-- 사이드 메뉴 (햄버거) -->
+  <div class="side-overlay" id="sideOverlay" onclick="closeSide()"></div>
+  <div class="side-menu" id="sideMenu">
+    <div class="side-head">
+      <div class="side-close" onclick="closeSide()">✕</div>
+      <div class="side-user">
+        <div class="side-avatar">김</div>
+        <div class="side-user-info">
+          <div class="side-user-name">김영자 님</div>
+          <div class="side-user-honor">시민 · 가입 28일째</div>
+        </div>
+      </div>
+      <div class="side-points">
+        <div class="side-points-item">
+          <span class="side-points-label">보유 팽</span>
+          <span class="side-points-val" id="sidePoints">2,450</span>
+        </div>
+        <div class="side-points-item">
+          <span class="side-points-label">참여 어젠다</span>
+          <span class="side-points-val">28건</span>
+        </div>
+      </div>
+    </div>
+    <div class="side-list">
+      <div class="side-group">
+        <div class="side-group-title">내 정보</div>
+        <div class="side-row">적립 내역</div>
+        <div class="side-row">현금 환전</div>
+        <div class="side-row">구매 내역</div>
+      </div>
+      <div class="side-group">
+        <div class="side-group-title">설정</div>
+        <div class="side-row">알림 설정</div>
+        <div class="side-row">위젯 설정</div>
+        <div class="side-row">관심 분야</div>
+      </div>
+      <div class="side-group">
+        <div class="side-group-title">지원</div>
+        <div class="side-row">자주 묻는 질문</div>
+        <div class="side-row">전화 상담</div>
+        <div class="side-row">의견 보내기</div>
+      </div>
+      <div class="side-group">
+        <div class="side-group-title">약관</div>
+        <div class="side-row">이용약관</div>
+        <div class="side-row">개인정보 처리방침</div>
+        <div class="side-row">로그아웃</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 위젯 설정 모달 -->
+  <div class="modal-overlay" id="widgetModal">
+    <div class="modal">
+      <div class="modal-icon">📱</div>
+      <div class="modal-title">홈 화면에 위젯을<br>두실래요?</div>
+      <div class="modal-desc">매일 오늘의 한 마디를 잠금화면에서 바로 보실 수 있어요.</div>
+      <div class="widget-preview">
+        <div class="widget-preview-label">⌂ 할말 · 오늘의 한 마디</div>
+        <div class="widget-preview-content">65세 정년 연장,<br>동의하시나요?</div>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn-primary" onclick="closeWidget()">위젯 설정하기</button>
+        <button class="modal-btn-secondary" onclick="closeWidget()">나중에 할게요</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">완료!</div>
+
+</div>
+
+<script>
+/* ─── 데이터 ─── */
+const agendas = {
+  0:{
+    cat:'정치 · 시사',
+    title:'65세 정년 연장,<br>동의하시나요?',
+    titlePlain:'65세 정년 연장, 동의하시나요?',
+    forSuggestions:[
+      {text:'수명이 늘어난 만큼 일도 늘어야 한다', count:312},
+      {text:'아직 일할 수 있는 나이를 막을 이유가 없다', count:248},
+      {text:'연금만으로는 생활이 어렵다', count:189},
+      {text:'경험이 회사에도 도움이 된다', count:134}
+    ],
+    againstSuggestions:[
+      {text:'젊은 세대 일자리가 줄어든다', count:201},
+      {text:'기업 부담이 너무 커진다', count:156},
+      {text:'은퇴 후 인생도 중요하다', count:98},
+      {text:'건강이 따라주지 않는다', count:67}
+    ],
+    opinions:[
+      {name:'박○철',age:68,stance:'for',text:'60대 중반도 한창인데 강제로 일을 못 하게 하는 건 본인 의사에 반하는 일이라고 생각합니다.',likes:48},
+      {name:'이○숙',age:71,stance:'against',text:'몸이 따라주지 않는데 일하라고 하면 그게 더 힘듭니다. 젊은이들에게 자리를 주는 게 맞아요.',likes:32},
+      {name:'김○성',age:65,stance:'for',text:'국민연금만으로는 노후가 빠듯합니다. 정년 연장이 현실적인 해법이라 봅니다.',likes:54},
+      {name:'정○희',age:69,stance:'for',text:'우리나라는 일하고 싶어도 못 하는 분위기가 강합니다. 선택은 본인이 하게 해줘야지요.',likes:28},
+      {name:'최○만',age:73,stance:'against',text:'기업도 부담입니다. 정년 연장보다 재고용 제도를 다듬는 게 낫지 않을까요.',likes:19},
+      {name:'한○수',age:66,stance:'for',text:'손주 키워주고 자식 도와주려면 어느 정도 수입이 있어야 합니다. 정년 연장 찬성합니다.',likes:41}
+    ]
+  },
+  1:{
+    cat:'경제 · 노동',
+    title:'주 4일제 전면 도입,<br>어떻게 보세요?',
+    titlePlain:'주 4일제 전면 도입, 어떻게 보세요?',
+    forSuggestions:[
+      {text:'삶의 질이 더 중요한 시대다', count:287},
+      {text:'한국은 너무 오래 일한다', count:234},
+      {text:'가족과 보낼 시간이 늘어난다', count:189},
+      {text:'생산성은 시간이 아니라 집중도다', count:142}
+    ],
+    againstSuggestions:[
+      {text:'중소기업은 감당하기 어렵다', count:198},
+      {text:'수입이 줄어들 것이 걱정된다', count:167},
+      {text:'한국 경제 현실에 안 맞다', count:134},
+      {text:'갑작스러운 변화는 혼란만 부른다', count:89}
+    ],
+    opinions:[]
+  },
+  2:{
+    cat:'사회 · 가족',
+    title:'자녀들 결혼 안 하는 풍조,<br>걱정되시나요?',
+    titlePlain:'자녀들 결혼 안 하는 풍조, 걱정되시나요?',
+    forSuggestions:[
+      {text:'손주 볼 날이 멀어 안타깝다', count:421},
+      {text:'외로운 노후가 걱정된다', count:298},
+      {text:'사회 활력이 떨어질까 우려된다', count:212},
+      {text:'경제 부담이 심해서 안쓰럽다', count:189}
+    ],
+    againstSuggestions:[
+      {text:'각자의 인생 선택을 존중해야 한다', count:178},
+      {text:'결혼이 행복의 정답은 아니다', count:134},
+      {text:'우리 세대 강요가 부담일 수 있다', count:98},
+      {text:'시대가 바뀌었으니 받아들여야 한다', count:67}
+    ],
+    opinions:[]
+  },
+  3:{
+    cat:'건강 · 노후',
+    title:'건강검진,<br>매년 꼬박꼬박 받으세요?',
+    titlePlain:'건강검진, 매년 꼬박꼬박 받으세요?',
+    forSuggestions:[
+      {text:'나이 들수록 더 챙겨야 한다', count:389},
+      {text:'조기 발견이 가장 중요하다', count:312},
+      {text:'자녀를 위해서라도 받는다', count:234},
+      {text:'국가검진은 무료니까 받는다', count:198}
+    ],
+    againstSuggestions:[
+      {text:'바빠서 시간 내기가 어렵다', count:89},
+      {text:'결과 듣기가 무섭다', count:67},
+      {text:'병원 가기 자체가 부담스럽다', count:54},
+      {text:'건강하면 굳이 안 받아도 된다', count:43}
+    ],
+    opinions:[]
+  },
+  4:{
+    cat:'일상 · 문화',
+    title:'자녀와 정치 얘기,<br>하시는 편인가요?',
+    titlePlain:'자녀와 정치 얘기, 하시는 편인가요?',
+    forSuggestions:[
+      {text:'세대 차이를 이해할 좋은 기회다', count:142},
+      {text:'서로의 입장을 알 수 있어 좋다', count:98},
+      {text:'우리 집은 자연스럽게 잘 한다', count:67},
+      {text:'젊은 사람 생각도 배울 점 있다', count:54}
+    ],
+    againstSuggestions:[
+      {text:'결국 다툼으로 끝나서 안 한다', count:312},
+      {text:'서로 입장이 너무 달라 피곤하다', count:234},
+      {text:'자녀가 듣기 싫어해서 안 한다', count:189},
+      {text:'명절 때마다 어색해질까 봐 안 한다', count:134}
+    ],
+    opinions:[]
+  }
+};
+
+let currentAgenda = 0;
+let currentStance = true;
+let selectedSuggest = null;
+let userPoints = 2450;
+let agendaCount = 28;
+let widgetShown = false;
+
+function startApp(){
+  // 스플래시 → 인트로 → 홈
+  showView('intro');
+  setTimeout(()=>{
+    document.getElementById('header').style.display='flex';
+    document.getElementById('tabbar').style.display='grid';
+    showView('home');
+    // 첫 진입 시 위젯 팝업
+    if(!widgetShown){
+      setTimeout(()=>{
+        document.getElementById('widgetModal').classList.add('open');
+        widgetShown = true;
+      }, 800);
+    }
+  }, 2200);
+}
+
+function closeWidget(){
+  document.getElementById('widgetModal').classList.remove('open');
+}
+
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const target=document.getElementById('view-'+name);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.view===name);
+  });
+  document.querySelector('.body').scrollTop=0;
+}
+
+function goHome(){
+  closeSide();
+  showView('home');
+}
+
+function openSide(){
+  document.getElementById('sideOverlay').classList.add('open');
+  document.getElementById('sideMenu').classList.add('open');
+}
+function closeSide(){
+  document.getElementById('sideOverlay').classList.remove('open');
+  document.getElementById('sideMenu').classList.remove('open');
+}
+
+function goVote(forStance){
+  currentAgenda = 0;
+  currentStance = forStance;
+  loadVoteView();
+  showView('vote');
+}
+function goVoteWithItem(idx){
+  currentAgenda = idx;
+  currentStance = true;
+  loadVoteView();
+  showView('vote');
+}
+
+function loadVoteView(){
+  const a = agendas[currentAgenda];
+  document.getElementById('voteCat').textContent = a.cat;
+  document.getElementById('voteTitle').innerHTML = a.title;
+  updateStanceDisplay();
+  renderSuggestions();
+  document.getElementById('commentInput').value = '';
+  selectedSuggest = null;
+  onInput();
+}
+
+function updateStanceDisplay(){
+  const display = document.getElementById('stanceDisplay');
+  const icon = document.getElementById('stanceIcon');
+  const text = document.getElementById('stanceText');
+  if(currentStance){
+    display.className = 'stance-value for-color';
+    icon.textContent = '○';
+    text.textContent = '찬성';
+  } else {
+    display.className = 'stance-value against-color';
+    icon.textContent = '✕';
+    text.textContent = '반대';
+  }
+}
+
+function toggleStance(){
+  currentStance = !currentStance;
+  updateStanceDisplay();
+  renderSuggestions();
+  selectedSuggest = null;
+  updateReward();
+}
+
+function renderSuggestions(){
+  const a = agendas[currentAgenda];
+  const list = currentStance ? a.forSuggestions : a.againstSuggestions;
+  const container = document.getElementById('suggestList');
+  container.innerHTML = '';
+  list.forEach((s, i)=>{
+    const chip = document.createElement('button');
+    chip.className = 'suggest-chip';
+    chip.innerHTML = `${s.text}<span class="suggest-chip-pick-count">(${s.count}명 선택)</span>`;
+    chip.onclick = ()=>selectSuggest(i);
+    container.appendChild(chip);
+  });
+}
+
+function selectSuggest(idx){
+  selectedSuggest = idx;
+  document.querySelectorAll('.suggest-chip').forEach((c, i)=>{
+    c.classList.toggle('selected', i===idx);
+  });
+  document.getElementById('commentInput').value = '';
+  document.getElementById('charCount').textContent = '0';
+  document.getElementById('bonusMsg').style.opacity = '0';
+  updateReward();
+}
+
+function onInput(){
+  const txt = document.getElementById('commentInput').value;
+  const len = txt.length;
+  document.getElementById('charCount').textContent = len;
+
+  if(len > 0 && selectedSuggest !== null){
+    selectedSuggest = null;
+    document.querySelectorAll('.suggest-chip').forEach(c=>c.classList.remove('selected'));
+  }
+
+  const bonusMsg = document.getElementById('bonusMsg');
+  if(len >= 30){
+    bonusMsg.textContent = '+80팽 보너스!';
+    bonusMsg.style.opacity = '1';
+    bonusMsg.style.color = 'var(--orange)';
+  } else if(len >= 10){
+    bonusMsg.textContent = '+30팽 보너스!';
+    bonusMsg.style.opacity = '1';
+    bonusMsg.style.color = 'var(--orange)';
+  } else if(len > 0){
+    bonusMsg.textContent = `${10-len}자만 더!`;
+    bonusMsg.style.opacity = '1';
+    bonusMsg.style.color = 'var(--text-lt)';
+  } else {
+    bonusMsg.style.opacity = '0';
+  }
+
+  updateReward();
+}
+
+function updateReward(){
+  let reward = 50;
+  const txt = document.getElementById('commentInput').value;
+  const len = txt.length;
+  if(selectedSuggest !== null){
+    reward += 20;
+  } else if(len >= 30){
+    reward += 80;
+  } else if(len >= 10){
+    reward += 30;
+  }
+  document.getElementById('rewardPreview').innerHTML = `${reward}<span>팽</span>`;
+}
+
+function submitVote(){
+  let reward = 50;
+  const txt = document.getElementById('commentInput').value;
+  const len = txt.length;
+  if(selectedSuggest !== null){
+    reward += 20;
+  } else if(len >= 30){
+    reward += 80;
+  } else if(len >= 10){
+    reward += 30;
+  }
+  userPoints += reward;
+  agendaCount += 1;
+  document.getElementById('medalNum').textContent = '+' + reward;
+  document.getElementById('thisReward').textContent = '+' + reward + '팽';
+  document.getElementById('totalReward').textContent = userPoints.toLocaleString() + '팽';
+  document.getElementById('topPoint').textContent = userPoints.toLocaleString();
+  document.getElementById('shopAmount').innerHTML = userPoints.toLocaleString() + '<span>팽</span>';
+  document.getElementById('sidePoints').textContent = userPoints.toLocaleString();
+  showView('success');
+}
+
+function goResult(){
+  renderOpinions('all');
+  showView('result');
+}
+
+function switchOpinionTab(t){
+  document.querySelectorAll('.result-tab').forEach(tab=>{
+    tab.classList.toggle('active', tab.dataset.tab===t);
+  });
+  renderOpinions(t);
+}
+
+function renderOpinions(filter){
+  const container = document.getElementById('opinionList');
+  container.innerHTML = '';
+  const ops = agendas[0].opinions;
+  ops.filter(o=>filter==='all' || o.stance===filter).forEach(o=>{
+    const div = document.createElement('div');
+    div.className = 'opinion';
+    div.innerHTML = `
+      <div class="opinion-head">
+        <div class="opinion-author">
+          <div class="opinion-avatar ${o.stance==='against'?'against':''}">${o.name.charAt(0)}</div>
+          <span>${o.name} · ${o.age}세</span>
+        </div>
+        <span class="opinion-stance ${o.stance}">${o.stance==='for'?'찬성':'반대'}</span>
+      </div>
+      <div class="opinion-text">${o.text}</div>
+      <div class="opinion-foot">
+        <span class="opinion-like">👍 공감 ${o.likes}</span>
+        <span>· 2시간 전</span>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadVoteView();
+});
+</script>
+</body>
+</html>
